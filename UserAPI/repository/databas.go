@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 
-	"github.com/cyberpoetry17/UserAPI/data"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

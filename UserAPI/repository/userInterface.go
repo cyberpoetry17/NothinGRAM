@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/cyberpoetry17/UserAPI/data"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 )
 
 type IUserRepository interface {

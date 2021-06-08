@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/cyberpoetry17/UserAPI/repository"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
 )
 
 // var database *gorm.DB
@@ -23,6 +23,10 @@ func main() {
 	}
 	//defer db.Close()
 	db.Automigrate()
+
+	//user := data.User2{Name: "marko"}
+	//repo := repository.UserRepo{}
+	//repo.SaveUser(&user)
 
 	// databaseUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort)
 

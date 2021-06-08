@@ -3,8 +3,6 @@ package data
 import (
 	"encoding/json"
 	"io"
-
-	"gorm.io/gorm"
 )
 
 // "encoding/json"
@@ -13,7 +11,6 @@ import (
 // "time"
 
 type User2 struct {
-	gorm.Model
 
 	Name                 string `gorm:"column:name"   json:"name"`
 	Surname              string `gorm:"column:surname"  json:"surname"`

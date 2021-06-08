@@ -1,16 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/cyberpoetry17/UserAPI/data"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/cyberpoetry17/UserAPI/repository"
 )
 
-var database *gorm.DB
-var err error
+// var database *gorm.DB
+// var err error
 
 func main() {
 
@@ -19,20 +16,27 @@ func main() {
 	dbName := os.Getenv("NAME")
 	password := os.Getenv("PASSWORD")
 	dbUser := os.Getenv("USER")
-
-	databaseUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort)
-
-	//var dns string = "host=" + os.Getenv("HOST") + " " + "user=" + os.Getenv("USER") + " " + "password=" + os.Getenv("PASSWORD") + " " + "dbname=" + os.Getenv("NAME") + "port=" + os.Getenv("DATABASE_PORT")
-
-	db, err := gorm.Open(postgres.Open(databaseUri), &gorm.Config{})
-
+	//host, dbUser, dbName, password, dbPort string)
+	db, err := repository.SetRepositories(host, dbUser, dbName, password, dbPort)
 	if err != nil {
-		panic("aaaa")
-	} else {
-		fmt.Printf("Successfully connected to your database GOPHER!!!")
+		panic(err)
 	}
+	//defer db.Close()
+	db.Automigrate()
 
-	db.AutoMigrate(data.User2{}) //baza mora znati kako da popuni sve ovo
-	database = db
+	// databaseUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort)
+
+	// //var dns string = "host=" + os.Getenv("HOST") + " " + "user=" + os.Getenv("USER") + " " + "password=" + os.Getenv("PASSWORD") + " " + "dbname=" + os.Getenv("NAME") + "port=" + os.Getenv("DATABASE_PORT")
+
+	// db, err := gorm.Open(postgres.Open(databaseUri), &gorm.Config{})
+
+	// if err != nil {
+	// 	panic("aaaa")
+	// } else {
+	// 	fmt.Printf("Successfully connected to your database GOPHER!!!")
+	// }
+
+	// db.AutoMigrate(data.User2{}) //baza mora znati kako da popuni sve ovo
+	// database = db
 
 }

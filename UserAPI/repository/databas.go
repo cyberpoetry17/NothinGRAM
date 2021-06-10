@@ -8,30 +8,32 @@ import (
 	"gorm.io/gorm"
 )
 
-type databaseRepositories struct {
-	User2 IUserRepository
-
-	database *gorm.DB
+type Database struct {
 }
 
-func SetRepositories(host, dbUser, dbName, password, dbPort string) (*databaseRepositories, error) {
+// type databaseRepositories struct {
+// 	repo     UserRepo
+// 	database *gorm.DB
+// }
+
+func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *gorm.DB {
 	databaseUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort)
 
 	database, err := gorm.Open(postgres.Open(databaseUri), &gorm.Config{})
 
 	if err != nil {
-		panic("aaaa")
+		panic("aaaa gopher error!!")
 	} else {
 		fmt.Printf("Successfully connected to your database GOPHER!!!")
 	}
+	database.AutoMigrate(&data.User2{})
 
-	return &databaseRepositories{
-		User2:    NewUserRepository(database), //pravi repozitorijum za Usera2
-		database: database,
-	}, nil
+	users := []data.User2{
+		//{Name: "Frodo", Surname: "Torbar", Email: "baggins@gmail.com", Username: "Saviour of the Middle Earth", Private: true, DateOfBirth: "12345", Gender: 1, PhoneNumber: "003345", Website: "OneRingToRuleThemAllButMe.com", Taggable: false, ReceiveNotifications: false, Password: "mypreci0us", Verified: true, Biography: "true", Role: 1},
+	}
+	for _, user := range users {
+		database.Create(&user)
+	}
 
-}
-
-func (repository *databaseRepositories) Automigrate() error {
-	return repository.database.AutoMigrate(&data.User2{})
+	return database
 }

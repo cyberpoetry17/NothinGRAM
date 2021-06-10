@@ -1,14 +1,39 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
+	"gorm.io/gorm"
+
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/handlers"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-// var database *gorm.DB
-// var err error
+func initializeRepository(database *gorm.DB) *repository.UserRepo {
+	return &repository.UserRepo{Database: database}
+}
 
+func initializeServices(repo *repository.UserRepo) *services.UserService {
+	return &services.UserService{Repo: repo}
+}
+
+func initializeHandlers(service *services.UserService) *handlers.UserHandler {
+	return &handlers.UserHandler{Service: service}
+}
+func handleFunc(handler *handlers.UserHandler) {
+	router := mux.NewRouter().StrictSlash(true)
+
+	router.HandleFunc("/", handler.Hello).Methods("GET")
+	router.HandleFunc("/", handler.CreateUser).Methods("POST")
+	router.HandleFunc("/verify/{consumerId}", handler.Verify).Methods("GET")
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), router))
+}
 func main() {
 
 	host := os.Getenv("HOST")
@@ -17,30 +42,11 @@ func main() {
 	password := os.Getenv("PASSWORD")
 	dbUser := os.Getenv("USER")
 	//host, dbUser, dbName, password, dbPort string)
-	db, err := repository.SetRepositories(host, dbUser, dbName, password, dbPort)
-	if err != nil {
-		panic(err)
-	}
-	//defer db.Close()
-	db.Automigrate()
+	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 
-	//user := data.User2{Name: "marko"}
-	//repo := repository.UserRepo{}
-	//repo.SaveUser(&user)
-
-	// databaseUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort)
-
-	// //var dns string = "host=" + os.Getenv("HOST") + " " + "user=" + os.Getenv("USER") + " " + "password=" + os.Getenv("PASSWORD") + " " + "dbname=" + os.Getenv("NAME") + "port=" + os.Getenv("DATABASE_PORT")
-
-	// db, err := gorm.Open(postgres.Open(databaseUri), &gorm.Config{})
-
-	// if err != nil {
-	// 	panic("aaaa")
-	// } else {
-	// 	fmt.Printf("Successfully connected to your database GOPHER!!!")
-	// }
-
-	// db.AutoMigrate(data.User2{}) //baza mora znati kako da popuni sve ovo
-	// database = db
+	repo := initializeRepository(db)
+	service := initializeServices(repo)
+	handler := initializeHandlers(service)
+	handleFunc(handler)
 
 }

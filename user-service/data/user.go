@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 // "encoding/json"
@@ -91,11 +92,11 @@ func (u *User2) SetPassword(password string) {
 
 //nesto sa sedmih vezbi
 
-// func (user *User2) BeforeCreate(scope *gorm.DB) error {
-// 	consumer.ID = uuid.New()
-// 	return nil
-// }
-// func GetAllUsers() Users {
-// 	//return usersList //za sada
-// 	return nil
-// }
+func (user *User2) BeforeCreate(scope *gorm.DB) error {
+	user.ID = uuid.New()
+	return nil
+}
+func GetAllUsers() Users {
+	//return usersList //za sada
+	return nil
+}

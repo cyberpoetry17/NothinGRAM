@@ -48,5 +48,4 @@ func main() {
 	service := initializeServices(repo)
 	handler := initializeHandlers(service)
 	handleFunc(handler)
-
 }

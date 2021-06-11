@@ -40,12 +40,26 @@ services:
     build:
       context: ./user-service
       dockerfile: Dockerfile
-    networks:
-      - backend
     environment: 
-      PORT: ${user}
+      PORT: ${USER_SERVICE_PORT}
+      DB_PORT: ${DATABASE_PORT}
+      DB_HOST: ${HOST}
+      DB_USER: ${USER}
+      DB_PASSWORD: ${PASSWORD}
+      DB_NAME: ${NAME}
+    depends_on: 
+      - userDb
 
-networks:
-  backend:
-    name: restuarant
-    driver: bridge
+  userDb:
+    image: postgres
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: ${PASSWORD}
+        POSTGRES_USER: ${USER}
+        POSTGRES_DB: ${NAME}
+    volumes:
+        - user_Db:/var/lib/postgresql/data
+#networks:
+#  backend:
+#    name: restuarant
+#    driver: bridge

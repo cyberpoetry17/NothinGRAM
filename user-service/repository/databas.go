@@ -20,7 +20,10 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	databaseUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort)
 
 	database, err := gorm.Open(postgres.Open(databaseUri), &gorm.Config{})
-
+	// database, err := gorm.Open(postgres.New(postgres.Config{
+	// 	DSN:                  fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, dbUser, dbName, password, dbPort),
+	// 	PreferSimpleProtocol: true,
+	// }), &gorm.Config{})
 	if err != nil {
 		panic("aaaa gopher error!!")
 	} else {

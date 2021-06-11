@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/handlers"
@@ -34,13 +35,22 @@ func handleFunc(handler *handlers.UserHandler) {
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), router))
 }
+
+func init() {
+
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
 func main() {
 
-	host := os.Getenv("HOST")
-	dbPort := os.Getenv("DATABASE_PORT")
-	dbName := os.Getenv("NAME")
-	password := os.Getenv("PASSWORD")
-	dbUser := os.Getenv("USER")
+	host, _ := os.LookupEnv("HOST")
+	dbPort, _ := os.LookupEnv("DATABASE_PORT")
+	dbName, _ := os.LookupEnv("NAME")
+	password, _ := os.LookupEnv("PASSWORD")
+	dbUser, _ := os.LookupEnv("USER")
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 

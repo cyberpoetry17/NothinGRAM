@@ -24,6 +24,18 @@ func (repo *UserRepo) UserExists(userId uuid.UUID) bool {
 	return count != 0
 }
 
+func (repo *UserRepo) UserExistsByEmail(email string) bool {
+	var count int64
+	repo.Database.Where("email = ?", email).Find(&data.User2{}).Count(&count)
+	return count != 0
+}
+
+func (repo *UserRepo) UserExistsByUsername(username string) bool {
+	var count int64
+	repo.Database.Where("username = ?", username).Find(&data.User2{}).Count(&count)
+	return count != 0
+}
+
 // func (r *UserRepo) SaveUser(user *data.User2) *data.User2 {
 // 	//databaseError := map[string]string{}
 // 	err := r.database.Debug().Create(&user).Error //CREATE prosledjenog usera,vratim mapu gresaka i usera

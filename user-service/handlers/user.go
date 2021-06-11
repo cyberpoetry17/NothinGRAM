@@ -24,6 +24,10 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
+
+	// email := vars["userEmail"]
+	// username := vars["userUsername"]
+
 	var user data.User2
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -32,6 +36,15 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println(user)
+	existsByUsername := handler.Service.Repo.UserExistsByUsername(user.Username)
+	existsByEmail := handler.Service.Repo.UserExistsByEmail(user.Email)
+
+	//Fault User Already Exits
+	if existsByEmail || existsByUsername {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	}
 	err = handler.Service.CreateUser(&user)
 	if err != nil {
 		fmt.Println(err)
@@ -45,11 +58,13 @@ func (handler *UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("verifying")
 	vars := mux.Vars(r)
 	id := vars["userId"]
+
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	exists, err := handler.Service.UserExists(id)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

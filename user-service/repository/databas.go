@@ -31,13 +31,14 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	}
 	database.AutoMigrate(&data.User2{})
 
-	users := []data.User2{
-		{Name: "Frodo", Surname: "Torbar", Email: "baggins@gmail.com", Username: "Saviour of the Middle Earth", Private: true, DateOfBirth: "12345", Gender: 1, PhoneNumber: "003345", Website: "OneRingToRuleThemAllButMe.com", Taggable: false, ReceiveNotifications: false, Password: "mypreci0us", Verified: true, Biography: "true", Role: 1},
-		//{Name: "Pera", Surname: "Peric", Email: "pera@gmail.com", Username: "Perica", Private: true, DateOfBirth: "12345", Gender: 1, PhoneNumber: "003345", Website: "pera.com", Taggable: false, ReceiveNotifications: false, Password: "pera123", Verified: true, Biography: "true", Role: 1},
-	}
-	for _, user := range users {
-		database.Create(&user)
-	}
+	// users := []data.User2{
+	// 	{Name: "Frodo", Surname: "Baggins", Email: "baggins@gmail.com", Username: "Saviour of the Middle Earth", Private: true, DateOfBirth: "12345", Gender: 1, PhoneNumber: "003345", Website: "OneRingToRuleThemAllButMe.com", Taggable: false, ReceiveNotifications: false, Password: "mypreci0us", Verified: true, Biography: "true", Role: 1},
+	// 	//{Name: "Pera", Surname: "Peric", Email: "pera@gmail.com", Username: "Perica", Private: true, DateOfBirth: "12345", Gender: 1, PhoneNumber: "003345", Website: "pera.com", Taggable: false, ReceiveNotifications: false, Password: "pera123", Verified: true, Biography: "true", Role: 1},
+	// }
+	// for _, user := range users {
+
+	// 	database.Create(&user)
+	// }
 
 	return database
 }

@@ -25,3 +25,13 @@ func (service *UserService) UserExists(userId string) (bool, error) {
 	exists := service.Repo.UserExists(id)
 	return exists, nil
 }
+
+func (service *UserService) UserExistsByEmail(email string) (bool, error) {
+	exists := service.Repo.UserExistsByEmail(email)
+	return exists, nil
+}
+
+func (service *UserService) UserExistsByUsername(username string) (bool, error) {
+	exists := service.Repo.UserExistsByEmail(username)
+	return exists, nil
+}

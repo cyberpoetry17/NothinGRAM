@@ -62,6 +62,7 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
+	fmt.Println("Created.")
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }

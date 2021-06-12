@@ -47,6 +47,10 @@ services:
       DB_USER: ${USER}
       DB_PASSWORD: ${PASSWORD}
       DB_NAME: ${NAME}
+    expose:
+      - 8004
+    ports:
+      - "8004:8004"
     depends_on: 
       - userDb
 

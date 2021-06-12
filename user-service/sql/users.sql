@@ -1,1 +1,0 @@
-insert into user2(name,surname,email,username,private,date,gender,phone,web,taggable,notif,password,verify,bio,role) values ('Frodo','Torbar','baggins@gmail.com','Saviour of the Middle Earth',true,'12345',1,'003345','OneRingToRuleThemAllButMe.com',false,false,'mypreci0us',true,'Nosac prstena',1)

@@ -22,11 +22,23 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//login user
+func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
+	user := &data.User2{}
+	//kastujem iz request tela u user strukturu
+	err := json.NewDecoder(r.Body).Decode(user)
+	if err != nil {
+		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+	resp := handler.Service.FindOneByEmailAndPassword(user.Email, user.Password)
+	json.NewEncoder(w).Encode(resp)
+}
+
+//register user
 func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
-
-	// email := vars["userEmail"]
-	// username := vars["userUsername"]
 
 	var user data.User2
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -75,3 +87,33 @@ func (handler *UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}
 }
+
+// func JwtVerify(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+// 		var header = r.Header.Get("x-access-token") //Grab the token from the header
+
+// 		header = strings.TrimSpace(header)
+
+// 		if header == "" {
+// 			//Token is missing, returns with error code 403 Unauthorized
+// 			w.WriteHeader(http.StatusForbidden)
+// 			json.NewEncoder(w).Encode(data.Exception{Message: "Missing auth token"})
+// 			return
+// 		}
+// 		tk := &data.Token{}
+
+// 		_, err := jwt.ParseWithClaims(header, tk, func(token *jwt.Token) (interface{}, error) {
+// 			return []byte("secret"), nil
+// 		})
+
+// 		if err != nil {
+// 			w.WriteHeader(http.StatusForbidden)
+// 			json.NewEncoder(w).Encode(data.Exception{Message: err.Error()})
+// 			return
+// 		}
+
+// 		ctx := context.WithValue(r.Context(), "user", tk)
+// 		next.ServeHTTP(w, r.WithContext(ctx))
+// 	})
+//}

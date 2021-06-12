@@ -34,6 +34,20 @@ services:
   #     KITCHEN_SERVICE_DOMAIN: ${KITCHEN_SERVICE_DOMAIN}
   #     KITCHEN_SERVICE_PORT: ${KITCHEN_SERVICE_PORT}
   #     PORT: ${ORDER_SERVICE_PORT}
+  userDb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_USER: ${USER}
+      POSTGRES_DB: ${NAME}
+  postDb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORDP}
+      POSTGRES_USER: ${USERP}
+      POSTGRES_DB: ${NAMEP}
 
   user-service:
     image: user-service:compose_build
@@ -54,13 +68,27 @@ services:
     depends_on: 
       - userDb
 
-  userDb:
-    image: postgres
-    restart: always
+
+  post-service:
+    image: post-service:compose_build
+    build:
+      context: ./post-service
+      dockerfile: DockerfileP
     environment:
-        POSTGRES_PASSWORD: ${PASSWORD}
-        POSTGRES_USER: ${USER}
-        POSTGRES_DB: ${NAME}
+      PORT: ${POST_SERVICE_PORT}
+      DB_PORT: ${DATABASE_PORTP}
+      DB_HOST: ${HOSTP}
+      DB_USER: ${USERP}
+      DB_PASSWORD: ${PASSWORDP}
+      DB_NAME: ${NAMEP}
+    expose:
+      - 8005
+    ports:
+      - "8005:8005"
+    depends_on:
+      - postDb
+
+
     # volumes:
     #     - user_Db:/var/lib/postgresql/data
 #networks:

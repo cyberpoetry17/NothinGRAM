@@ -29,11 +29,11 @@ func initializeHandlers(service *services.PostService) *handlers.PostHandler {
 func handleFunc(handler *handlers.PostHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/", handler.Hello).Methods("GET")
+	router.HandleFunc("/hi", handler.Hello).Methods("GET")
 	router.HandleFunc("/", handler.CreatePost).Methods("POST")
-	router.HandleFunc("/verify/{description}", handler.Verify).Methods("GET")
+	router.HandleFunc("/verify/{picpath}", handler.Verify).Methods("GET")
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORTP")), router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), router))
 }
 
 func init() {

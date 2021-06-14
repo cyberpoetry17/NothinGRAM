@@ -25,6 +25,7 @@ func (handler *PostHandler) Hello(w http.ResponseWriter, r *http.Request) {
 func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
 	var post data.Post
+	fmt.Println(post.Description)
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		//TODO log
@@ -37,7 +38,7 @@ func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-	fmt.Println("created")
+	fmt.Println("created desc"+post.Description)
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }

@@ -37,6 +37,7 @@ func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
+	fmt.Println("created")
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }
@@ -44,7 +45,7 @@ func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 func (handler *PostHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("verifying")
 	vars := mux.Vars(r)
-	id := vars["description"]
+	id := vars["picpath"]
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return

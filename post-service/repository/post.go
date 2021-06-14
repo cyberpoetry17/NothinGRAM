@@ -13,6 +13,9 @@ type PostRepo struct {
 
 func (repo *PostRepo) CreatePost(post *data.Post) error {
 	result := repo.Database.Create(post)
+	if result.Error== nil{
+		return result.Error
+	}
 	fmt.Println(result.RowsAffected)
 	return nil //sta s ovim nilom
 }

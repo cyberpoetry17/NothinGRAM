@@ -12,4 +12,5 @@ type Post struct{
 	Dislikes			 int64	`gorm:"column:dislikes"   json:"dislikes"`
 	UserID				 uuid.UUID `gorm:"column:userid"   json:"userid"`
 	Timestamp			 string `gorm:"column:timestamp"   json:"timestamp"`
+	//Tags 				[]Tag `gorm:"gorm:"many2many:posts_tags;"   json:"Tags"`
 }

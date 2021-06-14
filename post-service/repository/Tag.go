@@ -42,3 +42,11 @@ func (repo *TagRepo) GetTagByName(tagName string) *data.Tag {
 	}
 	return  &tag
 }
+
+func (repo *TagRepo) EditTag(tag *data.Tag) error {
+	return repo.Database.Model(tag).Update("TagName",tag.TagName).Error
+}
+
+func (repo *TagRepo) RemoveTag(tag *data.Tag) error {
+	return repo.Database.Delete(tag).Error
+}

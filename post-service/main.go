@@ -32,7 +32,9 @@ func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, c
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/", handler.CreatePost).Methods("POST")
 	router.HandleFunc("/verify/{description}", handler.Verify).Methods("GET")
-	router.HandleFunc("/tag/",tagHandler.CreateTag).Methods("POST")
+	router.HandleFunc("/addTag/",tagHandler.CreateTag).Methods("POST")
+	router.HandleFunc("/editTag/",tagHandler.EditTag).Methods("POST")
+	router.HandleFunc("/removeTag/",tagHandler.DeleteTag).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
 }

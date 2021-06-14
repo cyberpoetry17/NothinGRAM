@@ -1,0 +1,18 @@
+POST
+localhost:8005/addTag/
+{
+    "TagName":"name2"
+}
+
+POST
+localhost:8005/editTag/
+{
+    "TagName":"name5464654",
+    "ID":"5a00dbba-a676-4b54-9d19-a309049102b4"
+}
+
+DELETE
+localhost:8005/removeTag/
+{
+    "ID":"3ba79390-e94a-4814-8490-b8343d2f498d"
+}

@@ -44,9 +44,22 @@ func (repo *TagRepo) GetTagByName(tagName string) *data.Tag {
 }
 
 func (repo *TagRepo) EditTag(tag *data.Tag) error {
-	return repo.Database.Model(tag).Update("TagName",tag.TagName).Error
+	return repo.Database.Save(tag).Error
+	//return repo.Database.Model(tag).Update("TagName",tag.TagName).Error
 }
 
 func (repo *TagRepo) RemoveTag(tag *data.Tag) error {
 	return repo.Database.Delete(tag).Error
 }
+
+func (repo *TagRepo) GetAllTags() []data.Tag{
+	var tags []data.Tag
+	repo.Database.Find(&tags)
+	repo.Database.Preload("Posts" ,&tags)
+	return tags
+}
+//func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{
+//	repo.Database.
+//	repo.Database.Model(tag).Update("")
+//
+//}

@@ -29,9 +29,6 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	} else {
 		fmt.Printf("Successfully connected to your database for posts!!!")
 	}
-	database.AutoMigrate(&data.Post{})
-	database.AutoMigrate(&data.Tag{})
-	database.AutoMigrate(&data.Comment{})
-
+	database.AutoMigrate(&data.Post{},&data.Tag{},&data.Comment{})
 	return database
 }

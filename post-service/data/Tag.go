@@ -8,9 +8,9 @@ import (
 )
 
 type Tag struct {
-	ID      uuid.UUID `gorm:"column:id"      json:"id"`
+	ID      uuid.UUID `gorm:"primary_key,column:id"      json:"id"`
 	TagName string    `gorm:"column:TagName"   json:"TagName"`
-	Posts []Post    `gorm:"many2many:posts_tags;foreignKey:ID;joinForeignKey:Post_ID;References:ID;JoinReferences:ID"   json:"Posts"`
+	Posts []Post    `gorm:"many2many:posts_tags"   json:"Posts"`
 }
 
 

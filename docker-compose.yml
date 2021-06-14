@@ -62,9 +62,9 @@ services:
       DB_PASSWORD: ${PASSWORD}
       DB_NAME: ${NAME}
     expose:
-      - 8004
+      - ${USER_SERVICE_PORT}
     ports:
-      - "8004:8004"
+      - ${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
     depends_on: 
       - userDb
 
@@ -82,9 +82,9 @@ services:
       DB_PASSWORD: ${PASSWORDP}
       DB_NAME: ${NAMEP}
     expose:
-      - 8005
+      - ${POST_SERVICE_PORT}
     ports:
-      - "8005:8005"
+      - ${POST_SERVICE_PORT}:${POST_SERVICE_PORT}
     depends_on:
       - postDb
 

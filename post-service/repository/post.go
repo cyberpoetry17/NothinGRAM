@@ -22,7 +22,7 @@ func (repo *PostRepo) CreatePost(post *data.Post) error {
 
 func (repo *PostRepo) PostExists(desc string) bool {
 	var count int64
-	repo.Database.Where("description", desc).Find(&data.Post{}).Count(&count)
+	repo.Database.Where("picpath", desc).Find(&data.Post{}).Count(&count)
 	return count != 0
 }
 

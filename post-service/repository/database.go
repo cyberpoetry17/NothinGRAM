@@ -32,6 +32,8 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	database.AutoMigrate(&data.Post{})
 	database.AutoMigrate(&data.Tag{})
 	database.AutoMigrate(&data.Comment{})
+	database.AutoMigrate(&data.Like{})
+	database.AutoMigrate(&data.Dislike{})
 
 	return database
 }

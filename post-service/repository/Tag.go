@@ -55,7 +55,7 @@ func (repo *TagRepo) RemoveTag(tag *data.Tag) error {
 func (repo *TagRepo) GetAllTags() []data.Tag{
 	var tags []data.Tag
 	repo.Database.Find(&tags)
-	repo.Database.Preload("Posts" ,&tags)
+	repo.Database.Preload("Posts" ,&tags)	//check if work !!!
 	return tags
 }
 //func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{

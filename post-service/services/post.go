@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
+	"github.com/google/uuid"
 )
 
 type PostService struct {
@@ -19,4 +20,8 @@ func (service *PostService) PostExists(desc string) (bool, error) {
 	id := desc
 	exists := service.Repo.PostExists(id)
 	return exists, nil
+}
+
+func (service *PostService) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
+	return service.Repo.AddTagToPost(tag,postId)
 }

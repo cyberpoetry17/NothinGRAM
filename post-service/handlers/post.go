@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"net"
 	"net/http"
 
@@ -62,4 +63,22 @@ func (handler *PostHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
+}
+
+func (handler *PostHandler) AddTagToPost(w http.ResponseWriter, r *http.Request){
+	fmt.Println("creating")
+	var postTagDto DTO.PostTagDTO
+	err := json.NewDecoder(r.Body).Decode(&postTagDto)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.AddTagToPost(postTagDto.Tag, postTagDto.PostId)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
 }

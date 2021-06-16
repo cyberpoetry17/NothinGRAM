@@ -1,0 +1,70 @@
+POST
+localhost:8005/addTag/
+{
+    "TagName":"name2"
+}
+
+POST
+localhost:8005/editTag/
+{
+    "TagName":"name5464654",
+    "ID":"5a00dbba-a676-4b54-9d19-a309049102b4"
+}
+
+DELETE
+localhost:8005/removeTag/
+{
+    "ID":"3ba79390-e94a-4814-8490-b8343d2f498d"
+}
+----- POST
+POST
+localhost:8005/createpost
+{
+    "description":"opis",
+    "picpath":"img/blabla",
+    "timestamp": "2018-12-10T13:49:51.141Z"
+}
+
+POST
+localhost:8005/addTagToPost
+{
+    "Tag":{
+        "id":"1c168502-a3e4-42c3-9e57-544e86342dee",
+        "TagName":"name2"
+    },
+    "PostId":"6bb6cdd7-22e4-45f1-a50f-f68b56349cbc"
+}
+----- COMMENT
+POST
+localhost:8005/addComment/
+{
+    "Comment":"ovo je komentar",
+    "UserId":"cb338332-a72d-4409-8111-b949f19f5f8a",
+    "PostId":"cb338332-a72d-4409-811f-b949f19f5f8a"
+}
+
+POST
+localhost:8005/editComment/
+{
+    "Comment":"ovo je komentar22222",
+    "UserId":"cb338332-a72d-4409-8111-b949f19f5f8a",
+    "PostId":"cb338332-a72d-4409-811f-b949f19f5f8a",
+    "ID":"01811391-837c-4180-bf2c-d8f606e88916"
+}
+
+DELETE
+localhost:8005/removeComment/
+{
+    "ID":"a89e001a-8e58-47ec-a160-b3c422e0b9ab"
+}
+
+------LIKES
+POST
+ localhost:8005/createlike
+ {
+     "userid":"id",
+     "postid":"zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz"
+ }
+
+ GET
+ localhost:8005/alllikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz

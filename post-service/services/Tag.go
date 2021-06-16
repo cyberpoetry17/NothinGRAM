@@ -25,3 +25,15 @@ func (service *TagService) TagExistsByName(tagName string) bool {
 func (service *TagService) GetTagByName(tagName string) *data.Tag {
 	return service.Repo.GetTagByName(tagName)
 }
+
+func (service *TagService) EditTag(tag *data.Tag) error {
+	return service.Repo.EditTag(tag)
+}
+
+func (service *TagService) RemoveTag(tag *data.Tag) error {
+	return service.Repo.RemoveTag(tag)
+}
+
+func (service *TagService) GetAllTags() []data.Tag{
+	return service.Repo.GetAllTags()
+}

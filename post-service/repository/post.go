@@ -2,8 +2,8 @@ package repository
 
 import (
 	"fmt"
-
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -24,6 +24,38 @@ func (repo *PostRepo) PostExists(desc string) bool {
 	var count int64
 	repo.Database.Where("picpath", desc).Find(&data.Post{}).Count(&count)
 	return count != 0
+}
+
+func (repo *PostRepo) EditPost(post *data.Post) error  {
+	return repo.Database.Save(post).Error
+}
+
+func (repo *PostRepo) GetAll() []data.Post{
+	var posts []data.Post
+	repo.Database.
+		Preload("Tags").
+		Preload("Comments").
+		Preload("Likes").
+		Preload("Dislikes").
+		Find(&posts)
+	return posts
+}
+
+func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
+	for _, element := range repo.GetAll(){
+		if(element.ID == postId){
+			element.Tags = append(element.Tags, tag)
+			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
+			////return nil
+			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
+
+			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
+			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
+
+			return err
+		}
+	}
+	return nil
 }
 
 // func (r *UserRepo) SaveUser(user *data.User2) *data.User2 {

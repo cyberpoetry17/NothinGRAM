@@ -22,9 +22,9 @@ func (repo *TagRepo) CreateTag(tag *data.Tag) error {
 }
 
 //BY ID
-func (repo *TagRepo) TagExists(userId uuid.UUID) bool {
+func (repo *TagRepo) TagExists(tagId uuid.UUID) bool {
 	var count int64
-	repo.Database.Where("id = ?", userId).Find(&data.Tag{}).Count(&count)
+	repo.Database.Where("id = ?", tagId).Find(&data.Tag{}).Count(&count)
 	return count != 0
 }
 
@@ -42,3 +42,24 @@ func (repo *TagRepo) GetTagByName(tagName string) *data.Tag {
 	}
 	return  &tag
 }
+
+func (repo *TagRepo) EditTag(tag *data.Tag) error {
+	return repo.Database.Save(tag).Error
+	//return repo.Database.Model(tag).Update("TagName",tag.TagName).Error
+}
+
+func (repo *TagRepo) RemoveTag(tag *data.Tag) error {
+	return repo.Database.Delete(tag).Error
+}
+
+func (repo *TagRepo) GetAllTags() []data.Tag{
+	var tags []data.Tag
+	repo.Database.Find(&tags)
+	repo.Database.Preload("Posts" ,&tags)	//check if work !!!
+	return tags
+}
+//func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{
+//	repo.Database.
+//	repo.Database.Model(tag).Update("")
+//
+//}

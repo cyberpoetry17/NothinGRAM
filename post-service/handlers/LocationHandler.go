@@ -9,21 +9,21 @@ import (
 	"net/http"
 )
 
-type DislikeHandler struct {
-	Service *services.DislikeService
+type LocationHandler struct {
+	Service *services.LocationService
 }
 
-func (handler *DislikeHandler) CreateDislike(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("creating dislike")
-	var dislike data.Dislike
-	err := json.NewDecoder(r.Body).Decode(&dislike)
+func (handler *LocationHandler) CreateLocation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("creating location")
+	var location data.Location
+	err := json.NewDecoder(r.Body).Decode(&location)
 	if err != nil {
 		//TODO log
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(dislike)
-	err = handler.Service.CreateDislike(&dislike)
+	fmt.Println(location)
+	err = handler.Service.CreateLocation(&location)
 	if err != nil{
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
@@ -32,17 +32,17 @@ func (handler *DislikeHandler) CreateDislike(w http.ResponseWriter, r *http.Requ
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func (handler *DislikeHandler) DeleteDislike(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("deleting dislike")
-	var dislike data.Dislike
-	err := json.NewDecoder(r.Body).Decode(&dislike)
+func (handler *LocationHandler) DeleteLocation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("deleting location")
+	var location data.Location
+	err := json.NewDecoder(r.Body).Decode(&location)
 	if err != nil {
 		//TODO log
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(dislike)
-	err = handler.Service.RemoveDislike(&dislike)
+	fmt.Println(location)
+	err = handler.Service.RemoveLocation(&location)
 	if err != nil{
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
@@ -51,20 +51,18 @@ func (handler *DislikeHandler) DeleteDislike(w http.ResponseWriter, r *http.Requ
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func (handler *DislikeHandler) GetAllDislikesForPost (w http.ResponseWriter,r *http.Request){
+func (handler *LocationHandler) GetLocationForPost (w http.ResponseWriter,r *http.Request){
 	vars := mux.Vars(r)
 	id := vars["postid"]
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	dislikes := handler.Service.GetAllDislikesForPost(id)
+	location := handler.Service.GetLocationForPost(id)
 
-	if len(dislikes)!=0 {
+	if location != nil {
 		w.WriteHeader(http.StatusOK)
-		for i,dislikes := range dislikes{
-			fmt.Println("%d : %s", i,dislikes.IDD)
-		}
+		fmt.Println("Location id : %s",location.IDLoc)
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}

@@ -14,8 +14,9 @@ type Post struct{
 	Dislikes			 []Dislike	`gorm:"foreignKey:PostId"   json:"dislikes"`
 	UserID				 uuid.UUID `gorm:"column:userid"   json:"userid"`
 	Timestamp			 time.Time `gorm:"column:timestamp"   json:"timestamp"`
-	Tags 				[]Tag `gorm:"many2many:posts_tags;"   json:"Tags"`
-	Comments			[]Comment `gorm:"foreignkey:PostId"   json:"Comments"`
+	Tags 				 []Tag `gorm:"many2many:posts_tags;"   json:"Tags"`
+	Comments			 []Comment `gorm:"foreignkey:PostId"   json:"Comments"`
+	Location			 Location `gorm:"foreignkey:PostId"   json:"location"`
 	Media				[]Media `gorm:"foreignkey:PostId"   json:"Media"`
 }
 

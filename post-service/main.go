@@ -34,7 +34,8 @@ func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, c
 	commentHandleFuncs(router, commentHandler)
 	likeHandleFuncs(router, likeHandler)
 	mediaHandleFuncs(router, mediaHandler)
-
+	dislikeHandleFuncs(router, dislikeHandler)
+	locationHandleFuncs(router, locationHandler)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
 }
 
@@ -44,6 +45,15 @@ func mediaHandleFuncs(router *mux.Router, mediaHandler *handlers.MediaHandler) {
 	router.HandleFunc("RemoveMedia/", mediaHandler.RemoveMedia).Methods("DELETE")
 }
 
+func locationHandleFuncs(router *mux.Router, locationHandler *handlers.LocationHandler) {
+	router.HandleFunc("/locationforpost/{postid}", locationHandler.GetLocationForPost).Methods("GET")
+	router.HandleFunc("/createlocation", locationHandler.CreateLocation).Methods("POST")
+}
+
+func dislikeHandleFuncs(router *mux.Router, dislikeHandler *handlers.DislikeHandler) {
+	router.HandleFunc("/alldislikesforpost/{postid}", dislikeHandler.GetAllDislikesForPost).Methods("GET")
+	router.HandleFunc("/createdislike", dislikeHandler.CreateDislike).Methods("POST")
+}
 func likeHandleFuncs(router *mux.Router, likeHandler *handlers.LikeHandler) {
 	router.HandleFunc("/alllikesforpost/{postid}", likeHandler.GetAllLikesForPost).Methods("GET")
 	router.HandleFunc("/createlike", likeHandler.CreateLike).Methods("POST")

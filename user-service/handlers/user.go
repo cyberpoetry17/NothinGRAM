@@ -8,6 +8,7 @@ import (
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+
 	"github.com/gorilla/mux"
 )
 
@@ -89,32 +90,53 @@ func (handler *UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func JwtVerify(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("updating")
 
-// 		var header = r.Header.Get("x-access-token") //Grab the token from the header
+	var updateUserRequest services.UpdateUserRequest
 
-// 		header = strings.TrimSpace(header)
+	err := json.NewDecoder(r.Body).Decode(&updateUserRequest)
+	fmt.Println(updateUserRequest.ID)
+	if err != nil {
+		fmt.Println("aaaaaaaaaaa!")
+		w.WriteHeader(http.StatusBadGateway)
+		return
+	}
 
-// 		if header == "" {
-// 			//Token is missing, returns with error code 403 Unauthorized
-// 			w.WriteHeader(http.StatusForbidden)
-// 			json.NewEncoder(w).Encode(data.Exception{Message: "Missing auth token"})
-// 			return
+	//kastujem iz request tela u user strukturu
+
+	// fmt.Println(user.ID)
+	fmt.Print(err)
+
+	err = handler.Service.UpdateEditUser(&updateUserRequest) //ovde saljem update User request
+
+	if err != nil {
+		fmt.Println(err)
+
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+
+	fmt.Println("Updated.")
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+// func (u *data.User2) updateMe(w http.ResponseWriter, r *http.Request) error {
+// 	me := domain.UserMustFromContext(r.Context())
+// 	req := new(engine.UpdateUserRequest)
+// 	if err := decodeReq(r, req); err != nil {
+// 		return err
+// 	}
+
+// 	req.ID = me.ID
+
+// 	if err := u.Update(req); err != nil {
+// 		if err == engine.ErrEmailExists {
+// 			return newWebErr(emailExistsErrCode, http.StatusUnprocessableEntity, err)
 // 		}
-// 		tk := &data.Token{}
+// 		return err
+// 	}
 
-// 		_, err := jwt.ParseWithClaims(header, tk, func(token *jwt.Token) (interface{}, error) {
-// 			return []byte("secret"), nil
-// 		})
-
-// 		if err != nil {
-// 			w.WriteHeader(http.StatusForbidden)
-// 			json.NewEncoder(w).Encode(data.Exception{Message: err.Error()})
-// 			return
-// 		}
-
-// 		ctx := context.WithValue(r.Context(), "user", tk)
-// 		next.ServeHTTP(w, r.WithContext(ctx))
-// 	})
-//}
+// 	gores.NoContent(w)
+// 	return nil
+// }

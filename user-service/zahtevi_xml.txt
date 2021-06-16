@@ -22,3 +22,23 @@
         "email": "pera@gmail.com",
         "password": "pera123"
 }
+
+//update edit user  POST:localhost:8004/update
+{
+	"id":"c0341101-3533-4a9f-a7a6-24c8ef077b04",
+        "name": "Pera",
+        "surname": "Peric",
+        "email": "novaPericinaAdresa@gmail.com",
+        "username": "Perica",
+        "private": true,
+        "date": "12345",
+        "gender": 1,
+        "phone": "003345",
+        "web": "pera.com", 
+        "taggable": false,
+        "notif": false, 
+        "password": "pera123",
+        "verify": true,
+        "bio": "programer",
+        "role": 1
+}

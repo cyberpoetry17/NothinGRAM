@@ -17,6 +17,18 @@ func (repo *UserRepo) CreateUser(user *data.User2) error {
 	fmt.Println(result.RowsAffected)
 	return nil //sta s ovim nilom
 }
+func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
+	user := &data.User2{}
+
+	err := repo.Database.Where("id = ?", id).First(user).Error
+	fmt.Println("GRESKA NIJE U GET BY ID")
+	if err != nil {
+		fmt.Println("GRESKA U GET BY ID")
+		return nil, err
+	}
+
+	return user, nil
+}
 
 //BY ID
 func (repo *UserRepo) UserExists(userId uuid.UUID) bool {
@@ -35,14 +47,4 @@ func (repo *UserRepo) UserExistsByUsername(username string) bool {
 	var count int64
 	repo.Database.Where("username = ?", username).Find(&data.User2{}).Count(&count)
 	return count != 0
-}
-
-func (repo *UserRepo) GetByEmail(email string, user *data.User2) bool {
-	err := repo.Database.Where("Email = ?", email).First(user).Error
-	if err == nil {
-
-		return true
-	}
-	return false
-
 }

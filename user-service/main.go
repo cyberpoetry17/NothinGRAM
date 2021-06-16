@@ -31,6 +31,7 @@ func handleFunc(handler *handlers.UserHandler) {
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/register", handler.CreateUser).Methods("POST")
+	router.HandleFunc("/update", handler.UpdateUser).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
 	router.HandleFunc("/login", handler.LoginUser).Methods("POST")
 

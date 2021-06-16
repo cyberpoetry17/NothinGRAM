@@ -68,3 +68,24 @@ POST
 
  GET
  localhost:8005/alllikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz
+ ------DISLIKES
+ POST
+  localhost:8005/createdislike
+  {
+      "userid":"id",
+      "postid":"zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz"
+  }
+   GET
+   localhost:8005/alldislikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz
+
+ --------Location
+ POST
+ localhost:8005/createlocation
+ {
+     "country":"Serbia",
+     "city":"Novi Sad",
+     "address":"Adresa 1",
+     "postid":"b0f7e42e-ec6d-40d6-a7fc-2c9e8aea811d"
+ }
+ GET
+localhost:8005/locationforpost/b0f7e42e-ec6d-40d6-a7fc-2c9e8aea811d

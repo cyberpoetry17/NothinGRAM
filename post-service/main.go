@@ -34,7 +34,7 @@ func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, c
 	commentHandleFuncs(router, commentHandler)
 	likeHandleFuncs(router, likeHandler)
 	mediaHandleFuncs(router, mediaHandler)
-	
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
 }
 

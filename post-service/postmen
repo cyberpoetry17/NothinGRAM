@@ -1,5 +1,3 @@
------ TAG
-
 POST
 localhost:8005/addTag/
 {
@@ -26,6 +24,7 @@ localhost:8005/createpost
     "picpath":"img/blabla",
     "timestamp": "2018-12-10T13:49:51.141Z"
 }
+
 POST
 localhost:8005/addTagToPost
 {
@@ -58,3 +57,14 @@ localhost:8005/removeComment/
 {
     "ID":"a89e001a-8e58-47ec-a160-b3c422e0b9ab"
 }
+
+------LIKES
+POST
+ localhost:8005/createlike
+ {
+     "userid":"id",
+     "postid":"zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz"
+ }
+
+ GET
+ localhost:8005/alllikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz

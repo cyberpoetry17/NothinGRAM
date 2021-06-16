@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -48,4 +49,23 @@ func (handler *LikeHandler) DeleteLike(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *LikeHandler) GetAllLikesForPost (w http.ResponseWriter,r *http.Request){
+	vars := mux.Vars(r)
+	id := vars["postid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	likes := handler.Service.GetAllLikesForPost(id)
+
+	if len(likes)!=0 {
+		w.WriteHeader(http.StatusOK)
+		for i,likes := range likes{
+			fmt.Println("%d : %s", i,likes.IDL)
+		}
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
 }

@@ -8,7 +8,6 @@ import (
 
 type TagService struct {
 	Repo *repository.TagRepo
-	RepoPost *repository.PostRepo
 }
 
 func (service *TagService) CreateTag(tag *data.Tag) error {

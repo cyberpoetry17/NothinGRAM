@@ -22,9 +22,9 @@ func (repo *TagRepo) CreateTag(tag *data.Tag) error {
 }
 
 //BY ID
-func (repo *TagRepo) TagExists(userId uuid.UUID) bool {
+func (repo *TagRepo) TagExists(tagId uuid.UUID) bool {
 	var count int64
-	repo.Database.Where("id = ?", userId).Find(&data.Tag{}).Count(&count)
+	repo.Database.Where("id = ?", tagId).Find(&data.Tag{}).Count(&count)
 	return count != 0
 }
 

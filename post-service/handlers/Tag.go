@@ -51,7 +51,7 @@ func (handler *TagHandler) EditTag(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *TagHandler) DeleteTag(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("edit tag")
+	fmt.Println("delete tag")
 	var tag data.Tag
 	err := json.NewDecoder(r.Body).Decode(&tag)
 	if err != nil {

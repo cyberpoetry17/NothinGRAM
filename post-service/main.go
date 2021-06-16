@@ -29,14 +29,30 @@ func initializeHandlers(servicePost *services.PostService,serviceTag *services.T
 func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, commentHandler *handlers.CommentHandler,likeHandler *handlers.LikeHandler,dislikeHandler *handlers.DislikeHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
+	postHandleFuncs(handler, router)
+	tagHandleFuncs(router, tagHandler)
+	commentHandleFuncs(router, commentHandler)
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
+}
+
+func commentHandleFuncs(router *mux.Router, commentHandler *handlers.CommentHandler) {
+	router.HandleFunc("/addComment/", commentHandler.CreateComment).Methods("POST")
+	router.HandleFunc("/editComment/", commentHandler.EditComment).Methods("POST")
+	router.HandleFunc("/removeComment/", commentHandler.DeleteComment).Methods("DELETE")
+}
+
+func tagHandleFuncs(router *mux.Router, tagHandler *handlers.TagHandler) {
+	router.HandleFunc("/addTag/", tagHandler.CreateTag).Methods("POST")
+	router.HandleFunc("/editTag/", tagHandler.EditTag).Methods("POST")
+	router.HandleFunc("/removeTag/", tagHandler.DeleteTag).Methods("DELETE")
+}
+
+func postHandleFuncs(handler *handlers.PostHandler, router *mux.Router) {
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/createpost", handler.CreatePost).Methods("POST")
 	router.HandleFunc("/verify/{description}", handler.Verify).Methods("GET")
-	router.HandleFunc("/addTag/",tagHandler.CreateTag).Methods("POST")
-	router.HandleFunc("/editTag/",tagHandler.EditTag).Methods("POST")
-	router.HandleFunc("/removeTag/",tagHandler.DeleteTag).Methods("DELETE")
-	router.HandleFunc("/addTagToPost",handler.AddTagToPost).Methods("POST")
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
+	router.HandleFunc("/addTagToPost", handler.AddTagToPost).Methods("POST")
 }
 
 func init() {

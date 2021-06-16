@@ -32,7 +32,12 @@ func (repo *PostRepo) EditPost(post *data.Post) error  {
 
 func (repo *PostRepo) GetAll() []data.Post{
 	var posts []data.Post
-	repo.Database.Preload("Tags").Find(&posts)
+	repo.Database.
+		Preload("Tags").
+		Preload("Comments").
+		Preload("Likes").
+		Preload("Dislikes").
+		Find(&posts)
 	return posts
 }
 
@@ -42,10 +47,10 @@ func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 			element.Tags = append(element.Tags, tag)
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
-			err := repo.Database.Save(element).Error	//ovo radi ali kreira novi tag
+			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
 
 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
-			//err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
+			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
 
 			return err
 		}

@@ -15,7 +15,7 @@ import (
 // "time"
 
 type User2 struct {
-	ID                   uuid.UUID `json:"id"` //mozda ovo ne treba?
+	ID                   uuid.UUID `json:"-"` //mozda ovo ne treba?
 	Name                 string    `gorm:"column:name"   json:"name"`
 	Surname              string    `gorm:"column:surname"  json:"surname"`
 	Email                string    `gorm:"column:email"   json:"email"`
@@ -94,9 +94,5 @@ func (u *User2) SetPassword(password string) {
 
 func (user *User2) BeforeCreate(scope *gorm.DB) error {
 	user.ID = uuid.New()
-	return nil
-}
-func GetAllUsers() Users {
-	//return usersList //za sada
 	return nil
 }

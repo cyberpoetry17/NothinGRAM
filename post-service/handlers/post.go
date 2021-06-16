@@ -6,6 +6,7 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
@@ -27,6 +28,8 @@ func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
 	var post data.Post
 	fmt.Println(post.Description)
+	time2 :=time.Now()
+	fmt.Println(json.NewEncoder(w).Encode(time2))
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		//TODO log

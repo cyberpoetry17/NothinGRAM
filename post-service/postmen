@@ -24,9 +24,8 @@ localhost:8005/createpost
 {
     "description":"opis",
     "picpath":"img/blabla",
-    "timestamp":"12:50"
+    "timestamp": "2018-12-10T13:49:51.141Z"
 }
-
 POST
 localhost:8005/addTagToPost
 {

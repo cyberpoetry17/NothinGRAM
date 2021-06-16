@@ -34,3 +34,13 @@ localhost:8005/addTagToPost
     },
     "PostId":"6bb6cdd7-22e4-45f1-a50f-f68b56349cbc"
 }
+
+POST
+localhost:8005/createlike
+{
+    "userid":"id",
+    "postid":"zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz"
+}
+
+GET
+localhost:8005/alllikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz

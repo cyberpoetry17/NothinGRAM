@@ -17,6 +17,7 @@ type Post struct{
 	Tags 				 []Tag `gorm:"many2many:posts_tags;"   json:"Tags"`
 	Comments			 []Comment `gorm:"foreignkey:PostId"   json:"Comments"`
 	Location			 Location `gorm:"foreignkey:PostId"   json:"location"`
+	Media				[]Media `gorm:"foreignkey:PostId"   json:"Media"`
 }
 
 func (post *Post) BeforeCreate(scope *gorm.DB) error {

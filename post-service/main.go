@@ -15,18 +15,18 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-func initializeRepository(database *gorm.DB) (*repository.PostRepo,*repository.TagRepo,*repository.CommentRepo,*repository.LikeRepo,*repository.DislikeRepo,*repository.LocationRepo) {
-	return &repository.PostRepo{Database: database}, &repository.TagRepo{Database: database}, &repository.CommentRepo{Database: database},&repository.LikeRepo{Database: database},&repository.DislikeRepo{Database: database},&repository.LocationRepo{Database: database}
+func initializeRepository(database *gorm.DB) (*repository.PostRepo,*repository.TagRepo,*repository.CommentRepo,*repository.LikeRepo,*repository.DislikeRepo) {
+	return &repository.PostRepo{Database: database}, &repository.TagRepo{Database: database}, &repository.CommentRepo{Database: database},&repository.LikeRepo{Database: database},&repository.DislikeRepo{Database: database}
 }
 
-func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRepo, repoComment *repository.CommentRepo, repoLike *repository.LikeRepo,repoDislike *repository.DislikeRepo,repoLocation *repository.LocationRepo) (*services.PostService,*services.TagService,*services.CommentService,*services.LikeService,*services.DislikeService,*services.LocationService) {
-	return &services.PostService{Repo: repoPost}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.LocationService{Repo: repoLocation}
+func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRepo, repoComment *repository.CommentRepo, repoLike *repository.LikeRepo,repoDislike *repository.DislikeRepo) (*services.PostService,*services.TagService,*services.CommentService,*services.LikeService,*services.DislikeService) {
+	return &services.PostService{Repo: repoPost}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike}
 }
 
-func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService,serviceLocation *services.LocationService) (*handlers.PostHandler,*handlers.TagHandler,*handlers.CommentHandler,*handlers.LikeHandler,*handlers.DislikeHandler,*handlers.LocationHandler) {
-	return &handlers.PostHandler{Service: servicePost}, &handlers.TagHandler{Service: serviceTag}, &handlers.CommentHandler{Service: serviceComment},&handlers.LikeHandler{Service: serviceLike},&handlers.DislikeHandler{Service: serviceDislike},&handlers.LocationHandler{Service: serviceLocation}
+func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService) (*handlers.PostHandler,*handlers.TagHandler,*handlers.CommentHandler,*handlers.LikeHandler,*handlers.DislikeHandler) {
+	return &handlers.PostHandler{Service: servicePost}, &handlers.TagHandler{Service: serviceTag}, &handlers.CommentHandler{Service: serviceComment},&handlers.LikeHandler{Service: serviceLike},&handlers.DislikeHandler{Service: serviceDislike}
 }
-func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, commentHandler *handlers.CommentHandler,likeHandler *handlers.LikeHandler,dislikeHandler *handlers.DislikeHandler,locationHandler *handlers.LocationHandler) {
+func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, commentHandler *handlers.CommentHandler,likeHandler *handlers.LikeHandler,dislikeHandler *handlers.DislikeHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	postHandleFuncs(handler, router)
@@ -90,9 +90,9 @@ func main() {
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 
-	repoPost, repoTag,repoComment,repoLike,repoDislike,repoLocation := initializeRepository(db)
-	servicePost,serviceTag, serviceComment, serviceLike, serviceDislike,serviceLocation := initializeServices(repoPost, repoTag, repoComment,repoLike,repoDislike,repoLocation)
-	handlerPost,handlerTag, handlerComment,handlerLike, handlerDislike,handlerLocation := initializeHandlers(servicePost,serviceTag,serviceComment,serviceLike,serviceDislike,serviceLocation)
-	handleFunc(handlerPost,handlerTag,handlerComment,handlerLike,handlerDislike,handlerLocation)
+	repoPost, repoTag,repoComment,repoLike,repoDislike := initializeRepository(db)
+	servicePost,serviceTag, serviceComment, serviceLike, serviceDislike := initializeServices(repoPost, repoTag, repoComment,repoLike,repoDislike)
+	handlerPost,handlerTag, handlerComment,handlerLike, handlerDislike := initializeHandlers(servicePost,serviceTag,serviceComment,serviceLike,serviceDislike)
+	handleFunc(handlerPost,handlerTag,handlerComment,handlerLike,handlerDislike)
 	fmt.Println(os.Getenv("Port is:"+"PORT"))
 }

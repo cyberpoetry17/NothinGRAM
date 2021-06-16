@@ -7,8 +7,8 @@ import (
 
 type Like struct{
 	IDL uuid.UUID `gorm:"column:id;PRIMARY_KEY"      json:"id"`
-	UserId string `gorm:"column:userid"      json:"userid"`
-	PostId uuid.UUID `gorm:"column:postid"      json:"postid"`
+	UserId string `gorm:"column:userid;not null"      json:"userid"`
+	PostId uuid.UUID `gorm:"column:postid;not null"      json:"postid"`
 }
 
 func (like *Like) BeforeCreate(scope *gorm.DB) error {

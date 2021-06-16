@@ -16,6 +16,7 @@ type Post struct{
 	Timestamp			 time.Time `gorm:"column:timestamp"   json:"timestamp"`
 	Tags 				[]Tag `gorm:"many2many:posts_tags;"   json:"Tags"`
 	Comments			[]Comment `gorm:"foreignkey:PostId"   json:"Comments"`
+	Media				[]Media `gorm:"foreignkey:PostId"   json:"Media"`
 }
 
 func (post *Post) BeforeCreate(scope *gorm.DB) error {

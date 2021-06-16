@@ -7,8 +7,8 @@ import (
 
 type Dislike struct{
 	IDD  uuid.UUID `gorm:"column:id"      json:"id"`
-	UserId string `gorm:"column:userid"      json:"userid"`
-	PostId uuid.UUID `gorm:"column:postid"      json:"postid"`
+	UserId string `gorm:"column:userid;not null"      json:"userid"`
+	PostId uuid.UUID `gorm:"column:postid;not null"      json:"postid"`
 }
 
 func (dislike *Dislike) BeforeCreate(scope *gorm.DB) error {

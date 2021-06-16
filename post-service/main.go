@@ -32,9 +32,14 @@ func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, c
 	postHandleFuncs(handler, router)
 	tagHandleFuncs(router, tagHandler)
 	commentHandleFuncs(router, commentHandler)
-	router.HandleFunc("/alllikesforpost/{postid}",likeHandler.GetAllLikesForPost).Methods("GET")
-	router.HandleFunc("/createlike",likeHandler.CreateLike).Methods("POST")
+	likeHandleFuncs(router, likeHandler)
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
+}
+
+func likeHandleFuncs(router *mux.Router, likeHandler *handlers.LikeHandler) {
+	router.HandleFunc("/alllikesforpost/{postid}", likeHandler.GetAllLikesForPost).Methods("GET")
+	router.HandleFunc("/createlike", likeHandler.CreateLike).Methods("POST")
 }
 
 func commentHandleFuncs(router *mux.Router, commentHandler *handlers.CommentHandler) {

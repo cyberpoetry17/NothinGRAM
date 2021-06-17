@@ -45,6 +45,7 @@ func (repo *PostRepo) GetAll() []data.Post{
 		Find(&posts)
 	return posts
 }
+
 func (repo *PostRepo) GetPostById(postid uuid.UUID) data.Post {
 	var post data.Post
 	for _, element := range repo.GetAll() {
@@ -59,6 +60,39 @@ func (repo *PostRepo) GetPostById(postid uuid.UUID) data.Post {
 	}
 	return post
 }
+
+func (repo *PostRepo) GetPostByTag(tag data.Tag) []data.Post {
+	var posts []data.Post
+	for _, element := range repo.GetAll() {
+		for _,tagfound := range element.Tags{
+		if tagfound.ID == tag.ID {
+			repo.Database.
+				Preload("Tags").
+				Preload("Comments").
+				Preload("Likes").
+				Preload("Dislikes").
+				Find(&posts)
+			}
+		}
+	}
+	return posts
+}
+
+func (repo *PostRepo) GetPostByLocation(location data.Location) []data.Post {
+	var posts []data.Post
+	for _, element := range repo.GetAll() {
+		if element.LocationID == location.IDLoc {
+			repo.Database.
+				Preload("Tags").
+				Preload("Comments").
+				Preload("Likes").
+				Preload("Dislikes").
+				Find(&posts)
+		}
+	}
+	return posts
+}
+
 func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if element.ID == postId {
@@ -83,7 +117,7 @@ func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID)
 			element.LocationID = location.IDLoc
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
-			err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
+			err := repo.Database.Save(&element).Error
 
 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
 			//err := repo.Database.Raw("INSERT INTO posts_locations (location_id_loc,post_id) VALUES (?,?)",location.IDLoc.String(),element.ID.String()).Error
@@ -93,18 +127,29 @@ func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID)
 	return nil
 }
 
-/*func (repo *PostRepo) FilterPublicMaterialByTag(tag data.Tag) []data.Post{
+func (repo *PostRepo) FilterPublicMaterialByTag(tag data.Tag) []data.Post{
 	var media []data.Post
-	for _, element := range repo.GetAll() {
-		if element.Tags.   {
-			repo.Database.Raw("SELECT * FROM posts_tag WHERE tag_id = ?", tag.ID)
-		}
-	}
-	for _,element := range media{
+	//var frontList []data.Post
+	media = repo.GetPostByTag(tag)
+	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
+	//	if element.UserID.isPublic(){
+	//		append(frontList, element)
+	//	}
+	//}
+	return media//frontList
+}
 
-	}
-	return media
-}*/
+func (repo *PostRepo) FilterPublicMaterialByLocation(location data.Location) []data.Post{
+	var media []data.Post
+	//var frontList []data.Post
+	media = repo.GetPostByLocation(location)
+	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
+	//	if element.UserID.isPublic(){
+	//		append(frontList, element)
+	//	}
+	//}
+	return media//frontList
+}
 
 // func (r *UserRepo) SaveUser(user *data.User2) *data.User2 {
 // 	//databaseError := map[string]string{}

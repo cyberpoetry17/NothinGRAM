@@ -80,12 +80,23 @@ POST
 
  --------Location
  POST
- localhost:8005/createlocation
+localhost:8005/createlocation
  {
      "country":"Serbia",
      "city":"Novi Sad",
-     "address":"Adresa 1",
-     "postid":"b0f7e42e-ec6d-40d6-a7fc-2c9e8aea811d"
+     "address":"Adresa 1"
  }
  GET
 localhost:8005/locationforpost/b0f7e42e-ec6d-40d6-a7fc-2c9e8aea811d
+
+POST
+localhost:8005/addlocationtopost
+{
+    "Location":{
+        "id":"4bb593dc-d0be-4bb9-91ce-7fae73019929",
+        "country":"Serbia",
+        "city":"Novi Sad",
+        "address":"Adresa 1"
+    },
+    "PostId":"4988e916-fb72-4d58-8af9-ac6613f888c1"
+}

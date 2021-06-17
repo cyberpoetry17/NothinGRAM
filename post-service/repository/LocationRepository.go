@@ -29,3 +29,11 @@ func (repo LocationRepo) GetLocationForPost (postId string) *data.Location{
 func (repo LocationRepo) RemoveLocation (location *data.Location) error{
 	return repo.Database.Delete(location).Error
 }
+
+func (repo *LocationRepo) GetAll() []data.Location{
+	var locs []data.Location
+	repo.Database.
+		Preload("Posts").
+		Find(&locs)
+	return locs
+}

@@ -12,12 +12,17 @@ type PostRepo struct {
 }
 
 func (repo *PostRepo) CreatePost(post *data.Post) error {
-	result := repo.Database.Create(post)
-	if result.Error== nil{
-		return result.Error
+	var location data.Location
+	if post.LocationID == uuid.Nil {
+		repo.Database.Find(&location).Where("country = dumb")
+		post.LocationID = location.IDLoc
 	}
-	fmt.Println(result.RowsAffected)
-	return nil //sta s ovim nilom
+		result := repo.Database.Create(post)
+		if result.Error == nil {
+			return result.Error
+		}
+		fmt.Println(result.RowsAffected)
+		return nil //sta s ovim nilom
 }
 
 func (repo *PostRepo) PostExists(desc string) bool {
@@ -40,10 +45,23 @@ func (repo *PostRepo) GetAll() []data.Post{
 		Find(&posts)
 	return posts
 }
-
+func (repo *PostRepo) GetPostById(postid uuid.UUID) data.Post {
+	var post data.Post
+	for _, element := range repo.GetAll() {
+		if element.ID == postid {
+			repo.Database.
+				Preload("Tags").
+				Preload("Comments").
+				Preload("Likes").
+				Preload("Dislikes").
+				Find(&post)
+		}
+	}
+	return post
+}
 func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
-		if(element.ID == postId){
+		if element.ID == postId {
 			element.Tags = append(element.Tags, tag)
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
@@ -57,6 +75,36 @@ func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	}
 	return nil
 }
+
+func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID) error{
+	for _, element := range repo.GetAll(){
+		if element.ID == postId {
+			//location.Posts = append(location.Posts,repo.GetPostById(postId))
+			element.LocationID = location.IDLoc
+			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
+			////return nil
+			err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
+
+			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
+			//err := repo.Database.Raw("INSERT INTO posts_locations (location_id_loc,post_id) VALUES (?,?)",location.IDLoc.String(),element.ID.String()).Error
+			return err
+		}
+	}
+	return nil
+}
+
+/*func (repo *PostRepo) FilterPublicMaterialByTag(tag data.Tag) []data.Post{
+	var media []data.Post
+	for _, element := range repo.GetAll() {
+		if element.Tags.   {
+			repo.Database.Raw("SELECT * FROM posts_tag WHERE tag_id = ?", tag.ID)
+		}
+	}
+	for _,element := range media{
+
+	}
+	return media
+}*/
 
 // func (r *UserRepo) SaveUser(user *data.User2) *data.User2 {
 // 	//databaseError := map[string]string{}

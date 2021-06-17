@@ -6,7 +6,7 @@ import (
 )
 
 type Dislike struct{
-	IDD  uuid.UUID `gorm:"column:id"      json:"id"`
+	IDD  uuid.UUID `gorm:"column:id;PRIMARY_KEY"      json:"id"`
 	UserId string `gorm:"column:userid;not null"      json:"userid"`
 	PostId uuid.UUID `gorm:"column:postid;not null"      json:"postid"`
 }

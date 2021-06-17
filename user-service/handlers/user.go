@@ -38,7 +38,6 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 	resp, errorUserGetting := handler.Service.GetUserById(idUser)
 	if errorUserGetting != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -68,7 +67,6 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user data.User2
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		//TODO log
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -76,11 +74,9 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	existsByUsername := handler.Service.Repo.UserExistsByUsername(user.Username)
 	existsByEmail := handler.Service.Repo.UserExistsByEmail(user.Email)
 
-	//Fault User Already Exits
 	if existsByEmail || existsByUsername {
 		w.WriteHeader(http.StatusBadRequest)
 		return
-
 	}
 	err = handler.Service.CreateUser(&user)
 	if err != nil {
@@ -116,30 +112,22 @@ func (handler *UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("updating")
-
 	var updateUserRequest services.UpdateUserRequest
 
 	err := json.NewDecoder(r.Body).Decode(&updateUserRequest)
 	fmt.Println(updateUserRequest.ID)
 	if err != nil {
-		fmt.Println("aaaaaaaaaaa!")
 		w.WriteHeader(http.StatusBadGateway)
 		return
 	}
-
-	//kastujem iz request tela u user strukturu
-
-	// fmt.Println(user.ID)
 	fmt.Print(err)
 
 	err = handler.Service.UpdateEditUser(&updateUserRequest) //ovde saljem update User request
-
 	if err != nil {
 		fmt.Println(err)
 
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-
 	fmt.Println("Updated.")
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")

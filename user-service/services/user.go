@@ -38,7 +38,6 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-//nema zabranu unosa istog imejla i korisnickog imena
 func (service *UserService) CreateUser(user *data.User2) error {
 	service.Repo.CreateUser(user)
 	return nil
@@ -54,18 +53,7 @@ func (service *UserService) UserExists(userId string) (bool, error) {
 	return exists, nil
 }
 
-// func (service *UserService) UserExistsByEmail(email string) (bool, error) {
-// 	exists := service.Repo.UserExistsByEmail(email)
-// 	return exists, nil
-// }
-
-// func (service *UserService) UserExistsByUsername(username string) (bool, error) {
-// 	exists := service.Repo.UserExistsByEmail(username)
-// 	return exists, nil
-// }
-
 func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
-
 	user, err := service.Repo.GetById(id)
 	if err != nil {
 		return nil, err
@@ -82,7 +70,6 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	}
 	//setuje vreme
 	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
-
 	//poredi hesirane passworde da vidi da li su jednaki
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(r.Password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
@@ -100,13 +87,11 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	}
 
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-
 	tokenString, error := token.SignedString([]byte("secret"))
 	if error != nil {
 		fmt.Println(error)
 	}
 
-	//vraca token i usera login funkciji
 	var resp = map[string]interface{}{"status": true, "message": "logged in"}
 	resp["token"] = tokenString //Store the token in the response
 	resp["user"] = user
@@ -114,14 +99,11 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 }
 
 func checkIfStringIsValid(toCheck string) bool {
-
 	return toCheck != ""
 }
 
 func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
-
 	user, error := service.Repo.GetById(r.ID)
-
 	if error != nil {
 		fmt.Println("ovo ovde je greska")
 		return error
@@ -176,5 +158,4 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
 		return errorUpdatingUser
 	}
 	return nil
-
 }

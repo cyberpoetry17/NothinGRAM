@@ -1,21 +1,13 @@
 package data
 
 import (
-	"encoding/json"
-	"io"
-
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-// "encoding/json"
-// "fmt"
-// "io"
-// "time"
-
 type User2 struct {
-	ID                   uuid.UUID `json:"-"` //mozda ovo ne treba?
+	ID                   uuid.UUID `json:"-"`
 	Name                 string    `gorm:"column:name"   json:"name"`
 	Surname              string    `gorm:"column:surname"  json:"surname"`
 	Email                string    `gorm:"column:email"   json:"email"`
@@ -59,38 +51,18 @@ func (d Gender) EnumIndex() int {
 	return int(d)
 }
 
-//dekoduje usera u JSON format za slanje putem RESTa,ako ne-> vraca gresku
-func (user *Users) FromJSON(response io.Reader) error {
-	err := json.NewDecoder(response)
-	return err.Decode(user)
-}
-
-//prebacuje iz JSONa u GO
-func (user *Users) ToJSON(write io.Writer) error {
-	err := json.NewEncoder(write)
-	return err.Encode(user)
-}
-func (user *User2) ToJSONOne(write io.Writer) error {
-	err := json.NewEncoder(write)
-	return err.Encode(user)
-}
 func (u *User2) IsCredentialsVerified(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-
 	return err == nil
 }
 
-//dodaje password ali hesira ga da se ne vidi u sistemu
 func (u *User2) SetPassword(password string) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
 	}
-
 	u.Password = string(hashedPassword)
 }
-
-//nesto sa sedmih vezbi
 
 func (user *User2) BeforeCreate(scope *gorm.DB) error {
 	user.ID = uuid.New()

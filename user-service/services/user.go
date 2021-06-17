@@ -40,7 +40,6 @@ type LoginRequest struct {
 
 //nema zabranu unosa istog imejla i korisnickog imena
 func (service *UserService) CreateUser(user *data.User2) error {
-
 	service.Repo.CreateUser(user)
 	return nil
 }
@@ -55,18 +54,23 @@ func (service *UserService) UserExists(userId string) (bool, error) {
 	return exists, nil
 }
 
-func (service *UserService) UserExistsByEmail(email string) (bool, error) {
-	exists := service.Repo.UserExistsByEmail(email)
-	return exists, nil
-}
+// func (service *UserService) UserExistsByEmail(email string) (bool, error) {
+// 	exists := service.Repo.UserExistsByEmail(email)
+// 	return exists, nil
+// }
 
-func (service *UserService) UserExistsByUsername(username string) (bool, error) {
-	exists := service.Repo.UserExistsByEmail(username)
-	return exists, nil
-}
+// func (service *UserService) UserExistsByUsername(username string) (bool, error) {
+// 	exists := service.Repo.UserExistsByEmail(username)
+// 	return exists, nil
+// }
 
-func (service *UserService) GetUserById(id string) {
+func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
 
+	user, err := service.Repo.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
@@ -103,7 +107,7 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	}
 
 	//vraca token i usera login funkciji
-	var resp = map[string]interface{}{"status": false, "message": "logged in"}
+	var resp = map[string]interface{}{"status": true, "message": "logged in"}
 	resp["token"] = tokenString //Store the token in the response
 	resp["user"] = user
 	return resp

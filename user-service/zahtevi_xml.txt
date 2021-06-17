@@ -42,3 +42,4 @@
         "bio": "programer",
         "role": 1
 }
+//GET BY ID localhost:8004/user/c0341101-3533-4a9f-a7a6-24c8ef077b04

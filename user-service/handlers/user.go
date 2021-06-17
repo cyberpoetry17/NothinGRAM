@@ -8,6 +8,7 @@ import (
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/google/uuid"
 
 	"github.com/gorilla/mux"
 )
@@ -23,11 +24,33 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getById")
+	vars := mux.Vars(r)
+	id := vars["userId"]
+
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	idUser, errorParsing := uuid.Parse(id)
+	if errorParsing != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	resp, errorUserGetting := handler.Service.GetUserById(idUser)
+	if errorUserGetting != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(resp)
+	w.WriteHeader(http.StatusOK)
+}
+
 //login user
 func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
-	//user := &data.User2{}
 	var userRequest services.LoginRequest
-	//kastujem iz request tela u user strukturu
 	err := json.NewDecoder(r.Body).Decode(&userRequest)
 	if err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
@@ -121,23 +144,3 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }
-
-// func (u *data.User2) updateMe(w http.ResponseWriter, r *http.Request) error {
-// 	me := domain.UserMustFromContext(r.Context())
-// 	req := new(engine.UpdateUserRequest)
-// 	if err := decodeReq(r, req); err != nil {
-// 		return err
-// 	}
-
-// 	req.ID = me.ID
-
-// 	if err := u.Update(req); err != nil {
-// 		if err == engine.ErrEmailExists {
-// 			return newWebErr(emailExistsErrCode, http.StatusUnprocessableEntity, err)
-// 		}
-// 		return err
-// 	}
-
-// 	gores.NoContent(w)
-// 	return nil
-// }

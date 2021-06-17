@@ -33,6 +33,11 @@ type UpdateUserRequest struct {
 	ReceiveNotifications bool        `json:"notifications"`
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 //nema zabranu unosa istog imejla i korisnickog imena
 func (service *UserService) CreateUser(user *data.User2) error {
 
@@ -64,10 +69,10 @@ func (service *UserService) GetUserById(id string) {
 
 }
 
-func (service *UserService) FindOneByEmailAndPassword(email, password string) map[string]interface{} {
+func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	user := &data.User2{}
 	//nadje i kastuje
-	if err := service.Repo.Database.Where("Email = ?", email).First(user).Error; err != nil {
+	if err := service.Repo.Database.Where("Email = ?", r.Email).First(user).Error; err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
 		return resp
 	}
@@ -75,7 +80,7 @@ func (service *UserService) FindOneByEmailAndPassword(email, password string) ma
 	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
 
 	//poredi hesirane passworde da vidi da li su jednaki
-	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(r.Password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
 		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
 		return resp
@@ -112,6 +117,7 @@ func checkIfStringIsValid(toCheck string) bool {
 func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
 
 	user, error := service.Repo.GetById(r.ID)
+
 	if error != nil {
 		fmt.Println("ovo ovde je greska")
 		return error

@@ -19,7 +19,7 @@
 }
 //login usera      POST:localhost:8004/login
 {
-        "email": "pera@gmail.com",
+        "email": "pericaaa@gmail.com",
         "password": "pera123"
 }
 

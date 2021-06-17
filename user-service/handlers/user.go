@@ -25,15 +25,16 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 
 //login user
 func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
-	user := &data.User2{}
+	//user := &data.User2{}
+	var userRequest services.LoginRequest
 	//kastujem iz request tela u user strukturu
-	err := json.NewDecoder(r.Body).Decode(user)
+	err := json.NewDecoder(r.Body).Decode(&userRequest)
 	if err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
 		json.NewEncoder(w).Encode(resp)
 		return
 	}
-	resp := handler.Service.FindOneByEmailAndPassword(user.Email, user.Password)
+	resp := handler.Service.LoginUser(&userRequest)
 	json.NewEncoder(w).Encode(resp)
 }
 

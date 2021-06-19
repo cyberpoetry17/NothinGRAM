@@ -23,8 +23,8 @@ type User2 struct {
 	Private              bool      `gorm:"column:private" json:"private"`
 	Taggable             bool      `gorm:"column:taggable"  json:"taggable"`
 	ReceiveNotifications bool      `gorm:"column:notif" json:"notifications"`
-	//MutedId              []string `gorm:"one2many:muted" json:"muted"` //gorm:"many2many:article_tag"
-	//BlockedId            []string `gorm:"column:blocked" json:"blocked"` *MultiString `gorm:"type:text[]"`
+	MutedUsers           []Muted   `gorm:"foreignkey:UserID"   json:"mutedUsers"`
+	BlockedUsers         []Blocked `gorm:"foreignkey:UserID"   json:"blockedUsers"`
 }
 type Role int
 

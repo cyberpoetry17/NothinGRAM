@@ -12,12 +12,17 @@ type PostRepo struct {
 }
 
 func (repo *PostRepo) CreatePost(post *data.Post) error {
-	result := repo.Database.Create(post)
-	if result.Error== nil{
-		return result.Error
+	var location data.Location
+	if post.LocationID == uuid.Nil {
+		repo.Database.Find(&location).Where("country = dumb")
+		post.LocationID = location.IDLoc
 	}
-	fmt.Println(result.RowsAffected)
-	return nil //sta s ovim nilom
+		result := repo.Database.Create(post)
+		if result.Error == nil {
+			return result.Error
+		}
+		fmt.Println(result.RowsAffected)
+		return nil //sta s ovim nilom
 }
 
 func (repo *PostRepo) PostExists(desc string) bool {
@@ -47,10 +52,10 @@ func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 			element.Tags = append(element.Tags, tag)
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
-			err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
+			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
 
 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
-			//err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
+			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
 
 			return err
 		}

@@ -40,7 +40,7 @@ func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-	fmt.Println("created desc"+post.Description)
+	fmt.Println("created desc:"+post.Description)
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }
@@ -84,3 +84,21 @@ func (handler *PostHandler) AddTagToPost(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func (handler *PostHandler) AddLocationToPost(w http.ResponseWriter, r *http.Request){
+	fmt.Println("creating")
+	var postLocationDto DTO.PostLocationDTO
+	err := json.NewDecoder(r.Body).Decode(&postLocationDto)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.AddLocationToPost(postLocationDto.Location, postLocationDto.PostId)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	fmt.Println("location put on post")
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}

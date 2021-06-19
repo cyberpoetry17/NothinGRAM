@@ -10,7 +10,7 @@ type Location struct{
 	Country string `gorm:"column:country"      json:"country"`
 	City    string `gorm:"column:city"      json:"city"`
 	Address string `gorm:"column:address"      json:"address"`
-	PostId  uuid.UUID `gorm:"column:postid"      json:"postid"`
+	Posts  []Post `gorm:"foreignKey:LocationID"      json:"Posts"`
 }
 
 func (location *Location) BeforeCreate(scope *gorm.DB) error {

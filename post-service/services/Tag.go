@@ -37,3 +37,7 @@ func (service *TagService) RemoveTag(tag *data.Tag) error {
 func (service *TagService) GetAllTags() []data.Tag{
 	return service.Repo.GetAllTags()
 }
+
+func (service *TagService) FilterPublicMaterialByTags(tagId string) []data.Post{
+	return service.Repo.FilterPublicMaterialByTag(tagId)
+}

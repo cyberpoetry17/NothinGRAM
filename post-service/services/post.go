@@ -25,3 +25,7 @@ func (service *PostService) PostExists(desc string) (bool, error) {
 func (service *PostService) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	return service.Repo.AddTagToPost(tag,postId)
 }
+
+func (service *PostService) AddLocationToPost(location data.Location,postId uuid.UUID) error{
+	return service.Repo.AddLocationToPost(location,postId)
+}

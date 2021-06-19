@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -13,6 +14,9 @@ type PostRepo struct {
 
 func (repo *PostRepo) CreatePost(post *data.Post) error {
 	var location data.Location
+	if post.UserID.String() =="00000000-0000-0000-0000-000000000000"{
+		return errors.New("User id required")
+	}
 	if post.LocationID == uuid.Nil {
 		repo.Database.Find(&location).Where("country = dumb")
 		post.LocationID = location.IDLoc
@@ -62,7 +66,22 @@ func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	}
 	return nil
 }
+func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID) error{
+	for _, element := range repo.GetAll(){
+		if element.ID == postId {
+			//location.Posts = append(location.Posts,repo.GetPostById(postId))
+			element.LocationID = location.IDLoc
+			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
+			////return nil
+			err := repo.Database.Save(&element).Error
 
+			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
+			//err := repo.Database.Raw("INSERT INTO posts_locations (location_id_loc,post_id) VALUES (?,?)",location.IDLoc.String(),element.ID.String()).Error
+			return err
+		}
+	}
+	return nil
+}
 // func (r *UserRepo) SaveUser(user *data.User2) *data.User2 {
 // 	//databaseError := map[string]string{}
 // 	err := r.database.Debug().Create(&user).Error //CREATE prosledjenog usera,vratim mapu gresaka i usera

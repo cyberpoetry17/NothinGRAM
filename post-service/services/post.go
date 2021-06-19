@@ -12,8 +12,7 @@ type PostService struct {
 
 //verovatno treba da vrati neku vrednost
 func (service *PostService) CreatePost(post *data.Post) error {
-	service.Repo.CreatePost(post)
-	return nil
+	return service.Repo.CreatePost(post)
 }
 
 func (service *PostService) PostExists(desc string) (bool, error) {

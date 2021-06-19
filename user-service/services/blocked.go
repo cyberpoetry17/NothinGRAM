@@ -13,7 +13,7 @@ func (service *BlockedService) CreateBlockedUser(blockedUser *data.Blocked) erro
 	return service.Repo.CreateBlocked(blockedUser)
 }
 
-func (service *BlockedService) GetAllLikesForPost(userID string) ([]data.Blocked, error) {
+func (service *BlockedService) GetAllBlockedUsers(userID string) ([]data.Blocked, error) {
 
 	blockedUsers, error := service.Repo.GetAllBlockedUsersByID(userID)
 	if error != nil {

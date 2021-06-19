@@ -59,7 +59,7 @@ func (handler *BlockedHandler) GetAllBlockedUsersByID(w http.ResponseWriter, r *
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	blockedUsers, error := handler.Service.Repo.GetAllBlockedUsersByID(id)
+	blockedUsers, error := handler.Service.GetAllBlockedUsers(id)
 	if error != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

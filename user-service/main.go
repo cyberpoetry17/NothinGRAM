@@ -38,7 +38,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 
 	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
-	router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsersByID).Methods("GET")
+	router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsers).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }

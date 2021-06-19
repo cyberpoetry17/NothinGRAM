@@ -29,13 +29,14 @@ func initializeHandlers(servicePost *services.PostService,serviceTag *services.T
 func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, commentHandler *handlers.CommentHandler,likeHandler *handlers.LikeHandler,dislikeHandler *handlers.DislikeHandler, mediaHandler *handlers.MediaHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
+
 	postHandleFuncs(handler, router)
 	tagHandleFuncs(router, tagHandler)
 	commentHandleFuncs(router, commentHandler)
 	likeHandleFuncs(router, likeHandler)
 	mediaHandleFuncs(router, mediaHandler)
 	dislikeHandleFuncs(router, dislikeHandler)
-	locationHandleFuncs(router, locationHandler)
+	//locationHandleFuncs(router, locationHandler)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
 }
 

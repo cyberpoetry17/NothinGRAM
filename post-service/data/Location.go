@@ -11,7 +11,6 @@ type Location struct{
 	City    string `gorm:"column:city"      json:"city"`
 	Address string `gorm:"column:address"      json:"address"`
 	PostId  uuid.UUID `gorm:"column:postid"      json:"postid"`
-
 }
 
 func (location *Location) BeforeCreate(scope *gorm.DB) error {

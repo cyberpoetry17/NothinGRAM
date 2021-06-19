@@ -17,7 +17,7 @@ func (repo *CommentRepo) CreateComment(comment *data.Comment) error {
 		return result.Error
 	}
 	fmt.Println(result.RowsAffected)
-	return nil //sta s ovim nilom
+	return nil //sta s ovim nilom.
 }
 
 func (repo *CommentRepo) CommentExists(commentId uuid.UUID) bool {

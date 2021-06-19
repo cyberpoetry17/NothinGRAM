@@ -20,3 +20,7 @@ func (service *LocationService) GetLocationForPost (postId string) *data.Locatio
 func (service *LocationService) RemoveLocation (location *data.Location) error{
 	return service.Repo.RemoveLocation(location)
 }
+
+func (service *LocationService) FilterPublicMaterialByLocations(locationid string) []data.Post{
+	return service.Repo.FilterPublicMaterialByLocation(locationid)
+}

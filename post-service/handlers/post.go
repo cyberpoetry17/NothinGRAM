@@ -42,7 +42,7 @@ func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-	fmt.Println("created desc"+post.Description)
+	fmt.Println("created desc:"+post.Description)
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }

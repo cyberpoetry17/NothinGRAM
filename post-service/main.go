@@ -48,6 +48,7 @@ func mediaHandleFuncs(router *mux.Router, mediaHandler *handlers.MediaHandler) {
 func locationHandleFuncs(router *mux.Router, locationHandler *handlers.LocationHandler) {
 	router.HandleFunc("/locationforpost/{postid}", locationHandler.GetLocationForPost).Methods("GET")
 	router.HandleFunc("/createlocation", locationHandler.CreateLocation).Methods("POST")
+	router.HandleFunc("/filterpublicmaterialbylocationid/{locationid}",locationHandler.FilterPublicMaterialByLocationId).Methods("GET")
 }
 
 func dislikeHandleFuncs(router *mux.Router, dislikeHandler *handlers.DislikeHandler) {
@@ -69,6 +70,7 @@ func tagHandleFuncs(router *mux.Router, tagHandler *handlers.TagHandler) {
 	router.HandleFunc("/addTag/", tagHandler.CreateTag).Methods("POST")
 	router.HandleFunc("/editTag/", tagHandler.EditTag).Methods("POST")
 	router.HandleFunc("/removeTag/", tagHandler.DeleteTag).Methods("DELETE")
+	router.HandleFunc("/filterpublicmaterialbytagid/{tagid}",tagHandler.FilterPublicMaterialByTagId).Methods("GET")
 }
 
 func postHandleFuncs(handler *handlers.PostHandler, router *mux.Router) {

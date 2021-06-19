@@ -97,12 +97,12 @@ func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if element.ID == postId {
 			element.Tags = append(element.Tags, tag)
+			//tag.Posts = append(tag.Posts,repo.GetPostById(postId))
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
-			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
-
+			err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
-			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
+			//err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
 
 			return err
 		}
@@ -125,30 +125,6 @@ func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID)
 		}
 	}
 	return nil
-}
-
-func (repo *PostRepo) FilterPublicMaterialByTag(tag data.Tag) []data.Post{
-	var media []data.Post
-	//var frontList []data.Post
-	media = repo.GetPostByTag(tag)
-	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
-	//	if element.UserID.isPublic(){
-	//		append(frontList, element)
-	//	}
-	//}
-	return media//frontList
-}
-
-func (repo *PostRepo) FilterPublicMaterialByLocation(location data.Location) []data.Post{
-	var media []data.Post
-	//var frontList []data.Post
-	media = repo.GetPostByLocation(location)
-	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
-	//	if element.UserID.isPublic(){
-	//		append(frontList, element)
-	//	}
-	//}
-	return media//frontList
 }
 
 // func (r *UserRepo) SaveUser(user *data.User2) *data.User2 {

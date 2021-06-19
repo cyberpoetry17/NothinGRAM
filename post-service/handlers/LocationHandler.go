@@ -67,3 +67,18 @@ func (handler *LocationHandler) GetLocationForPost (w http.ResponseWriter,r *htt
 		w.WriteHeader(http.StatusNotFound)
 	}
 }
+
+func (handler *LocationHandler) FilterPublicMaterialByLocationId(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("filtering by location")
+	vars := mux.Vars(r)
+	locationid := vars["locationid"]
+	if locationid == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(locationid)
+	handler.Service.FilterPublicMaterialByLocations(locationid)
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}

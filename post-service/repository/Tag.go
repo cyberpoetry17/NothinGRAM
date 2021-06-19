@@ -43,6 +43,19 @@ func (repo *TagRepo) GetTagByName(tagName string) *data.Tag {
 	return  &tag
 }
 
+func (repo *TagRepo) GetPostByTag(tagId string) []data.Post{
+	var posts []data.Post
+	var tagFound = repo.GetAllTags()
+	for _,element := range tagFound{
+		if element.ID.String() ==  tagId{
+			for _,el := range element.Posts{
+				posts = append(posts, el)
+			}
+		}
+	}
+	return posts
+}
+
 func (repo *TagRepo) EditTag(tag *data.Tag) error {
 	return repo.Database.Save(tag).Error
 	//return repo.Database.Model(tag).Update("TagName",tag.TagName).Error
@@ -54,9 +67,23 @@ func (repo *TagRepo) RemoveTag(tag *data.Tag) error {
 
 func (repo *TagRepo) GetAllTags() []data.Tag{
 	var tags []data.Tag
-	repo.Database.Find(&tags)
-	repo.Database.Preload("Posts" ,&tags)	//check if work !!!
+	repo.Database.Preload("Posts").Find(&tags)	//check if work !!!
 	return tags
+}
+
+func (repo *TagRepo) FilterPublicMaterialByTag(tagId string) []data.Post{
+	var media []data.Post
+	//var frontList []data.Post
+	media = repo.GetPostByTag(tagId)
+	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
+	//	if element.UserID.isPublic(){
+	//		frontList = append(frontList, element)
+	//	}
+	//}
+	for _,el := range media{
+		fmt.Println(el.ID)
+	}
+	return media//frontList
 }
 //func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{
 //	repo.Database.

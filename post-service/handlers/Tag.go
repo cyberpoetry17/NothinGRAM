@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -65,6 +66,21 @@ func (handler *TagHandler) DeleteTag(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *TagHandler) FilterPublicMaterialByTagId(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("filtering by tag")
+	vars := mux.Vars(r)
+	tagid := vars["tagid"]
+	if tagid == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println(tagid)
+	handler.Service.FilterPublicMaterialByTags(tagid)
+
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 }

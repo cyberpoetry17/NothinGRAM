@@ -41,6 +41,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsers).Methods("GET")
 
 	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
+	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/gorilla/mux"
 )
 
 type MutedHandler struct {
@@ -49,4 +50,27 @@ func (handler *MutedHandler) RemoveMutedUser(w http.ResponseWriter, r *http.Requ
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *MutedHandler) GetAllMutedUsers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["userID"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	mutedUsers, error := handler.Service.GetAllMutedUsers(id)
+	if error != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if len(mutedUsers) != 0 {
+		w.WriteHeader(http.StatusOK)
+		for i, mutedUsers := range mutedUsers {
+			fmt.Printf("%d : %s", i, mutedUsers.MutedID)
+		}
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
 }

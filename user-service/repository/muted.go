@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,7 @@ type MutedRepo struct {
 	Database *gorm.DB
 }
 
-func (repo MutedRepo) CreateLike(muted *data.Muted) error {
+func (repo MutedRepo) CreateMuted(muted *data.Muted) error {
 	result := repo.Database.Create(muted)
 	if result.Error != nil {
 		return result.Error
@@ -22,4 +23,16 @@ func (repo MutedRepo) CreateLike(muted *data.Muted) error {
 
 func (repo MutedRepo) RemoveMuted(muted *data.Muted) error {
 	return repo.Database.Delete(muted).Error
+}
+
+func (repo MutedRepo) GetAllMutedUsersByID(userID string) ([]data.Muted, error) {
+	id, err := uuid.Parse(userID)
+	if err != nil {
+		print(err)
+		return nil, err
+	}
+	var mutedUsers []data.Muted
+	repo.Database.Find(&mutedUsers).Where("userID = ?", id)
+	repo.Database.Preload("user2", &mutedUsers)
+	return mutedUsers, nil
 }

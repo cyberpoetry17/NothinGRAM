@@ -15,18 +15,18 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo) {
-	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}
+func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo, *repository.MutedRepo) {
+	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}
 }
 
-func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo) (*services.UserService, *services.BlockedService) {
-	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}
+func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo) (*services.UserService, *services.BlockedService, *services.MutedService) {
+	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}
 }
 
-func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService) (*handlers.UserHandler, *handlers.BlockedHandler) {
-	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}
+func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler) {
+	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}
 }
-func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler) {
+func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
@@ -39,6 +39,8 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
 	router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsers).Methods("GET")
+
+	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }
@@ -61,8 +63,8 @@ func main() {
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 
-	repositoryUser, repositoryBlocked := initializeRepository(db)
-	serviceUser, serviceBLocked := initializeServices(repositoryUser, repositoryBlocked)
-	handlerUser, handlerBlocked := initializeHandlers(serviceUser, serviceBLocked)
-	handleFuncUser(handlerUser, handlerBlocked)
+	repositoryUser, repositoryBlocked, repositoryMuted := initializeRepository(db)
+	serviceUser, serviceBLocked, serviceMuted := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted)
+	handlerUser, handlerBlocked, handlerMuted := initializeHandlers(serviceUser, serviceBLocked, serviceMuted)
+	handleFuncUser(handlerUser, handlerBlocked, handlerMuted)
 }

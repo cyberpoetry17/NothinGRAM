@@ -26,7 +26,6 @@ func (repo BlockedRepo) RemoveBlocked(blocked *data.Blocked) error {
 }
 
 func (repo BlockedRepo) GetAllBlockedUsersByID(userID string) ([]data.Blocked, error) {
-
 	id, err := uuid.Parse(userID)
 	if err != nil {
 		print(err)
@@ -34,6 +33,6 @@ func (repo BlockedRepo) GetAllBlockedUsersByID(userID string) ([]data.Blocked, e
 	}
 	var blockedUsers []data.Blocked
 	repo.Database.Find(&blockedUsers).Where("userID = ?", id)
-	repo.Database.Preload("BlockedUsers", &blockedUsers)
+	repo.Database.Preload("user2", &blockedUsers)
 	return blockedUsers, nil
 }

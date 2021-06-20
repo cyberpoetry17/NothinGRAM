@@ -22,7 +22,9 @@ localhost:8005/createpost
 {
     "description":"opis",
     "picpath":"img/blabla",
-    "timestamp": "2018-12-10T13:49:51.141Z"
+    "timestamp": "2018-12-10T13:49:51.141Z",
+    "userid": "00000000-0000-0000-0000-00000001",
+    "private": false
 }
 
 POST

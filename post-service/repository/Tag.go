@@ -2,7 +2,6 @@ package repository
 
 import (
 	"fmt"
-
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -73,17 +72,23 @@ func (repo *TagRepo) GetAllTags() []data.Tag{
 
 func (repo *TagRepo) FilterPublicMaterialByTag(tagId string) []data.Post{
 	var media []data.Post
+	var backList []data.Post
 	//var frontList []data.Post
 	media = repo.GetPostByTag(tagId)
+	for _,element := range media{
+		if element.Private == false{
+			backList = append(backList,element)
+		}
+	}
 	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
 	//	if element.UserID.isPublic(){
 	//		frontList = append(frontList, element)
 	//	}
 	//}
-	for _,el := range media{
+	for _,el := range backList{
 		fmt.Println(el.ID)
 	}
-	return media//frontList
+	return backList//frontList
 }
 //func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{
 //	repo.Database.

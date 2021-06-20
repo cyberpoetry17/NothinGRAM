@@ -53,15 +53,21 @@ func (repo *LocationRepo) GetPostByLocation(locationId string) []data.Post{
 
 func (repo *LocationRepo) FilterPublicMaterialByLocation(locationId string) []data.Post{
 	var media []data.Post
+	var backList []data.Post
 	//var frontList []data.Post
 	media = repo.GetPostByLocation(locationId)
+	for _,element := range media{
+		if element.Private == false{
+			backList = append(backList,element)
+		}
+	}
 	//for _,element := range media{				prosirenje funkcije za kad se ubaci user
 	//	if element.UserID.isPublic(){
 	//		append(frontList, element)
 	//	}
 	//}
-	for _,el := range media{
-		fmt.Println(el.ID)
+	for _,el := range backList{
+		fmt.Println("Results: " + el.ID.String())
 	}
-	return media//frontList
+	return backList//frontList
 }

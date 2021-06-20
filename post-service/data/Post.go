@@ -18,6 +18,7 @@ type Post struct{
 	Comments			 []Comment `gorm:"foreignkey:PostId"   json:"Comments"`
 	LocationID			 uuid.UUID `gorm:"column:LocationID"   json:"LocationID"`
 	Media				[]Media `gorm:"foreignkey:PostId"   json:"Media"`
+	Private				 bool	`gorm:"column:private"   json:"private"`
 }
 
 func (post *Post) BeforeCreate(scope *gorm.DB) error {

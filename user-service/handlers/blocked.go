@@ -52,7 +52,7 @@ func (handler *BlockedHandler) UnblockUser(w http.ResponseWriter, r *http.Reques
 	w.Header().Set("Content-Type", "application/json")
 }
 
-func (handler *BlockedHandler) GetAllBlockedUsersByID(w http.ResponseWriter, r *http.Request) {
+func (handler *BlockedHandler) GetAllBlockedUsers(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["userID"]
 	if id == "" {

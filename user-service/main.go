@@ -15,18 +15,18 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo, *repository.MutedRepo) {
-	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}
+func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo, *repository.MutedRepo, *repository.FollowerRepo) {
+	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}, &repository.FollowerRepo{Database: database}
 }
 
-func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo) (*services.UserService, *services.BlockedService, *services.MutedService) {
-	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}
+func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService) {
+	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower}
 }
 
-func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler) {
-	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}
+func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler) {
+	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}
 }
-func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler) {
+func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
@@ -43,6 +43,9 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
 	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
 	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
+	
+	router.HandleFunc("/follow", followerHandler.FollowUser).Methods("POST")
+	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }
@@ -65,8 +68,8 @@ func main() {
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 
-	repositoryUser, repositoryBlocked, repositoryMuted := initializeRepository(db)
-	serviceUser, serviceBLocked, serviceMuted := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted)
-	handlerUser, handlerBlocked, handlerMuted := initializeHandlers(serviceUser, serviceBLocked, serviceMuted)
-	handleFuncUser(handlerUser, handlerBlocked, handlerMuted)
+	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower := initializeRepository(db)
+	serviceUser, serviceBLocked, serviceMuted, serviceFollower := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower)
+	handlerUser, handlerBlocked, handlerMuted, handlerFollower := initializeHandlers(serviceUser, serviceBLocked, serviceMuted, serviceFollower)
+	handleFuncUser(handlerUser, handlerBlocked, handlerMuted, handlerFollower)
 }

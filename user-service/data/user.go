@@ -23,6 +23,8 @@ type User2 struct {
 	Private              bool      `gorm:"column:private" json:"private"`
 	Taggable             bool      `gorm:"column:taggable"  json:"taggable"`
 	ReceiveNotifications bool      `gorm:"column:notif" json:"notifications"`
+	Followers            []Follower `gorm:"foreignkey:IDUser" json:followers`
+	Following            []Follower `gorm:"foreignkey:IDFollower" json:following`
 	MutedUsers           []Muted   `gorm:"foreignkey:UserID"   json:"mutedUsers"`
 	BlockedUsers         []Blocked `gorm:"foreignkey:UserID"   json:"blockedUsers"`
 }

@@ -25,6 +25,7 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 		fmt.Printf("Successfully connected to your database GOPHER!!!")
 	}
 	database.AutoMigrate(&data.User2{})
+	database.AutoMigrate(&data.Follower{})
 	database.AutoMigrate(&data.Blocked{})
 	database.AutoMigrate(&data.Muted{})
 

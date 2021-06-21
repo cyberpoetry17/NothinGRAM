@@ -15,10 +15,19 @@ type UserRepo struct {
 func (repo *UserRepo) CreateUser(user *data.User2) error {
 	result := repo.Database.Create(user)
 	fmt.Println(result.RowsAffected)
-	return nil //sta s ovim nilom
+	return nil
+}
+func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
+	user := &data.User2{}
+
+	err := repo.Database.Where("id = ?", id).Preload("blocked").First(user).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
-//BY ID
 func (repo *UserRepo) UserExists(userId uuid.UUID) bool {
 	var count int64
 	repo.Database.Where("id = ?", userId).Find(&data.User2{}).Count(&count)
@@ -37,12 +46,19 @@ func (repo *UserRepo) UserExistsByUsername(username string) bool {
 	return count != 0
 }
 
-func (repo *UserRepo) GetByEmail(email string, user *data.User2) bool {
-	err := repo.Database.Where("Email = ?", email).First(user).Error
-	if err == nil {
+// func (repo *UserRepo) AddTagToPost(tag data.Tag,userID uuid.UUID) error{
+// 	for _, element := range repo.GetAllBlockedUsers(){
+// 		if(element.ID == userID){
+// 			element.Tags = append(element.Tags, tag)
+// 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
+// 			////return nil
+// 			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
 
-		return true
-	}
-	return false
+// 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
+// 			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
 
-}
+// 			return err
+// 		}
+// 	}
+// 	return nil
+// }

@@ -33,9 +33,12 @@ type UpdateUserRequest struct {
 	ReceiveNotifications bool        `json:"notifications"`
 }
 
-//nema zabranu unosa istog imejla i korisnickog imena
-func (service *UserService) CreateUser(user *data.User2) error {
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 
+func (service *UserService) CreateUser(user *data.User2) error {
 	service.Repo.CreateUser(user)
 	return nil
 }
@@ -50,32 +53,25 @@ func (service *UserService) UserExists(userId string) (bool, error) {
 	return exists, nil
 }
 
-func (service *UserService) UserExistsByEmail(email string) (bool, error) {
-	exists := service.Repo.UserExistsByEmail(email)
-	return exists, nil
+func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
+	user, err := service.Repo.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
-func (service *UserService) UserExistsByUsername(username string) (bool, error) {
-	exists := service.Repo.UserExistsByEmail(username)
-	return exists, nil
-}
-
-func (service *UserService) GetUserById(id string) {
-
-}
-
-func (service *UserService) FindOneByEmailAndPassword(email, password string) map[string]interface{} {
+func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	user := &data.User2{}
 	//nadje i kastuje
-	if err := service.Repo.Database.Where("Email = ?", email).First(user).Error; err != nil {
+	if err := service.Repo.Database.Where("Email = ?", r.Email).First(user).Error; err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
 		return resp
 	}
 	//setuje vreme
 	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
-
 	//poredi hesirane passworde da vidi da li su jednaki
-	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(r.Password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
 		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
 		return resp
@@ -91,26 +87,22 @@ func (service *UserService) FindOneByEmailAndPassword(email, password string) ma
 	}
 
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-
 	tokenString, error := token.SignedString([]byte("secret"))
 	if error != nil {
 		fmt.Println(error)
 	}
 
-	//vraca token i usera login funkciji
-	var resp = map[string]interface{}{"status": false, "message": "logged in"}
+	var resp = map[string]interface{}{"status": true, "message": "logged in"}
 	resp["token"] = tokenString //Store the token in the response
 	resp["user"] = user
 	return resp
 }
 
 func checkIfStringIsValid(toCheck string) bool {
-
 	return toCheck != ""
 }
 
 func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
-
 	user, error := service.Repo.GetById(r.ID)
 	if error != nil {
 		fmt.Println("ovo ovde je greska")
@@ -166,5 +158,4 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
 		return errorUpdatingUser
 	}
 	return nil
-
 }

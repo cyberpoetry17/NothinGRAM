@@ -15,25 +15,37 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-func initializeRepository(database *gorm.DB) *repository.UserRepo {
-	return &repository.UserRepo{Database: database}
+func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo, *repository.MutedRepo, *repository.FollowerRepo) {
+	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}, &repository.FollowerRepo{Database: database}
 }
 
-func initializeServices(repo *repository.UserRepo) *services.UserService {
-	return &services.UserService{Repo: repo}
+func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService) {
+	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower}
 }
 
-func initializeHandlers(service *services.UserService) *handlers.UserHandler {
-	return &handlers.UserHandler{Service: service}
+func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler) {
+	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}
 }
-func handleFunc(handler *handlers.UserHandler) {
+func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
+	router.HandleFunc("/user/{userId}", handler.GetById).Methods("GET")
 	router.HandleFunc("/register", handler.CreateUser).Methods("POST")
 	router.HandleFunc("/update", handler.UpdateUser).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
 	router.HandleFunc("/login", handler.LoginUser).Methods("POST")
+
+	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
+	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
+	router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsers).Methods("GET")
+
+	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
+	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
+	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
+	
+	router.HandleFunc("/follow", followerHandler.FollowUser).Methods("POST")
+	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }
@@ -56,8 +68,8 @@ func main() {
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 
-	repo := initializeRepository(db)
-	service := initializeServices(repo)
-	handler := initializeHandlers(service)
-	handleFunc(handler)
+	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower := initializeRepository(db)
+	serviceUser, serviceBLocked, serviceMuted, serviceFollower := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower)
+	handlerUser, handlerBlocked, handlerMuted, handlerFollower := initializeHandlers(serviceUser, serviceBLocked, serviceMuted, serviceFollower)
+	handleFuncUser(handlerUser, handlerBlocked, handlerMuted, handlerFollower)
 }

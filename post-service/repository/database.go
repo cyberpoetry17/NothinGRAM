@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"gorm.io/driver/postgres"
@@ -29,6 +30,16 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	} else {
 		fmt.Printf("Successfully connected to your database for posts!!!")
 	}
-	database.AutoMigrate(&data.Post{},&data.Tag{},&data.Comment{},&data.Like{},&data.Dislike{})
+	database.AutoMigrate(&data.Location{},&data.Post{},&data.Tag{},&data.Comment{},&data.Like{},&data.Dislike{},&data.User{},&data.Media{})
+	loc := data.Location{IDLoc: uuid.UUID{},Country: "dumb",City: "dumb",Address: "dumb"}
+	//add users
+	//database.Create(&data.User{Name: "Pera",Surname: "Peric",Username: "Pera123",Private: false})
+	//database.Create(&data.User{Name: "Marko",Surname: "Markovic",Username: "Mare",Private: false})
+	var location data.Location
+	var count int64
+	database.Find(&location).Where("country","dumb").Count(&count)
+	if count == 0{
+		database.Create(&loc)
+	}
 	return database
 }

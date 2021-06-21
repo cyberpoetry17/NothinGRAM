@@ -22,7 +22,9 @@ localhost:8005/createpost
 {
     "description":"opis",
     "picpath":"img/blabla",
-    "timestamp": "2018-12-10T13:49:51.141Z"
+    "timestamp": "2018-12-10T13:49:51.141Z",
+    "userid": "00000000-0000-0000-0000-00000001",
+    "private": false
 }
 
 POST
@@ -68,3 +70,38 @@ POST
 
  GET
  localhost:8005/alllikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz
+ ------DISLIKES
+ POST
+  localhost:8005/createdislike
+  {
+      "userid":"id",
+      "postid":"zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz"
+  }
+   GET
+   localhost:8005/alldislikesforpost/zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzz
+
+ --------Location
+ POST
+localhost:8005/createlocation
+ {
+     "country":"Serbia",
+     "city":"Novi Sad",
+     "address":"Adresa 1"
+ }
+ GET
+localhost:8005/locationforpost/b0f7e42e-ec6d-40d6-a7fc-2c9e8aea811d
+
+POST
+localhost:8005/addlocationtopost
+{
+    "Location":{
+        "id":"4bb593dc-d0be-4bb9-91ce-7fae73019929",
+        "country":"Serbia",
+        "city":"Novi Sad",
+        "address":"Adresa 1"
+    },
+    "PostId":"4988e916-fb72-4d58-8af9-ac6613f888c1"
+}
+--------------- SEARCH BY TAG/LOCATION
+GET
+localhost:8005/filterpublicmaterialbytagid/88c66d14-4094-4111-bb3e-e5747d57bca6

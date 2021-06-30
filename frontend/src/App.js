@@ -1,6 +1,7 @@
 // import React, { useEffect } from 'react'
 import AddImg from './components/AddImg'
-
+import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
+import Home from './components/Home';
 
 
 function App() {
@@ -38,7 +39,22 @@ function App() {
   // }, [])
   return (
     <>
-      <AddImg/>
+      <h1>This is out of router (static)</h1>
+      <BrowserRouter>
+        {/* this is menu bar  */}
+        <div class="topnav">
+          <Link to= "/" >HOME</Link><br/>
+          <Link to="/pic">Add picture</Link>
+        </div>
+        <Switch>
+          <Route path="/pic">
+            <AddImg/>
+          </Route>
+          <Route path = "/">
+            <Home/>
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </>
   );
 }

@@ -64,7 +64,8 @@ func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
 func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	user := &data.User2{}
 	//nadje i kastuje
-	if err := service.Repo.Database.Where("Email = ?", r.Email).First(user).Error; err != nil {
+	err := service.Repo.Database.Where("Email = ?", r.Email).First(user).Error
+	if err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Email address not found"}
 		return resp
 	}

@@ -17,6 +17,12 @@ type UserHandler struct {
 	Service *services.UserService
 }
 
+func setupResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+}
+
 func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 	addrs, _ := net.InterfaceAddrs()
 	for i, addr := range addrs {
@@ -49,6 +55,12 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 
 //login user
 func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
+
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
 	var userRequest services.LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&userRequest)
 	if err != nil {
@@ -57,6 +69,9 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	resp := handler.Service.LoginUser(&userRequest)
+	fmt.Println("aaaaaaaaa")
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resp)
 }
 

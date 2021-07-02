@@ -34,7 +34,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/register", handler.CreateUser).Methods("POST")
 	router.HandleFunc("/update", handler.UpdateUser).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
-	router.HandleFunc("/login", handler.LoginUser).Methods("POST")
+	router.HandleFunc("/login", handler.LoginUser).Methods(http.MethodPost, http.MethodOptions)
 
 	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
@@ -43,7 +43,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
 	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
 	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
-	
+
 	router.HandleFunc("/follow", followerHandler.FollowUser).Methods("POST")
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 

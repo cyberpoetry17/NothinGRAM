@@ -8,9 +8,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"gorm.io/gorm"
 
-	"github.com/cyberpoetry17/NothinGRAM/UserAPI/handlers"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/handlerss"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
@@ -23,12 +24,14 @@ func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRe
 	return &services.PostService{Repo: repoPost}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation}
 }
 
-func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService, serviceMedia *services.MediaService,serviceLocation *services.LocationService) (*handlers.PostHandler,*handlers.TagHandler,*handlers.CommentHandler,*handlers.LikeHandler,*handlers.DislikeHandler,*handlers.MediaHandler,*handlers.LocationHandler) {
-	return &handlers.PostHandler{Service: servicePost}, &handlers.TagHandler{Service: serviceTag}, &handlers.CommentHandler{Service: serviceComment},&handlers.LikeHandler{Service: serviceLike},&handlers.DislikeHandler{Service: serviceDislike}, &handlers.MediaHandler{Service: serviceMedia},&handlers.LocationHandler{Service: serviceLocation}
+func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService, serviceMedia *services.MediaService,serviceLocation *services.LocationService) (*handlerss.PostHandler,*handlerss.TagHandler,*handlerss.CommentHandler,*handlerss.LikeHandler,*handlerss.DislikeHandler,*handlerss.MediaHandler,*handlerss.LocationHandler) {
+	return &handlerss.PostHandler{Service: servicePost}, &handlerss.TagHandler{Service: serviceTag}, &handlerss.CommentHandler{Service: serviceComment},&handlerss.LikeHandler{Service: serviceLike},&handlerss.DislikeHandler{Service: serviceDislike}, &handlerss.MediaHandler{Service: serviceMedia},&handlerss.LocationHandler{Service: serviceLocation}
 }
-func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, commentHandler *handlers.CommentHandler,likeHandler *handlers.LikeHandler,dislikeHandler *handlers.DislikeHandler, mediaHandler *handlers.MediaHandler,locationHandler *handlers.LocationHandler) {
+func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler, commentHandler *handlerss.CommentHandler,likeHandler *handlerss.LikeHandler,dislikeHandler *handlerss.DislikeHandler, mediaHandler *handlerss.MediaHandler,locationHandler *handlerss.LocationHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
+	c:=cors.New(cors.Options{AllowedOrigins: []string{"*"},AllowCredentials: true})
+	hand := c.Handler(router)
 
 	postHandleFuncs(handler, router)
 	tagHandleFuncs(router, tagHandler)
@@ -37,44 +40,44 @@ func handleFunc(handler *handlers.PostHandler,tagHandler *handlers.TagHandler, c
 	mediaHandleFuncs(router, mediaHandler)
 	dislikeHandleFuncs(router, dislikeHandler)
 	locationHandleFuncs(router, locationHandler)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), hand))
 }
 
-func mediaHandleFuncs(router *mux.Router, mediaHandler *handlers.MediaHandler) {
+func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) {
 	router.HandleFunc("/addMedia/", mediaHandler.CreateMedia).Methods("POST")
 	router.HandleFunc("/EditMedia/", mediaHandler.EditMedia).Methods("POST")
 	router.HandleFunc("RemoveMedia/", mediaHandler.RemoveMedia).Methods("DELETE")
 }
 
-func locationHandleFuncs(router *mux.Router, locationHandler *handlers.LocationHandler) {
+func locationHandleFuncs(router *mux.Router, locationHandler *handlerss.LocationHandler) {
 	router.HandleFunc("/locationforpost/{postid}", locationHandler.GetLocationForPost).Methods("GET")
 	router.HandleFunc("/createlocation", locationHandler.CreateLocation).Methods("POST")
 	router.HandleFunc("/filterpublicmaterialbylocationid/{locationid}",locationHandler.FilterPublicMaterialByLocationId).Methods("GET")
 }
 
-func dislikeHandleFuncs(router *mux.Router, dislikeHandler *handlers.DislikeHandler) {
+func dislikeHandleFuncs(router *mux.Router, dislikeHandler *handlerss.DislikeHandler) {
 	router.HandleFunc("/alldislikesforpost/{postid}", dislikeHandler.GetAllDislikesForPost).Methods("GET")
 	router.HandleFunc("/createdislike", dislikeHandler.CreateDislike).Methods("POST")
 }
-func likeHandleFuncs(router *mux.Router, likeHandler *handlers.LikeHandler) {
+func likeHandleFuncs(router *mux.Router, likeHandler *handlerss.LikeHandler) {
 	router.HandleFunc("/alllikesforpost/{postid}", likeHandler.GetAllLikesForPost).Methods("GET")
 	router.HandleFunc("/createlike", likeHandler.CreateLike).Methods("POST")
 }
 
-func commentHandleFuncs(router *mux.Router, commentHandler *handlers.CommentHandler) {
+func commentHandleFuncs(router *mux.Router, commentHandler *handlerss.CommentHandler) {
 	router.HandleFunc("/addComment/", commentHandler.CreateComment).Methods("POST")
 	router.HandleFunc("/editComment/", commentHandler.EditComment).Methods("POST")
 	router.HandleFunc("/removeComment/", commentHandler.DeleteComment).Methods("DELETE")
 }
 
-func tagHandleFuncs(router *mux.Router, tagHandler *handlers.TagHandler) {
+func tagHandleFuncs(router *mux.Router, tagHandler *handlerss.TagHandler) {
 	router.HandleFunc("/addTag/", tagHandler.CreateTag).Methods("POST")
 	router.HandleFunc("/editTag/", tagHandler.EditTag).Methods("POST")
 	router.HandleFunc("/removeTag/", tagHandler.DeleteTag).Methods("DELETE")
 	router.HandleFunc("/filterpublicmaterialbytagid/{tagid}",tagHandler.FilterPublicMaterialByTagId).Methods("GET")
 }
 
-func postHandleFuncs(handler *handlers.PostHandler, router *mux.Router) {
+func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/createpost", handler.CreatePost).Methods("POST")
 	router.HandleFunc("/verify/{description}", handler.Verify).Methods("GET")

@@ -2,6 +2,8 @@
 import AddImg from './components/AddImg'
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import Home from './components/Home';
+import Post from './components/Post'
+import Like from './components/Like';
 
 
 function App() {
@@ -42,13 +44,23 @@ function App() {
       <h1>This is out of router (static)</h1>
       <BrowserRouter>
         {/* this is menu bar  */}
-        <div class="topnav">
+        <div className="topnav">
           <Link to= "/" >HOME</Link><br/>
-          <Link to="/pic">Add picture</Link>
+          <Link to="/pic">Add picture</Link><br />
+          <Link to="/posts">Post feed</Link><br />
         </div>
         <Switch>
+          <Route path="/dislike">
+            <Like/>
+          </Route>
+          <Route path="/like">
+            <Like/>
+          </Route>
           <Route path="/pic">
             <AddImg/>
+          </Route>
+          <Route path="/posts">
+            <Post/>
           </Route>
           <Route path = "/">
             <Home/>

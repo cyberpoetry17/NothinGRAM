@@ -1,4 +1,4 @@
-package handlers
+package handlerss
 
 import (
 	"encoding/json"
@@ -7,7 +7,6 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 	"github.com/gorilla/mux"
-	"net"
 	"net/http"
 )
 
@@ -16,10 +15,14 @@ type PostHandler struct {
 }
 
 func (handler *PostHandler) Hello(w http.ResponseWriter, r *http.Request) {
-	addrs, _ := net.InterfaceAddrs()
-	for i, addr := range addrs {
-		fmt.Printf("%d %v\n", i, addr)
+	fmt.Println("Getting all posts..")
+	json.NewEncoder(w).Encode(handler.Service.GetAllPosts())
+	for _,el := range handler.Service.GetAllPosts(){
+		fmt.Println("Results: " + el.ID.String())
 	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
 }
 
 func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {

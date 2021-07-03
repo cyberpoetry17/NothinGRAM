@@ -28,3 +28,6 @@ func (service *PostService) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 func (service *PostService) AddLocationToPost(location data.Location,postId uuid.UUID) error{
 	return service.Repo.AddLocationToPost(location,postId)
 }
+func (service *PostService) GetAllPosts() []data.Post{
+	return service.Repo.GetAll()
+}

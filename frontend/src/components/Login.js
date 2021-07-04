@@ -2,7 +2,6 @@ import React from 'react';
 import {Form, Button, Container,Image} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {serviceConfig} from '../applicationSettings.js'
-//import ModalAlert from './ModalAlert.js'
 import logo from "../resources/nothingramBeli.png";
 import '../styles/Login.css';
 
@@ -21,6 +20,8 @@ class Login extends React.Component{
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
+ 
+  
 
     handleChange(e){
         const { id, value } = e.target;
@@ -31,16 +32,16 @@ class Login extends React.Component{
         e.preventDefault();
         this.login();
     }
-    componentDidMount(){
-       
-       }
 
+    componentDidMount(){
+      
+    }
 
     login(){
         const {_email,_password} = this.state
 
         const LoginDTO = { email: _email, password: _password}
-
+        const userLogged = { email: null,username: null,token: null}
 
         const requestOpt = {
             method: 'POST',
@@ -56,28 +57,22 @@ class Login extends React.Component{
                     
                 }
                 console.log("USPELO");
-                return response.json;
+                return response.json();
             })
-
+         
             .then((data) => {
-                console.log(data);
+                console.log(data.token);
                 if(data != null){
-                   
-                        localStorage.setItem('token', JSON.stringify(data));
-                        this.props.history.push('/');
-                 
-                }
+                    if(data.token != null){
+                        userLogged.username = data.username;
+                        userLogged.email = data.email;
+                        userLogged.token = data.token;
+                        localStorage.setItem('user', userLogged)
+                        this.props.history.push('/home');
+                    }}
             })
-            //  .catch(err => {
-            //      console.log("aaaaaaaaaa");
-            //      console.log(err.message);
-            //  })
             .catch(response => {
-                // const promise = Promise.resolve(response.json())
-                // promise.then(data => {
-                //     this.setState({message:data.message})
-                //   //  this.child.current.showModal(); 
-                // })
+
             })
     }
     
@@ -86,7 +81,7 @@ class Login extends React.Component{
         const {_email, _password} = this.state;
 
         return(
-            <Container style={{position: "relative", top: "50%", transform: "translateY(41%)"}} class="loginClass">
+            <Container style={{position: "relative", top: "50%", transform: "translateY(41%)"}}>
                     <div className='login-div'>
                         <Image 
                             style={{marginLeft:"20%"}}
@@ -138,6 +133,6 @@ class Login extends React.Component{
             </Container>
         );
     }
-    }
+}
 
 export default Login;

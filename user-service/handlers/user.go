@@ -6,6 +6,9 @@ import (
 	"net"
 	"net/http"
 
+	"strings"
+	"time"
+
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 	"github.com/google/uuid"
@@ -50,6 +53,7 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -62,6 +66,7 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userRequest services.LoginRequest
+
 	err := json.NewDecoder(r.Body).Decode(&userRequest)
 	if err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
@@ -75,32 +80,85 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
+func parseString(info string) time.Time {
+	s := strings.Split(info, ":")
+	println(s)
+	firstPart := s[0]
+	println(firstPart)
+	dateString := ""
+	//runes := []rune(firstPart)
+	for i := 0; i < len(firstPart)-3; i++ {
+		dateString += string(firstPart[i])
+
+	}
+	println(dateString)
+	t, err := time.Parse("2006-01-02", dateString)
+	if err != nil {
+		println("Time parsing not supported!")
+	}
+	return t
+}
+
+func createUserFromDTO(dto services.RegisterRequest, date time.Time) *data.User2 {
+	var user data.User2
+	user.DateOfBirth = date
+	user.Email = dto.Email
+	user.Name = dto.Name
+	user.Gender = dto.Gender
+	user.Password = dto.Password
+	user.PhoneNumber = dto.PhoneNumber
+	user.Private = dto.Private
+	user.Role = dto.Role
+	user.Verified = dto.Verify
+	user.ReceiveNotifications = dto.ReceiveNotifications
+	user.Biography = dto.Biography
+	user.Taggable = dto.Taggable
+	user.Username = dto.Username
+	user.Website = dto.Website
+	user.Surname = dto.Surname
+
+	return &user
+}
+
 //register user
 func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
 
-	var user data.User2
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
 		return
 	}
+
+	// //var user data.User2
+	var user services.RegisterRequest
+	//var user data.User2
+	err := json.NewDecoder(r.Body).Decode(&user) //dekodiran je dto sa stringom..sad hocu da parsiram string
+
+	if err != nil {
+		println(err)
+		w.WriteHeader(http.StatusNoContent)
+
+		return
+	}
+
+	DateOfBirthTime := parseString(user.DateOfBirth)
+	newUser := createUserFromDTO(user, DateOfBirthTime)
 	fmt.Println(user)
-	existsByUsername := handler.Service.Repo.UserExistsByUsername(user.Username)
-	existsByEmail := handler.Service.Repo.UserExistsByEmail(user.Email)
+	existsByUsername := handler.Service.Repo.UserExistsByUsername(newUser.Username)
+	existsByEmail := handler.Service.Repo.UserExistsByEmail(newUser.Email)
 
 	if existsByEmail || existsByUsername {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = handler.Service.CreateUser(&user)
+	err = handler.Service.CreateUser(newUser)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
 	fmt.Println("Created.")
 	w.WriteHeader(http.StatusCreated)
-	w.Header().Set("Content-Type", "application/json")
+
 }
 
 func (handler *UserHandler) Verify(w http.ResponseWriter, r *http.Request) {

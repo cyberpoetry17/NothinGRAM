@@ -1,0 +1,16 @@
+.register-div {
+    background-color: rgb(255, 255, 255);
+    border-style: solid;
+    border-color: #999595;
+    /* ce40d1 */
+    height: 70%;
+    width: 30%;
+    margin: 15px auto !important;
+}
+/* .register-div {
+    background-color: #ffff;
+    border-style: solid;
+    border-color: #999595;
+    max-width: 600px;
+    margin: 20px auto !important;
+  } */

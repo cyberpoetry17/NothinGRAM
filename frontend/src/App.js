@@ -1,59 +1,15 @@
 import React from 'react'
-import './App.css';
-//import AddImg from './components/AddImg'
-
-
-
-
-// function App() {
-//   // const [fileUrl, setFileUrl] = React.useState(null)
-//   // const [users, setUsers] = React.useState([])
-//   // const onFileChange = async (e) =>{
-//   //     const file = e.target.files[0]
-//   //     console.log("ispis",app.storage().ref())
-//   //     const storageRef = app.storage().ref()
-//   //     const fileRef = storageRef.child(file.name)
-//   //     await fileRef.put(file)
-//   //     setFileUrl(await fileRef.getDownloadURL())
-//   // }
-
-//   // const onSubmit = (e) => {
-//   //   e.preventDefault()
-//   //   //const username = e.target.value;
-//   //   var username = document.getElementById("name").value;
-//   //   if(!username){
-//   //     return
-//   //   }
-//   //   db.collection("users").doc("UUvNYlsLmAaIuOKr10XH").set({
-//   //     name: username,
-//   //     avatar: fileUrl
-//   //   })
-//   // }
-//   // useEffect(() => {
-//   //   const fetchUsers = async () =>{
-//   //     const usersCollection = await db.collection('users').get()
-//   //     setUsers(usersCollection.docs.map(doc => {
-//   //       return doc.data()
-//   //     }))
-//   //   }
-//   //   fetchUsers();
-//   // }, [])
-//   return (
-//     <>
-//        <Login/>
-//     </>
-//   );
-// }
-
-//import React from "react";
+import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
+import RegisterUser from './components/Register'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
+
 
 export default function App() {
   return (
@@ -68,7 +24,10 @@ export default function App() {
               <Link to="/image">addImage</Link>
             </li>
             <li>
-              <Link to="/login">Login</Link>
+              <Link to="/login">Sign in</Link>
+            </li>
+            <li>
+              <Link to="/register">Sign up!</Link>
             </li>
           </ul>
         </nav>
@@ -82,9 +41,9 @@ export default function App() {
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/">
-           
-          </Route>
+           <Route path="/register">
+            <RegisterUser />
+          </Route> 
         </Switch>
       </div>
     </Router>

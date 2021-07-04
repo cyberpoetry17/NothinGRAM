@@ -7,10 +7,8 @@
     width: 30%;
     margin: 15px auto !important;
 }
-/* .register-div {
-    background-color: #ffff;
-    border-style: solid;
-    border-color: #999595;
-    max-width: 600px;
-    margin: 20px auto !important;
-  } */
+
+.photo {
+    height: 100px;
+    width: 100px; 
+}

@@ -1,8 +1,9 @@
 import React from 'react'
-import {Form, Container,Col,Button} from 'react-bootstrap';
+import {Form, Container,Col,Button,Image} from 'react-bootstrap';
 import DatePick from '../components/DateOfBirth.js'
 import {serviceConfig} from '../applicationSettings.js'
 import 'react-datepicker/dist/react-datepicker.css'
+import logo from "../resources/nothingramBeli.png";
 class RegisterUser extends React.Component{
     constructor(props){
         super(props);
@@ -13,23 +14,24 @@ class RegisterUser extends React.Component{
             _username:"",
             _dateOfBirth: new Date(),
             _phone:"",
-            _web:"",
+            _web:"web",
             _email: "",
             _password: "",
             _repeatPassword: "",
-            _bio:"",
-            _verify:"",
-            _role:"",
-            _notify:"",
-            _private:"",
-            _taggable:"",
-            _gender:"",
+            _bio:"insert bio",
+            _verify:false,
+            _role:1,
+            _notify:false,
+            _private:false,
+            _taggable:true,
+            _gender: 0,
             message: ""
         }
         this.child = React.createRef();
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleGender = this.handleGender.bind(this);
+        this.handleNotification = this.handleNotification.bind(this);
 
     }
 
@@ -38,14 +40,17 @@ class RegisterUser extends React.Component{
         this.setState({ [id]: value });
     }
     
- 
     handleGender = (event) => {
-        this.setState({_gender: event.target.value})
-      }
+        this.setState({ _gender: event.target.value})
+    }
+
+
+    handleNotification (){
+        this.setState({ _notify: true})
+    }
+
     handleSubmit(e) {
         e.preventDefault();
-        
-
         const { _password, _repeatPassword } = this.state;
         
         if(_password.trim() !== _repeatPassword.trim()){
@@ -55,9 +60,8 @@ class RegisterUser extends React.Component{
         console.log("working")
         this.register();
     }
-    componentDidMount(){
-       
-    }
+    
+    componentDidMount(){}
     
     register(){
         
@@ -75,14 +79,14 @@ class RegisterUser extends React.Component{
             _notify,
             _private,
             _taggable,
-            _gender,} = this.state;
+            _gender} = this.state;
 
         const registerRequest = {
             email: _email,
             password: _password,
             name: _name,
             surname: _surname,            
-            phoneNumber: _phone,
+            phone: _phone,
             username: _username,
             bio: _bio,
             verify: _verify,
@@ -109,28 +113,35 @@ class RegisterUser extends React.Component{
             this.props.history.push('/');
         })
         .catch(response => {
-            const promise = Promise.resolve(response.json);
-            promise.then(data => {
-                alert(data.message);
-            })            
+            // const promise = Promise.resolve(response.json);
+            // promise.then(data => {
+            //     alert(data.message);
+            // })            
         })
     }
     
    
     render(){
-        const {_email, _password,_username,_surname,_phone,_dateOfBirth,_repeatPassword,_name} = this.state;
+        const {_email, _password,_username,_surname,_phone,_dateOfBirth,_repeatPassword,_name,_gender,_notify} = this.state;
         
         return(
             <Container style={{position: "relative"}}>
                     <div 
                     className="register-div"
                     style={{
+                       
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center"}}
 
-                    >
-                        <h2 style={{textAlign:"center"}}>NothinGRAM</h2> 
+                    ><Image 
+                    className="photo"
+                    src={logo}
+                    alt="NOTHINGRAM"
+                   
+                   
+                />
+                        {/* <h2 style={{textAlign:"center"}}>NothinGRAM</h2>  */}
                         <Form onSubmit={this.handleSubmit}>
                         <Form.Row>
                         <Form.Group as={Col} md="6">
@@ -175,7 +186,7 @@ class RegisterUser extends React.Component{
                                     id="_repeatPassword"
                                     value={_repeatPassword}
                                     type="password"
-                                    placeholder="Password"
+                                    placeholder="Repeat password"
                                     onChange={this.handleChange}
                                 />
                             </Form.Group>
@@ -203,40 +214,46 @@ class RegisterUser extends React.Component{
                                     onChange={this.handleChange}
                                 />
                             </Form.Group>
-                            <Form.Group as={Col} md="4">
-                              
+                            <Form.Group as={Col} md="5">      
                                 <Form.Control
                                     required
                                     id="_phone"
                                     value={_phone}
+                                    pattern="[0-9]{10}"
                                     type="text"
                                     placeholder="Phone"
                                     onChange={this.handleChange}
                                 />
                             </Form.Group>
                         </Form.Row>
-                       <DatePick 
+                        <DatePick 
                        id="_dateOfBirth"
                        value={_dateOfBirth}
                        onChange={this.handleChange}
                        ></DatePick>
-           
-                       <div>
-                       {/* <div>
-
-                       <input type="radio" value="Male"  
-                      checked={_gender === 'Male'}
-                      onChange={this.handleGender}
                        
-                       /> Male
+                        <div>
+                        <Form.Group as={Col} controlId="formHorizontalCheck">
+                        <Col sm={{ span: 10, offset: 2 }}>
+                        <Form.Check label="Recieve notification" values={_notify}/>
+                        </Col>
+                        </Form.Group>
 
-                       <input type="radio" value="Female" name="gender" 
-                        checked={_gender === 'Female'}
+                        </div>
+                       
+                       <div>
+                       <div>
+                       
+                       <input type="radio" value={0}
+                      checked={_gender === 0}
+                      onChange={this.handleGender} 
+                       /> Male
+                       <input type="radio"   name="gender" value={1}
+                        checked={_gender === 1}
                         onChange={this.handleGender}/> Female
 
-                       </div> */}
                        </div>
-
+                       </div>
                         <div className="text-center">
                                 <Button variant="primary" type="submit">
                                     Submit

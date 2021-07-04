@@ -30,7 +30,9 @@ class RegisterUser extends React.Component{
         this.child = React.createRef();
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleGender = this.handleGender.bind(this);
+        // this.handleGender = this.handleGender.bind(this);
+        this.handleGenderMale = this.handleGenderMale.bind(this);
+        this.handleGenderFemale = this.handleGenderFemale.bind(this);
         this.handleNotification = this.handleNotification.bind(this);
 
     }
@@ -40,10 +42,16 @@ class RegisterUser extends React.Component{
         this.setState({ [id]: value });
     }
     
-    handleGender = (event) => {
-        this.setState({ _gender: event.target.value})
+    handleGenderMale(){
+        this.setState({ _gender: 0})
+    }
+    handleGenderFemale(){
+        this.setState({ _gender: 1})
     }
 
+    // handleGender(event){
+    //     this.setState({ _gender: event.target.value})
+    // }
 
     handleNotification (){
         this.setState({ _notify: true})
@@ -113,10 +121,7 @@ class RegisterUser extends React.Component{
             this.props.history.push('/');
         })
         .catch(response => {
-            // const promise = Promise.resolve(response.json);
-            // promise.then(data => {
-            //     alert(data.message);
-            // })            
+           
         })
     }
     
@@ -141,7 +146,7 @@ class RegisterUser extends React.Component{
                    
                    
                 />
-                        {/* <h2 style={{textAlign:"center"}}>NothinGRAM</h2>  */}
+                       
                         <Form onSubmit={this.handleSubmit}>
                         <Form.Row>
                         <Form.Group as={Col} md="6">
@@ -246,11 +251,11 @@ class RegisterUser extends React.Component{
                        
                        <input type="radio" value={0}
                       checked={_gender === 0}
-                      onChange={this.handleGender} 
+                      onChange={this.handleGenderMale} 
                        /> Male
                        <input type="radio"   name="gender" value={1}
                         checked={_gender === 1}
-                        onChange={this.handleGender}/> Female
+                        onChange={this.handleGenderFemale}/> Female
 
                        </div>
                        </div>

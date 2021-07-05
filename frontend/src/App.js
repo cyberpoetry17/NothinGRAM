@@ -1,6 +1,7 @@
-// import React, { useEffect } from 'react'
+import React from 'react'
+import './App.css'
+import Login from './components/Login'
 import AddImg from './components/AddImg'
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import Home from './components/Home';
 import Post from './components/Post'
 import Like from './components/Like';
@@ -8,55 +9,43 @@ import PostFeed from './components/PostFeed';
 import Test from "./components/Test"
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
+import RegisterUser from './components/Register'
+import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 
-
-function App() {
-  // const [fileUrl, setFileUrl] = React.useState(null)
-  // const [users, setUsers] = React.useState([])
-  // const onFileChange = async (e) =>{
-  //     const file = e.target.files[0]
-  //     console.log("ispis",app.storage().ref())
-  //     const storageRef = app.storage().ref()
-  //     const fileRef = storageRef.child(file.name)
-  //     await fileRef.put(file)
-  //     setFileUrl(await fileRef.getDownloadURL())
-  // }
-
-  // const onSubmit = (e) => {
-  //   e.preventDefault()
-  //   //const username = e.target.value;
-  //   var username = document.getElementById("name").value;
-  //   if(!username){
-  //     return
-  //   }
-  //   db.collection("users").doc("UUvNYlsLmAaIuOKr10XH").set({
-  //     name: username,
-  //     avatar: fileUrl
-  //   })
-  // }
-  // useEffect(() => {
-  //   const fetchUsers = async () =>{
-  //     const usersCollection = await db.collection('users').get()
-  //     setUsers(usersCollection.docs.map(doc => {
-  //       return doc.data()
-  //     }))
-  //   }
-  //   fetchUsers();
-  // }, [])
+export default function App() {
   return (
-    <>
-      <h1>This is out of router (static)</h1>
-     
 
+    <>
       <BrowserRouter>
-        {/* this is menu bar  */}
-        <div className="topnav">
-          <Link to= "/" >HOME</Link><br/>
-          <Link to="/pic">Add picture</Link><br />
-          <Link to="/posts">Post feed</Link><br />
-          <Link to="/addPost">Add post</Link><br />
-        </div>
+          <div>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/pic">Picture</Link>
+                </li>
+                <li>
+                  <Link to="/login">Sign in</Link>
+                </li>
+                <li>
+                  <Link to="/register">Sign up!</Link>
+                </li>
+                <li>
+                  <Link to="/posts">Post feed</Link>
+                </li>
+                <li>
+                <Link to="/addPost">Add post</Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
         <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
           <Route path="/dislike">
             <Dislike/>
           </Route>
@@ -72,14 +61,21 @@ function App() {
           <Route path="/addPost">
             <AddPost/>
           </Route>
+          <Route path="/register">
+            <RegisterUser />
+          </Route> 
           <Route path = "/">
             <Home/>
           </Route>
         </Switch>
       </BrowserRouter>
-      
+
     </>
+
+
   );
 }
 
-export default App;
+
+
+

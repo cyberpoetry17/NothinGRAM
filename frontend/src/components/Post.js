@@ -6,7 +6,7 @@ import { Like } from './Like';
 import {Dislike} from './Dislike';
 import "../styles/post-style.css";
 
-export default function Post({userid,postid}){
+export default function Post({userid,postid,picpath}){
     // componentDidMount(){
     //     this.GetAllPosts();
     // }
@@ -45,7 +45,7 @@ export default function Post({userid,postid}){
                     <button className="like_but">Dislike</button><p>17(isto metodom)</p>
                 </div>
                 <div className="post__body">
-                    <img className="postImg"/>OVDE DODATI SLIKU
+                    <img width="300" height="300" src={picpath} alt="my pic"/><br/>
                 </div>
                 <div >
                     <p>Comments</p>

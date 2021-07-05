@@ -1,32 +1,34 @@
 package data
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type User2 struct {
-	ID                   uuid.UUID `json:"-"`
-	Name                 string    `gorm:"column:name"   json:"name"`
-	Surname              string    `gorm:"column:surname"  json:"surname"`
-	Email                string    `gorm:"column:email"   json:"email"`
-	Username             string    `gorm:"column:username" json:"username"`
-	Password             string    `gorm:"column:password" json:"password"`
-	DateOfBirth          string    `gorm:"column:date" json:"date"`
-	Gender               Gender    `gorm:"column:gender" json:"gender"`
-	PhoneNumber          string    `gorm:"column:phone"  json:"phone"`
-	Biography            string    `gorm:"column:bio"  json:"bio"`
-	Website              string    `gorm:"column:web" json:"web"`
-	Role                 Role      `gorm:"column:role"  json:"role"`
-	Verified             bool      `gorm:"column:verify"  json:"verify"`
-	Private              bool      `gorm:"column:private" json:"private"`
-	Taggable             bool      `gorm:"column:taggable"  json:"taggable"`
-	ReceiveNotifications bool      `gorm:"column:notif" json:"notifications"`
+	ID                   uuid.UUID  `json:"-"`
+	Name                 string     `gorm:"column:name"   json:"name"`
+	Surname              string     `gorm:"column:surname"  json:"surname"`
+	Email                string     `gorm:"column:email"   json:"email"`
+	Username             string     `gorm:"column:username" json:"username"`
+	Password             string     `gorm:"column:password" json:"password"`
+	DateOfBirth          time.Time  `gorm:"column:date" json:"date"`
+	Gender               Gender     `gorm:"column:gender" json:"gender"`
+	PhoneNumber          string     `gorm:"column:phone"  json:"phone"`
+	Biography            string     `gorm:"column:bio"  json:"bio"`
+	Website              string     `gorm:"column:web" json:"web"`
+	Role                 Role       `gorm:"column:role"  json:"role"`
+	Verified             bool       `gorm:"column:verify"  json:"verify"`
+	Private              bool       `gorm:"column:private" json:"private"`
+	Taggable             bool       `gorm:"column:taggable"  json:"taggable"`
+	ReceiveNotifications bool       `gorm:"column:notif" json:"notifications"`
 	Followers            []Follower `gorm:"foreignkey:IDUser" json:followers`
 	Following            []Follower `gorm:"foreignkey:IDFollower" json:following`
-	MutedUsers           []Muted   `gorm:"foreignkey:UserID"   json:"mutedUsers"`
-	BlockedUsers         []Blocked `gorm:"foreignkey:UserID"   json:"blockedUsers"`
+	MutedUsers           []Muted    `gorm:"foreignkey:UserID"   json:"mutedUsers"`
+	BlockedUsers         []Blocked  `gorm:"foreignkey:UserID"   json:"blockedUsers"`
 }
 type Role int
 

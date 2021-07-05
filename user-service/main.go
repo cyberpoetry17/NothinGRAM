@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -31,10 +32,10 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/user/{userId}", handler.GetById).Methods("GET")
-	router.HandleFunc("/register", handler.CreateUser).Methods("POST")
+	router.HandleFunc("/register", handler.CreateUser).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/update", handler.UpdateUser).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
-	router.HandleFunc("/login", handler.LoginUser).Methods("POST")
+	router.HandleFunc("/login", handler.LoginUser).Methods(http.MethodPost, http.MethodOptions)
 
 	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
@@ -43,7 +44,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
 	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
 	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
-	
+
 	router.HandleFunc("/follow", followerHandler.FollowUser).Methods("POST")
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 
@@ -67,6 +68,12 @@ func main() {
 	dbUser, _ := os.LookupEnv("USER")
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
+	loc, err := time.LoadLocation("Europe/Budapest")
+	if err != nil {
+		println("problem with local zone")
+	}
+	// handle err
+	time.Local = loc //
 
 	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower := initializeRepository(db)
 	serviceUser, serviceBLocked, serviceMuted, serviceFollower := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower)

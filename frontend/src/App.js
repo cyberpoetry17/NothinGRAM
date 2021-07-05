@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
+import Home from './components/Home';
 import RegisterUser from './components/Register'
 import {
   BrowserRouter as Router,
@@ -9,6 +10,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+
 
 
 export default function App() {
@@ -21,7 +23,7 @@ export default function App() {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/image">addImage</Link>
+              <Link to="/pic">Picture</Link>
             </li>
             <li>
               <Link to="/login">Sign in</Link>
@@ -29,13 +31,14 @@ export default function App() {
             <li>
               <Link to="/register">Sign up!</Link>
             </li>
+            
           </ul>
         </nav>
 
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/image">
+          <Route path="/pic">
             <AddImg/>
           </Route>
           <Route path="/login">
@@ -44,9 +47,12 @@ export default function App() {
            <Route path="/register">
             <RegisterUser />
           </Route> 
+          <Route path="/"> 
+          <Home></Home></Route>
         </Switch>
       </div>
     </Router>
+
   );
 }
 

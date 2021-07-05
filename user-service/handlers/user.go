@@ -11,6 +11,7 @@ import (
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 
 	"github.com/gorilla/mux"
@@ -32,6 +33,63 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%d %v\n", i, addr)
 	}
 }
+
+func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			// If the cookie is not set, return an unauthorized status
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		// For any other type of error, return a bad request status
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	tknStr := c.Value
+	token := &data.Token{}
+	tkn, err := jwt.ParseWithClaims(tknStr, token, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
+}
+
+// func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
+// 	c, err := r.Cookie("token")
+// 	tknStr := c.Value
+
+// 	token := &data.Token{}
+// 	tkn, err := jwt.ParseWithClaims(tknStr, token, func(token *jwt.Token) (interface{}, error) {
+// 		return []byte("secret"), nil
+// 	})
+// 	if err != nil {
+// 		if err == jwt.ErrSignatureInvalid {
+// 			w.WriteHeader(http.StatusUnauthorized)
+// 			return
+// 		}
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		return
+// 	}
+// 	if !tkn.Valid {
+// 		w.WriteHeader(http.StatusUnauthorized)
+// 		return
+// 	}
+
+// 	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
+// }
 
 func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getById")
@@ -74,6 +132,17 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	resp := handler.Service.LoginUser(&userRequest)
+	tokenString := resp["token"].(string)
+	expirationTime := resp["expirationDate"].(time.Time)
+	println("token string: \n")
+	println(tokenString)
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+	})
+
 	fmt.Println("aaaaaaaaa")
 
 	w.WriteHeader(http.StatusOK)
@@ -137,7 +206,6 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		println(err)
 		w.WriteHeader(http.StatusNoContent)
-
 		return
 	}
 

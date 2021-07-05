@@ -89,7 +89,7 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 		return resp
 	}
 	//setuje vreme
-	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
+	expiresAt := time.Now().Add(time.Minute * 1000)
 	//poredi hesirane passworde da vidi da li su jednaki
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(r.Password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
@@ -102,7 +102,7 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 		Username: user.Username,
 		Email:    user.Email,
 		StandardClaims: &jwt.StandardClaims{
-			ExpiresAt: expiresAt,
+			ExpiresAt: expiresAt.Unix(),
 		},
 	}
 
@@ -115,6 +115,7 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	var resp = map[string]interface{}{"status": true, "message": "logged in"}
 	resp["token"] = tokenString //Store the token in the response
 	resp["user"] = user
+	resp["expirationDate"] = expiresAt
 	return resp
 }
 

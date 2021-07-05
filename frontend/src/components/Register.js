@@ -118,7 +118,7 @@ class RegisterUser extends React.Component{
             if (!response.ok) {
                 return Promise.reject(response);
             }
-            this.props.history.push('/');
+            this.props.history.push('/login');
         })
         .catch(response => {
            
@@ -168,6 +168,7 @@ class RegisterUser extends React.Component{
                                     value={_username}
                                     type="text"
                                     placeholder="Username"
+                                    pattern="^[A-Za-z0-9]{0,10}$"
                                     onChange={this.handleChange}
                                 />
                             </Form.Group>
@@ -205,6 +206,7 @@ class RegisterUser extends React.Component{
                                     value={_name}
                                     type="text"
                                     placeholder="Name"
+                                    pattern="[A-Za-z]+"
                                     onChange={this.handleChange}
                                 />
                             </Form.Group>
@@ -216,6 +218,7 @@ class RegisterUser extends React.Component{
                                     value={_surname}
                                     type="text"
                                     placeholder="Surname"
+                                    pattern="[A-Za-z]+"
                                     onChange={this.handleChange}
                                 />
                             </Form.Group>
@@ -224,7 +227,9 @@ class RegisterUser extends React.Component{
                                     required
                                     id="_phone"
                                     value={_phone}
-                                    pattern="[0-9]{10}"
+                                    pattern="[0][0-9]+"
+                                    maxLength = {12}
+                                    minLength = {10}
                                     type="text"
                                     placeholder="Phone"
                                     onChange={this.handleChange}

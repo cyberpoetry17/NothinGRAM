@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -67,6 +68,12 @@ func main() {
 	dbUser, _ := os.LookupEnv("USER")
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
+	loc, err := time.LoadLocation("Europe/Budapest")
+	if err != nil {
+		println("problem with local zone")
+	}
+	// handle err
+	time.Local = loc //
 
 	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower := initializeRepository(db)
 	serviceUser, serviceBLocked, serviceMuted, serviceFollower := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower)

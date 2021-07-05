@@ -1,4 +1,4 @@
-package handlers
+package handlerss
 
 import (
 	"encoding/json"
@@ -62,10 +62,13 @@ func (handler *LikeHandler) GetAllLikesForPost (w http.ResponseWriter,r *http.Re
 
 	if len(likes)!=0 {
 		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(len(likes))
 		for i,likes := range likes{
 			fmt.Println("%d : %s", i,likes.IDL)
 		}
 	} else {
+		_ = json.NewEncoder(w).Encode(0)
 		w.WriteHeader(http.StatusNotFound)
+
 	}
 }

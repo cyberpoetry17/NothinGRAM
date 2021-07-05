@@ -21,9 +21,14 @@ func (repo LikeRepo) CreateLike(like *data.Like) error {
 
 func (repo LikeRepo) GetAllLikesForPost (postId string) []data.Like{
 	var likes []data.Like
-	repo.Database.Find(&likes).Where("PostId = ?",postId)
-	repo.Database.Preload("Posts",&likes)
-	return likes
+	var backList []data.Like
+	repo.Database.Preload("Posts").Find(&likes)
+	for _,element := range likes{
+		if element.PostId.String() == postId {
+			backList = append(backList,element)
+		}
+	}
+	return backList
 }
 
 func (repo LikeRepo) RemoveLike (like *data.Like) error{

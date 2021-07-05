@@ -3,55 +3,75 @@ import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
+import Post from './components/Post'
+import Like from './components/Like';
+import PostFeed from './components/PostFeed';
+import Test from "./components/Test"
+import AddPost  from './components/AddPost';
+import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
-
+import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 
 export default function App() {
   return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/pic">Picture</Link>
-            </li>
-            <li>
-              <Link to="/login">Sign in</Link>
-            </li>
-            <li>
-              <Link to="/register">Sign up!</Link>
-            </li>
-            
-          </ul>
-        </nav>
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+    <>
+      <BrowserRouter>
+          <div>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/pic">Picture</Link>
+                </li>
+                <li>
+                  <Link to="/login">Sign in</Link>
+                </li>
+                <li>
+                  <Link to="/register">Sign up!</Link>
+                </li>
+                <li>
+                  <Link to="/posts">Post feed</Link>
+                </li>
+                <li>
+                <Link to="/addPost">Add post</Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
         <Switch>
-          <Route path="/pic">
-            <AddImg/>
-          </Route>
           <Route path="/login">
             <Login />
           </Route>
-           <Route path="/register">
+          <Route path="/dislike">
+            <Dislike/>
+          </Route>
+          <Route path="/like">
+            <Like/>
+          </Route>
+          <Route path="/pic">
+            <AddImg/>
+          </Route>
+          <Route path="/posts">
+            <PostFeed/>
+          </Route>
+          <Route path="/addPost">
+            <AddPost/>
+          </Route>
+          <Route path="/register">
             <RegisterUser />
           </Route> 
-          <Route path="/"> 
-          <Home></Home></Route>
+          <Route path = "/">
+            <Home/>
+          </Route>
         </Switch>
-      </div>
-    </Router>
+      </BrowserRouter>
+
+    </>
+
 
   );
 }

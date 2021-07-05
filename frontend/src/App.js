@@ -5,6 +5,9 @@ import Home from './components/Home';
 import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
+import Test from "./components/Test"
+import AddPost  from './components/AddPost';
+import Dislike from './components/Dislike';
 
 
 function App() {
@@ -43,16 +46,19 @@ function App() {
   return (
     <>
       <h1>This is out of router (static)</h1>
+     
+
       <BrowserRouter>
         {/* this is menu bar  */}
         <div className="topnav">
           <Link to= "/" >HOME</Link><br/>
           <Link to="/pic">Add picture</Link><br />
           <Link to="/posts">Post feed</Link><br />
+          <Link to="/addPost">Add post</Link><br />
         </div>
         <Switch>
           <Route path="/dislike">
-            <Like/>
+            <Dislike/>
           </Route>
           <Route path="/like">
             <Like/>
@@ -63,11 +69,15 @@ function App() {
           <Route path="/posts">
             <PostFeed/>
           </Route>
+          <Route path="/addPost">
+            <AddPost/>
+          </Route>
           <Route path = "/">
             <Home/>
           </Route>
         </Switch>
       </BrowserRouter>
+      
     </>
   );
 }

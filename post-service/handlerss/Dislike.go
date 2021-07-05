@@ -69,3 +69,22 @@ func (handler *DislikeHandler) GetAllDislikesForPost (w http.ResponseWriter,r *h
 		w.WriteHeader(http.StatusNotFound)
 	}
 }
+
+func (handler *DislikeHandler) CheckIfUserDislikedPost (w http.ResponseWriter,r *http.Request){
+	var dislike data.Dislike
+	err := json.NewDecoder(r.Body).Decode(&dislike)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	disliked := handler.Service.CheckIfUserDislikedPost(&dislike)
+
+	if disliked != false {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(true)
+	} else {
+		_ = json.NewEncoder(w).Encode(false)
+
+	}
+}

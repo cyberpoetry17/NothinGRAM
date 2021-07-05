@@ -58,10 +58,12 @@ func locationHandleFuncs(router *mux.Router, locationHandler *handlerss.Location
 func dislikeHandleFuncs(router *mux.Router, dislikeHandler *handlerss.DislikeHandler) {
 	router.HandleFunc("/alldislikesforpost/{postid}", dislikeHandler.GetAllDislikesForPost).Methods("GET")
 	router.HandleFunc("/createdislike", dislikeHandler.CreateDislike).Methods("POST")
+	router.HandleFunc("/checkifdislikedbyuser",dislikeHandler.CheckIfUserDislikedPost).Methods("POST")
 }
 func likeHandleFuncs(router *mux.Router, likeHandler *handlerss.LikeHandler) {
 	router.HandleFunc("/alllikesforpost/{postid}", likeHandler.GetAllLikesForPost).Methods("GET")
 	router.HandleFunc("/createlike", likeHandler.CreateLike).Methods("POST")
+	router.HandleFunc("/checkiflikedbyuser",likeHandler.CheckIfUserLikedPost).Methods("POST")
 }
 
 func commentHandleFuncs(router *mux.Router, commentHandler *handlerss.CommentHandler) {

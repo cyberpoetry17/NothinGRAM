@@ -34,3 +34,14 @@ func (repo LikeRepo) GetAllLikesForPost (postId string) []data.Like{
 func (repo LikeRepo) RemoveLike (like *data.Like) error{
 	return repo.Database.Delete(like).Error
 }
+
+func (repo LikeRepo) CheckIfUserLikedPost (like *data.Like) bool{
+	var likes []data.Like
+	likes = repo.GetAllLikesForPost(like.PostId.String())
+	for _,element := range likes{
+		if element.UserId == like.UserId{
+			return true
+		}
+	}
+	return false
+}

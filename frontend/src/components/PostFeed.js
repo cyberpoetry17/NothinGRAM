@@ -33,7 +33,7 @@ export class PostFeed extends React.Component{
             <>
         {data.map((post,i) => (
         <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID}/>
+            <Post userid={post.userid} postid={post.ID} picpath={post.picpath}/>
         </div>
         ))}
         </>

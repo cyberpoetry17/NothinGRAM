@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { app } from './base';
+import {Form} from 'react-bootstrap';
 
 function AddPost() {
     const [post, setPost] = useState({description:'', picpath:'', private:true, UserID:"0f608e5a-1e79-4dd3-ba7e-fe99c81e6fe2"})
@@ -39,6 +40,24 @@ function AddPost() {
 
     return (
         <div>
+            <label className="d-flex justify-content-center">ADD POST</label>
+            <Form className="justify-content-md-center">
+                <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control  placeholder="Enter description" onChange={e => setPost({...post, description:e.target.value})}/>
+                </Form.Group>
+                <Form.Group>
+                    <Form.File id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
+                </Form.Group>
+                <Form.Group>
+                    {['radio'].map((type) => (
+                        <div key={`inline-${type}`} className="mb-3">
+                        <Form.Check inline label="PRIVATE" name="group1" type={type} id={`inline-${type}-1`} onChange={setPrivate}/>
+                        <Form.Check inline label="NOT PRIVATE" name="group1" type={type} id={`inline-${type}-2`} onChange= {setPublic}/>
+                        </div>
+                    ))}
+                </Form.Group>
+            </Form>
             <input 
             type= 'text' 
             value= {post.description}

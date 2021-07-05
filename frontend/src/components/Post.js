@@ -6,10 +6,11 @@ import { Like } from './Like';
 import {Dislike} from './Dislike';
 import "../styles/post-style.css";
 
-export default function Post({userid,postid}){
-
-    var [liked,setState] = React.useState(false);
-
+export default function Post({userid,postid,picpath}){
+    // componentDidMount(){
+    //     this.GetAllPosts();
+    // }
+    
     const GetLikesForPost = (postid) =>{                                                         //jos nisam namestio skroz da
         axios.get('http://localhost:8005/alllikesforpost/'+postid).then((response)=>{
             const data = response.data;
@@ -46,15 +47,15 @@ export default function Post({userid,postid}){
     const DislikeThisPost = () =>{
         CheckIfUserDislikedPost();
     }
-
-    return(
-        <>
-        <div className="post">
-            <div className="post__header">
-                <div className="post__headerLeft">
-                    <h3>{userid}(bice slika i ime)</h3>
-                    <h3 style={{marginLeft:"8px"}}>{postid}(vrv se sklanja)</h3>
-                </div>
+        return(
+            <>
+            
+            <div className="post">
+                <div className="post__header">
+                    <div className="post__headerLeft">
+                        <h3>{userid}(bice slika i ime)</h3>
+                        <h3 style={{marginLeft:"8px"}}>{postid}(vrv se sklanja)</h3>
+                    </div>
                 <button className="like_but" onClick={LikeThisPost}>Like</button><p>17(ubaciti metodom)</p>
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>17(isto metodom)</p>
             </div>

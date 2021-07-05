@@ -11,13 +11,36 @@ import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {Nav} from 'react-bootstrap';
+
 
 export default function App() {
   return (
 
     <>
       <BrowserRouter>
-          <div>
+          <Nav activeKey="/" >
+            <Nav.Item>
+              <Nav.Link href="/">HOME</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/pic">PICTURE</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/login">SIGN IN</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/register">SIGN UP!</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/posts">POSTS FEED</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/addPost">ADD POST</Nav.Link>
+            </Nav.Item>
+          </Nav>
+          {/* <div>
             <nav>
               <ul>
                 <li>
@@ -40,7 +63,7 @@ export default function App() {
                 </li>
               </ul>
             </nav>
-          </div>
+          </div> */}
 
         <Switch>
           <Route path="/login">

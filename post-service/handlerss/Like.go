@@ -67,6 +67,7 @@ func (handler *LikeHandler) GetAllLikesForPost (w http.ResponseWriter,r *http.Re
 			fmt.Println("%d : %s", i,likes.IDL)
 		}
 	} else {
+		_ = json.NewEncoder(w).Encode(0)
 		w.WriteHeader(http.StatusNotFound)
 
 	}

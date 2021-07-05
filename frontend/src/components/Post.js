@@ -3,56 +3,61 @@ import { app } from './base';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 import { Like } from './Like';
-import Dislike from './Dislike';
+import {Dislike} from './Dislike';
+import "../styles/post-style.css";
 
-export class Post extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-          posts: [],
-        };
-      }
-
+export default function Post({userid,postid}){
+    // componentDidMount(){
+    //     this.GetAllPosts();
+    // }
     
-    componentDidMount(){
-        this.GetAllPosts();
+    const GetLikesForPost = (postid) =>{                                                         //jos nisam namestio skroz da
+        axios.get('http://localhost:8005/alllikesforpost/'+postid).then((response)=>{
+            const data = response.data;
+            this.setState({likes:data});
+            console.log(this.state.likes)
+        })
+        .catch(()=>{alert('didnt retrieve likes')});
     }
-    
-    // GetLikesForPost(postid){                                                         //metoda je ukleta,kad se pozove izvrsi se milion puta iz nekog razloga
-    //     axios.get('http://localhost:8005/alllikesforpost/'+postid).then((response)=>{
+
+    // GetAllPosts(){
+    //     axios.get('http://localhost:8005/').then((response)=>{
     //         const data = response.data;
-    //         this.setState({likes:data});
-    //         console.log(this.state.likes)
+    //         this.setState({posts:data});
+    //         console.log(this.state.posts)
     //     })
-    //     .catch(()=>{alert('didnt retrieve likes')});
+    //     .catch(()=>{alert('didnt retrieve ')});
     // }
 
-    GetAllPosts(){
-        axios.get('http://localhost:8005/').then((response)=>{
-            const data = response.data;
-            this.setState({posts:data});
-            console.log(this.state.posts)
-        })
-        .catch(()=>{alert('didnt retrieve ')});
+    const LikeThisPost = () =>{
+        axios({method:'post',url:'http://localhost:8005/createlike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
     }
-
-    render(){
-        const data = this.state.posts;
-        const like = this.state.likes;
         return(
-            <BrowserRouter>
             <>
-            <ul>
-                {data.map((post,i) => (
-                <li key={i}>
-                    <h3>Post id:{post.ID}</h3>,<h3>User id:{post.userid}</h3>,<Route path='/like' component={Like}/><Link to='/like'>Likes</Link>,<Route path='/dislike' component={Dislike}/><Link to='/dislike'>Dislikes</Link>
-                </li>
-                ))}
-            </ul>
+            
+            <div className="post">
+                <div className="post__header">
+                    <div className="post__headerLeft">
+                        <h3>{userid}(bice slika i ime)</h3>
+                        <h3 style={{marginLeft:"8px"}}>{postid}(vrv se sklanja)</h3>
+                    </div>
+                    <button className="like_but" onClick={LikeThisPost}>Like</button><p>17(ubaciti metodom)</p>
+                    <button className="like_but">Dislike</button><p>17(isto metodom)</p>
+                </div>
+                <div className="post__body">
+                    <img className="postImg"/>OVDE DODATI SLIKU
+                </div>
+                <div >
+                    <p>Comments</p>
+                    <p style={{backgroundColor:"white"}}>
+                        <span style={{fontWeight:"500",marginRight:"6px"}}>
+                            Ovde ubaciti ime metodom
+                        </span>
+                            Komentar isto dobaviti
+                    </p>
+                </div>
+            </div>
             </>
-            </BrowserRouter>
-            );
-    }
+        );
 
 }
-export default Post

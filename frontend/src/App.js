@@ -4,6 +4,7 @@ import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import Home from './components/Home';
 import Post from './components/Post'
 import Like from './components/Like';
+import PostFeed from './components/PostFeed';
 
 
 function App() {
@@ -60,7 +61,7 @@ function App() {
             <AddImg/>
           </Route>
           <Route path="/posts">
-            <Post/>
+            <PostFeed/>
           </Route>
           <Route path = "/">
             <Home/>

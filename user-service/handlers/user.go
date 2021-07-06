@@ -34,7 +34,44 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type authorizationID struct {
+	Token string `json: "token"`
+}
+
 func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	if (r).Method == "OPTIONS" {
+		return
+	}
+
+	var tokenStruct authorizationID
+	err := json.NewDecoder(r.Body).Decode(&tokenStruct) //ovde se nalazi token sa informacijama
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	tknStr := tokenStruct.Token
+	tokenObj := &data.Token{}
+	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	w.Write([]byte(fmt.Sprintf("Welcome %s!", tokenObj.Username)))
+}
+
+/*func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -65,7 +102,7 @@ func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Re
 	}
 
 	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
-}
+}*/
 
 // func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
 // 	c, err := r.Cookie("token")

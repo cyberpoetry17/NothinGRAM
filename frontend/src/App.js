@@ -3,6 +3,7 @@ import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
+import UserHomepage from './components/UserHomepage';
 import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
@@ -63,7 +64,8 @@ export default function App() {
           </Route>
           <Route path="/register">
             <RegisterUser />
-          </Route> 
+          </Route>
+          <Route path="/userhomepage" component={UserHomepage} />
           <Route path = "/">
             <Home/>
           </Route>

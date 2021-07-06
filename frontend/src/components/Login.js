@@ -1,6 +1,7 @@
 import React from 'react';
 import {Form, Button, Container,Image} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import {withRouter} from 'react-router';
 import {serviceConfig} from '../applicationSettings.js'
 import logo from "../resources/nothingramBeli.png";
 import '../styles/Login.css';
@@ -20,8 +21,6 @@ class Login extends React.Component{
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
- 
-  
 
     handleChange(e){
         const { id, value } = e.target;
@@ -41,7 +40,6 @@ class Login extends React.Component{
         const {_email,_password} = this.state
 
         const LoginDTO = { email: _email, password: _password}
-        const userLogged = { email: null,username: null,token: null}
 
         const requestOpt = {
             method: 'POST',
@@ -64,15 +62,12 @@ class Login extends React.Component{
                 console.log(data.token);
                 if(data != null){
                     if(data.token != null){
-                        userLogged.username = data.username;
-                        userLogged.email = data.email;
-                        userLogged.token = data.token;
-                        localStorage.setItem('user', userLogged)
-                        this.props.history.push('/home');
+                        localStorage.setItem('token', data.token);
+                        this.props.history.push(`/userhomepage/${this.state._email}`);
                     }}
             })
             .catch(response => {
-
+                
             })
     }
     
@@ -135,4 +130,4 @@ class Login extends React.Component{
     }
 }
 
-export default Login;
+export default withRouter(Login);

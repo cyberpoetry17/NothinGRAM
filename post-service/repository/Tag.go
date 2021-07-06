@@ -20,6 +20,7 @@ func (repo *TagRepo) CreateTag(tag *data.Tag) error {
 	return nil //sta s ovim nilom
 }
 
+
 //BY ID
 func (repo *TagRepo) TagExists(tagId uuid.UUID) bool {
 	var count int64
@@ -89,6 +90,12 @@ func (repo *TagRepo) FilterPublicMaterialByTag(tagId string) []data.Post{
 		fmt.Println(el.ID)
 	}
 	return backList//frontList
+}
+
+func (repo *TagRepo) getById(tagId uuid.UUID) data.Tag{
+	var tag data.Tag
+	repo.Database.Where("id = ?", tagId).Find(&tag)
+	return tag
 }
 //func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{
 //	repo.Database.

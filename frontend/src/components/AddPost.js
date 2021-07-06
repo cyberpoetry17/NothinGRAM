@@ -2,6 +2,8 @@ import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { app } from './base';
 import {Form,Container,Row,Col,Button} from 'react-bootstrap';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 function AddPost() {
     const [post, setPost] = useState({description:'', picpath:'', private:true, UserID:"0f608e5a-1e79-4dd3-ba7e-fe99c81e6fe2"})
@@ -39,7 +41,7 @@ function AddPost() {
 
     return (
         <div>
-            <label className="d-flex justify-content-center">ADD POST</label>
+            <h1 className="d-flex justify-content-center">ADD POST</h1>
             <Container  width="20">
                 <Row>
                     <Col></Col>
@@ -68,7 +70,25 @@ function AddPost() {
                                 <Form.Label>Tag</Form.Label>
                                 <Form.Control  placeholder="Enter tag" />
                             </Form.Group>
-                            
+                            <Form.Group controlId="exampleForm.ControlSelect2">
+                                <Form.Label>Example multiple select</Form.Label>
+                                <Form.Control as="select" multiple>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <Autocomplete
+                            id="auto"
+                            multiple
+                            id="combo-box-demo"
+                            options={["1","2","pera","zika"]}
+                            // getOptionLabel={(option) => option.title}
+                            style={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+                            />
                             <img width="100" height="100" src={post.picpath} alt="my pic"/><br/>
                             <Button onClick={add}>ADD POST</Button>
                         </Form>

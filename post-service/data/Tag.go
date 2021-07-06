@@ -15,7 +15,9 @@ type Tag struct {
 
 
 func (tag *Tag) BeforeCreate(scope *gorm.DB) error {
-	tag.ID = uuid.New()
+	if(tag.ID.String() == "00000000-0000-0000-0000-000000000000") {
+		tag.ID = uuid.New()
+	}
 	return nil
 }
 //dekoduje usera u JSON format za slanje putem RESTa,ako ne-> vraca gresku

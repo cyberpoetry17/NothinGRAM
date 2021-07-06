@@ -22,7 +22,8 @@ type Post struct{
 }
 
 func (post *Post) BeforeCreate(scope *gorm.DB) error {
-	post.ID = uuid.New()
+	if(post.ID.String() == "00000000-0000-0000-0000-000000000000") {
+		post.ID = uuid.New()
+	}
 	return nil
-
 }

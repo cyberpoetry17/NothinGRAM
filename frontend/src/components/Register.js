@@ -1,10 +1,17 @@
 import React from 'react'
 import {Form, Container,Col,Button,Image} from 'react-bootstrap';
-import DatePick from '../components/DateOfBirth.js'
+// import DatePick from '../components/DateOfBirth.js'
 import {serviceConfig} from '../applicationSettings.js'
 import 'react-datepicker/dist/react-datepicker.css'
 import logo from "../resources/nothingramBeli.png";
+// import {DatePickerComponent} from "@syncfusion/ej2-react-calendars";
+import DatePick from '../components/DateOfBirth.js'
 import { withRouter } from 'react-router'
+
+
+// import required css from library
+import "react-datepicker/dist/react-datepicker.css";
+
 
 class RegisterUser extends React.Component{
     constructor(props){
@@ -44,6 +51,12 @@ class RegisterUser extends React.Component{
         const { id, value } = e.target;
         this.setState({ [id]: value });
     }
+
+    handleChangeDate(e){
+        
+        this.setState( {_dateOfBirth : e.target.Date});
+    }
+    
     
     handleGenderMale(){
         this.setState({ _gender: 0})
@@ -135,7 +148,8 @@ class RegisterUser extends React.Component{
     
    
     render(){
-        const {_email, _password,_username,_surname,_phone,_dateOfBirth,_repeatPassword,_name,_gender,_notify} = this.state;
+        const {_email, _password,_username,_surname,_phone, _repeatPassword,_name,_gender,_notify,_dateOfBirth} = this.state;
+        //const dateValue =  new Date(new Date().getDay,new Date().getMonth,new Date().getMonth)
         
         return(
             <Container style={{position: "relative"}}>
@@ -244,12 +258,14 @@ class RegisterUser extends React.Component{
                                 />
                             </Form.Group>
                         </Form.Row>
+                        {/* <DatePickerComponent placeholder="Insert date" value={_dateOfBirth} onChange={this.handleChange}></DatePickerComponent> */}
                         <DatePick 
                        id="_dateOfBirth"
                        value={_dateOfBirth}
-                       onChange={this.handleChange}
-                       ></DatePick>
                        
+                       placeholder="insert date"
+                       ></DatePick>  
+     
                         <div>
                         <Form.Group as={Col} controlId="formHorizontalCheck">
                         <Col sm={{ span: 10, offset: 2 }}>

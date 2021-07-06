@@ -80,6 +80,10 @@ func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
 	return user, nil
 }
 
+func (service *UserService) GetUsernameById(id uuid.UUID) string {
+	return service.Repo.GetUsernameById(id)
+}
+
 func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 	user := &data.User2{}
 	//nadje i kastuje

@@ -115,6 +115,27 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getting username By Id")
+	vars := mux.Vars(r)
+	id := vars["usernamebyid"]
+
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	idUser, errorParsing := uuid.Parse(id)
+	if errorParsing != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	resp := handler.Service.GetUsernameById(idUser)
+
+	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
 //login user
 func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 

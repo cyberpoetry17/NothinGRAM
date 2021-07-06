@@ -68,7 +68,6 @@ func (handler *LikeHandler) GetAllLikesForPost (w http.ResponseWriter,r *http.Re
 		}
 	} else {
 		_ = json.NewEncoder(w).Encode(0)
-		w.WriteHeader(http.StatusNotFound)
 
 	}
 }

@@ -6,6 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"io/ioutil"
+	"net/http"
 )
 
 type PostRepo struct {
@@ -50,6 +52,37 @@ func (repo *PostRepo) GetAll() []data.Post{
 	return posts
 }
 
+func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	repo.Database.
+		Preload("Tags").
+		Preload("Comments").
+		Preload("Likes").
+		Preload("Dislikes").
+		Find(&posts)
+	for _,element := range posts{
+		if element.UserID.String() == id{
+			frontList = append(frontList, element)
+		}
+	}
+	return frontList
+}
+
+
+func(repo *PostRepo) GetUsernameByPostUserID(userid string) string {
+	var backString string
+	var posts = repo.GetAll()
+	for _,element := range posts{
+		if element.UserID.String() == userid{
+			response, _ := http.Get("http://localhost:8004/username/{"+userid+"}")
+			backString,_:=ioutil.ReadAll(response.Body)
+			return string(backString)
+		}
+	}
+	return backString
+}
+
 func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if(element.ID == postId){
@@ -66,6 +99,7 @@ func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
 	}
 	return nil
 }
+
 func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if element.ID == postId {

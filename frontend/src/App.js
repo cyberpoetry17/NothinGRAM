@@ -10,6 +10,7 @@ import Test from "./components/Test"
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
+import Profile from './components/Profile'
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
@@ -66,6 +67,7 @@ export default function App() {
           </div> */}
 
         <Switch>
+          <Route path="/profile/:username" component={Profile}/>
           <Route path="/login">
             <Login />
           </Route>

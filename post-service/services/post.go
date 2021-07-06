@@ -31,3 +31,11 @@ func (service *PostService) AddLocationToPost(location data.Location,postId uuid
 func (service *PostService) GetAllPosts() []data.Post{
 	return service.Repo.GetAll()
 }
+
+func (service *PostService) GetPostsByUserID(id string) []data.Post{
+	return service.Repo.GetPostsByUserID(id)
+}
+
+func (service *PostService) GetUsernameByPostUserID(userid string) string{
+	return service.Repo.GetUsernameByPostUserID(userid)
+}

@@ -82,9 +82,11 @@ func tagHandleFuncs(router *mux.Router, tagHandler *handlerss.TagHandler) {
 func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/createpost", handler.CreatePost).Methods("POST")
+	router.HandleFunc("/allpostsbyuserid/{userid}",handler.GetPostsByUserID).Methods("GET")
 	router.HandleFunc("/verify/{description}", handler.Verify).Methods("GET")
 	router.HandleFunc("/addTagToPost", handler.AddTagToPost).Methods("POST")
 	router.HandleFunc("/addlocationtopost", handler.AddLocationToPost).Methods("POST")
+	router.HandleFunc("/getusernamebyid/{userid}", handler.GetUsernameByPostUserID).Methods("GET")
 }
 
 func init() {

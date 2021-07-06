@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 	"io/ioutil"
 	"net/http"
+	"log"
 )
 
 type PostRepo struct {
@@ -83,16 +84,19 @@ func(repo *PostRepo) GetUsernameByPostUserID(userid string) string {
 	return backString
 }
 
-func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
+func (repo *PostRepo) AddTagToPost(tag *data.Tag,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if(element.ID == postId){
-			element.Tags = append(element.Tags, tag)
+			log.Println(tag.ID.String())
+			//element.Tags = append(element.Tags, *tag)
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
+			tag.Posts = append(tag.Posts, element)
+			err :=  repo.Database.Save(&tag).Error
 			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
-
+			//repo.Database.Model(&element).Association("Tags").Append(&tag)
 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
-			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
+			//err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID,element.ID).Error
 
 			return err
 		}

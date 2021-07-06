@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { app } from './base';
-import {Form} from 'react-bootstrap';
+import {Form,Container,Row,Col,Button} from 'react-bootstrap';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 function AddPost() {
     const [post, setPost] = useState({description:'', picpath:'', private:true, UserID:"0f608e5a-1e79-4dd3-ba7e-fe99c81e6fe2"})
@@ -35,30 +37,68 @@ function AddPost() {
             url :'http://localhost:8005/createpost',
             data:a,
         });
-        
     }
 
     return (
         <div>
-            <label className="d-flex justify-content-center">ADD POST</label>
-            <Form className="justify-content-md-center">
-                <Form.Group controlId="exampleForm.ControlInput1">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control  placeholder="Enter description" onChange={e => setPost({...post, description:e.target.value})}/>
-                </Form.Group>
-                <Form.Group>
-                    <Form.File id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
-                </Form.Group>
-                <Form.Group>
-                    {['radio'].map((type) => (
-                        <div key={`inline-${type}`} className="mb-3">
-                        <Form.Check inline label="PRIVATE" name="group1" type={type} id={`inline-${type}-1`} onChange={setPrivate}/>
-                        <Form.Check inline label="NOT PRIVATE" name="group1" type={type} id={`inline-${type}-2`} onChange= {setPublic}/>
-                        </div>
-                    ))}
-                </Form.Group>
-            </Form>
-            <input 
+            <h1 className="d-flex justify-content-center">ADD POST</h1>
+            <Container  width="20">
+                <Row>
+                    <Col></Col>
+                    <Col>
+                        <Form className="justify-content-md-center">
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control  placeholder="Enter description" onChange={e => setPost({...post, description:e.target.value})}/>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.File id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
+                            </Form.Group>
+                            <Form.Group>
+                                {['radio'].map((type) => (
+                                    <div key={`inline-${type}`} className="mb-3">
+                                    <Form.Check inline label="PRIVATE" name="group1" type={type} id={`inline-${type}-1`} onChange={setPrivate}/>
+                                    <Form.Check inline label="NOT PRIVATE" name="group1" type={type} id={`inline-${type}-2`} onChange= {setPublic}/>
+                                    </div>
+                                ))}
+                            </Form.Group>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                                <Form.Label>Location</Form.Label>
+                                <Form.Control  placeholder="Enter location" />
+                            </Form.Group>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                                <Form.Label>Tag</Form.Label>
+                                <Form.Control  placeholder="Enter tag" />
+                            </Form.Group>
+                            <Form.Group controlId="exampleForm.ControlSelect2">
+                                <Form.Label>Example multiple select</Form.Label>
+                                <Form.Control as="select" multiple>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <Autocomplete
+                            id="auto"
+                            multiple
+                            id="combo-box-demo"
+                            options={["1","2","pera","zika"]}
+                            // getOptionLabel={(option) => option.title}
+                            style={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+                            />
+                            <img width="100" height="100" src={post.picpath} alt="my pic"/><br/>
+                            <Button onClick={add}>ADD POST</Button>
+                        </Form>
+                    </Col>
+                    <Col></Col>
+                </Row>
+                
+            </Container>
+            
+            {/* <input 
             type= 'text' 
             value= {post.description}
             onChange={e => setPost({...post, description:e.target.value})}
@@ -70,7 +110,7 @@ function AddPost() {
             <input type="file" onChange={fileChange} /><br/>
             <img width="100" height="100" src={post.picpath} alt="my pic"/><br/>
             <button onClick={ispisi}>JSON</button>
-            <button onClick={add}>ADD POST</button>
+            <button onClick={add}>ADD POST</button> */}
         </div>
     )
 }

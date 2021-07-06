@@ -74,7 +74,7 @@ export default function Post({userid,postid,picpath}){
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>{dislikes}</p>
             </div>
             <div className="post__body">
-                <img className="postImg"/>OVDE DODATI SLIKU
+                <img className="postImg" src={picpath} width="100" height="400"/>OVDE DODATI SLIKU
             </div>
             <div >
                 <p>Comments</p>

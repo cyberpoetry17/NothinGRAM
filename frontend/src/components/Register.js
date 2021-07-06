@@ -4,6 +4,8 @@ import DatePick from '../components/DateOfBirth.js'
 import {serviceConfig} from '../applicationSettings.js'
 import 'react-datepicker/dist/react-datepicker.css'
 import logo from "../resources/nothingramBeli.png";
+import { withRouter } from 'react-router'
+
 class RegisterUser extends React.Component{
     constructor(props){
         super(props);
@@ -34,6 +36,7 @@ class RegisterUser extends React.Component{
         this.handleGenderMale = this.handleGenderMale.bind(this);
         this.handleGenderFemale = this.handleGenderFemale.bind(this);
         this.handleNotification = this.handleNotification.bind(this);
+       
 
     }
 
@@ -67,9 +70,12 @@ class RegisterUser extends React.Component{
         }
         console.log("working")
         this.register();
+        
     }
     
-    componentDidMount(){}
+    componentDidMount(){
+        
+    }
     
     register(){
         
@@ -119,9 +125,11 @@ class RegisterUser extends React.Component{
                 return Promise.reject(response);
             }
             this.props.history.push('/login');
+          
         })
         .catch(response => {
-           
+            if(response.status === 400){
+            alert("User already exists!");}
         })
     }
     
@@ -275,4 +283,5 @@ class RegisterUser extends React.Component{
         );
     }
 }
-export default RegisterUser;
+export default withRouter(RegisterUser);
+// export default RegisterUser;

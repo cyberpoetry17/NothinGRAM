@@ -122,7 +122,6 @@ func (handler *UserHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(tokenString)
-
 }
 
 // func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
@@ -186,11 +185,19 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&userRequest)
 	if err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
-
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(resp)
 		return
 	}
 	resp := handler.Service.LoginUser(&userRequest)
+	messageStatus := resp["message"].(string)
+
+	if messageStatus == "Email address not found" || messageStatus == "Invalid login credentials. Please try again" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(resp)
+		return
+
+	}
 	tokenString := resp["token"].(string)
 	//expirationTime := resp["expirationDate"].(time.Time)
 	println("token string: \n")

@@ -1,7 +1,7 @@
 function validateJWS(tokenInfo) {
-    var isExpired = false;
-    var currentDate = new Date();
-    if (tokenInfo.exp < currentDate.getTime()) {
+    let isExpired = false;
+    let currentDate = new Date();    
+    if (tokenInfo.exp*1000 < currentDate.getTime()) {
         isExpired = true;
     }
 

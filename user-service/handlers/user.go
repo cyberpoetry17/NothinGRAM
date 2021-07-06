@@ -21,6 +21,10 @@ type UserHandler struct {
 	Service *services.UserService
 }
 
+type authorizationID struct {
+	Token string `json:"token"`
+}
+
 func setupResponse(w *http.ResponseWriter, req *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
@@ -34,21 +38,54 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
+// 	c, err := r.Cookie("token")
+// 	if err != nil {
+// 		if err == http.ErrNoCookie {
+// 			// If the cookie is not set, return an unauthorized status
+// 			w.WriteHeader(http.StatusUnauthorized)
+// 			return
+// 		}
+// 		// For any other type of error, return a bad request status
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		return
+// 	}
+// 	tknStr := c.Value
+// 	token := &data.Token{}
+// 	tkn, err := jwt.ParseWithClaims(tknStr, token, func(token *jwt.Token) (interface{}, error) {
+// 		return []byte("secret"), nil
+// 	})
+// 	if err != nil {
+// 		if err == jwt.ErrSignatureInvalid {
+// 			w.WriteHeader(http.StatusUnauthorized)
+// 			return
+// 		}
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		return
+// 	}
+// 	if !tkn.Valid {
+// 		w.WriteHeader(http.StatusUnauthorized)
+// 		return
+// 	}
+
+// 	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
+// }
+
 func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
-	c, err := r.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			// If the cookie is not set, return an unauthorized status
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		// For any other type of error, return a bad request status
-		w.WriteHeader(http.StatusBadRequest)
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
 		return
 	}
-	tknStr := c.Value
-	token := &data.Token{}
-	tkn, err := jwt.ParseWithClaims(tknStr, token, func(token *jwt.Token) (interface{}, error) {
+
+	var tokenStruct authorizationID
+	err := json.NewDecoder(r.Body).Decode(&tokenStruct) //ovde se nalazi token sa informacijama
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	tknStr := tokenStruct.Token
+	tokenObj := &data.Token{}
+	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
 	})
 	if err != nil {
@@ -64,7 +101,28 @@ func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
+	w.Write([]byte(fmt.Sprintf("Welcome %s!", tokenObj.Username)))
+}
+
+func (handler *UserHandler) Logout(w http.ResponseWriter, r *http.Request) {
+	tk := &data.Token{
+		UserID:   uuid.Nil,
+		Username: "",
+		Email:    "",
+		StandardClaims: &jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(-time.Hour).Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
+	tokenString, error := token.SignedString([]byte("secret"))
+	if error != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tokenString)
+
 }
 
 // func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
@@ -128,20 +186,15 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&userRequest)
 	if err != nil {
 		var resp = map[string]interface{}{"status": false, "message": "Invalid request"}
+
 		json.NewEncoder(w).Encode(resp)
 		return
 	}
 	resp := handler.Service.LoginUser(&userRequest)
 	tokenString := resp["token"].(string)
-	expirationTime := resp["expirationDate"].(time.Time)
+	//expirationTime := resp["expirationDate"].(time.Time)
 	println("token string: \n")
 	println(tokenString)
-
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
 
 	fmt.Println("aaaaaaaaa")
 
@@ -197,7 +250,6 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if (*r).Method == "OPTIONS" {
 		return
 	}
-
 	// //var user data.User2
 	var user services.RegisterRequest
 	//var user data.User2

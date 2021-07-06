@@ -19,26 +19,27 @@ export default function App() {
   return (
 
     <>
+      
       <BrowserRouter>
-          <Nav activeKey="/" >
-            <Nav.Item>
-              <Nav.Link href="/">HOME</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/pic">PICTURE</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/login">SIGN IN</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/register">SIGN UP!</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/posts">POSTS FEED</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/addPost">ADD POST</Nav.Link>
-            </Nav.Item>
+          <Nav className="navbar" activeKey="/" >
+              <Nav.Item>
+                <Nav.Link href="/">HOME</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/pic">PICTURE</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/login">SIGN IN</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/register">SIGN UP!</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/posts">POSTS FEED</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/addPost">ADD POST</Nav.Link>
+              </Nav.Item>
           </Nav>
           {/* <div>
             <nav>
@@ -64,8 +65,7 @@ export default function App() {
               </ul>
             </nav>
           </div> */}
-
-        <Switch>
+        <Switch >
           <Route path="/login">
             <Login />
           </Route>
@@ -78,10 +78,10 @@ export default function App() {
           <Route path="/pic">
             <AddImg/>
           </Route>
-          <Route path="/posts">
+          <Route className="main" path="/posts">
             <PostFeed/>
           </Route>
-          <Route path="/addPost">
+          <Route  path="/addPost">
             <AddPost/>
           </Route>
           <Route path="/register">
@@ -91,8 +91,8 @@ export default function App() {
             <Home/>
           </Route>
         </Switch>
-      </BrowserRouter>
 
+      </BrowserRouter>
     </>
 
 

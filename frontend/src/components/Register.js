@@ -1,5 +1,6 @@
 import React from 'react'
 import {Form, Container,Col,Button,Image} from 'react-bootstrap';
+
 // import DatePick from '../components/DateOfBirth.js'
 import {serviceConfig} from '../applicationSettings.js'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -31,6 +32,7 @@ class RegisterUser extends React.Component{
             _verify:false,
             _role:1,
             _notify:false,
+            checked: false,
             _private:false,
             _taggable:true,
             _gender: 0,
@@ -39,10 +41,11 @@ class RegisterUser extends React.Component{
         this.child = React.createRef();
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        // this.handleGender = this.handleGender.bind(this);
+      
         this.handleGenderMale = this.handleGenderMale.bind(this);
         this.handleGenderFemale = this.handleGenderFemale.bind(this);
         this.handleNotification = this.handleNotification.bind(this);
+        this.handleCheckNotif = this.handleCheckNotif.bind(this);
        
 
     }
@@ -54,9 +57,15 @@ class RegisterUser extends React.Component{
 
     handleChangeDate(e){
         
-        this.setState( {_dateOfBirth : e.target.Date});
+        this.setState( {_dateOfBirth : this.state._dateOfBirth});
     }
     
+    handleCheckNotif(e){
+        console.log(e.target);
+         this.setState({
+            _notify: e.target._notify
+              })
+      }
     
     handleGenderMale(){
         this.setState({ _gender: 0})
@@ -69,8 +78,8 @@ class RegisterUser extends React.Component{
     //     this.setState({ _gender: event.target.value})
     // }
 
-    handleNotification (){
-        this.setState({ _notify: true})
+    handleNotification (e){
+        this.setState({ _notify: !this.state._notify})
     }
 
     handleSubmit(e) {
@@ -85,10 +94,9 @@ class RegisterUser extends React.Component{
         this.register();
         
     }
+  
     
-    componentDidMount(){
-        
-    }
+    componentDidMount(){}
     
     register(){
         
@@ -148,7 +156,7 @@ class RegisterUser extends React.Component{
     
    
     render(){
-        const {_email, _password,_username,_surname,_phone, _repeatPassword,_name,_gender,_notify,_dateOfBirth} = this.state;
+        const {_email, _password,_username,_surname,_phone, _repeatPassword,_name,_gender,_dateOfBirth,_notify} = this.state;
         //const dateValue =  new Date(new Date().getDay,new Date().getMonth,new Date().getMonth)
         
         return(
@@ -267,11 +275,23 @@ class RegisterUser extends React.Component{
                        ></DatePick>  
      
                         <div>
-                        <Form.Group as={Col} controlId="formHorizontalCheck">
-                        <Col sm={{ span: 10, offset: 2 }}>
-                        <Form.Check label="Recieve notification" values={_notify}/>
-                        </Col>
-                        </Form.Group>
+                        <div>
+        {/* <Checkbox
+          checked={_notify}
+          onChange={this.handleChangeN} />
+        <Button type="button" onClick={this.handleToggle}>Toggle</Button>
+        <Button type="button" onClick={this.handleIsItChecked}>Is it checked?</Button> */}
+     
+                         <input
+          type="checkbox"
+          id="_notify"
+          name="topping"
+          value="_notify"
+          checked={_notify}
+          onChange={this.handleNotification}
+        />
+        <label>Receive notifications</label>
+      </div>
 
                         </div>
                        

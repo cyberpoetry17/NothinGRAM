@@ -24,7 +24,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: large;
 }
-.dislike_but:focus{
+.like_but:focus{
     outline: none;
     background-color: red;
 }

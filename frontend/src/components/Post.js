@@ -51,11 +51,29 @@ export default function Post({userid,postid,picpath}){
         });
     }
 
+    const DoINeedToRemoveDislike = () => {
+        axios({method:'post',url:'http://localhost:8005/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then((response)=>{
+            if(response.data == true){
+                axios({method:'post',url:'http://localhost:8005/deletedislike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
+            }
+        });
+    }
+
+    const DoINeedToRemoveLike = () => {
+        axios({method:'post',url:'http://localhost:8005/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then((response)=>{
+            if(response.data == true){
+                axios({method:'post',url:'http://localhost:8005/deletelike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
+            }
+        });
+    }
+
     const LikeThisPost = () =>{
+        DoINeedToRemoveDislike();
         CheckIfUserLikedPost();
     }
 
     const DislikeThisPost = () =>{
+        DoINeedToRemoveLike();
         CheckIfUserDislikedPost();
     }
 

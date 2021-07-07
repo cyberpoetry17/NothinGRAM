@@ -32,7 +32,7 @@ func (repo LikeRepo) GetAllLikesForPost (postId string) []data.Like{
 }
 
 func (repo LikeRepo) RemoveLike (like *data.Like) error{
-	return repo.Database.Delete(like).Error
+	return repo.Database.Where("postid=? and userid=?",like.PostId,like.UserId).Delete(&like).Error
 }
 
 func (repo LikeRepo) CheckIfUserLikedPost (like *data.Like) bool{

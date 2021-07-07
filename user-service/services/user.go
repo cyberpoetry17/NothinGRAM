@@ -72,8 +72,8 @@ func (service *UserService) UserExists(userId string) (bool, error) {
 	return exists, nil
 }
 
-func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
-	user, err := service.Repo.GetById(id)
+func (service *UserService) GetUserById(ID uuid.UUID) (*data.User2, error) {
+	user, err := service.Repo.GetById(ID)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,8 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 		return resp
 	}
 	//setuje vreme
-	expiresAt := time.Now().Add(time.Minute * 1000)
+
+	expiresAt := time.Now().Local().Add(time.Minute * 10000)
 	//poredi hesirane passworde da vidi da li su jednaki
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(r.Password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!

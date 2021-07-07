@@ -72,6 +72,7 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 // }
 
 func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
+
 	setupResponse(&w, r)
 	if (*r).Method == "OPTIONS" {
 		return
@@ -88,12 +89,18 @@ func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Re
 	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
 	})
+
+	if tokenObj.ExpiresAt < time.Now().UTC().Local().Unix() {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	if !tkn.Valid {
@@ -105,12 +112,18 @@ func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Re
 }
 
 func (handler *UserHandler) Logout(w http.ResponseWriter, r *http.Request) {
+
+	id, err := uuid.Parse("kjkszpj")
+	if err != nil {
+		print(err)
+
+	}
 	tk := &data.Token{
-		UserID:   uuid.Nil,
-		Username: "",
-		Email:    "",
+		UserID:   id,
+		Username: "anonymous",
+		Email:    "anonymous",
 		StandardClaims: &jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(-time.Hour).Unix(),
+			ExpiresAt: time.Now().Add(-5 * time.Hour).Local().Unix(),
 		},
 	}
 
@@ -150,21 +163,39 @@ func (handler *UserHandler) Logout(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getById")
-	vars := mux.Vars(r)
-	id := vars["userId"]
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 
-	if id == "" {
+	var tokenStruct authorizationID
+	err := json.NewDecoder(r.Body).Decode(&tokenStruct) //ovde se nalazi token sa informacijama
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	tknStr := tokenStruct.Token
+	tokenObj := &data.Token{}
+	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	idUser, errorParsing := uuid.Parse(id)
-	if errorParsing != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	resp, errorUserGetting := handler.Service.GetUserById(idUser)
+
+	resp, errorUserGetting := handler.Service.GetUserById(tokenObj.UserID)
+
 	if errorUserGetting != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusConflict)
 		return
 	}
 	json.NewEncoder(w).Encode(resp)

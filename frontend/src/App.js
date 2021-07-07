@@ -3,13 +3,14 @@ import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-import Post from './components/Post'
+//import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
-import Test from "./components/Test"
+//import Test from "./components/Test"
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
+import UpdateUser from './components/Update'
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 
 export default function App() {
@@ -37,6 +38,9 @@ export default function App() {
                 </li>
                 <li>
                 <Link to="/addPost">Add post</Link>
+                </li>
+                <li>
+                  <Link to="/update">Update</Link>
                 </li>
               </ul>
             </nav>
@@ -66,6 +70,9 @@ export default function App() {
           </Route> 
           <Route path = "/">
             <Home/>
+          </Route>
+          <Route path = "/update">
+            <UpdateUser />
           </Route>
         </Switch>
       </BrowserRouter>

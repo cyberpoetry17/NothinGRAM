@@ -20,7 +20,7 @@ func (repo *UserRepo) CreateUser(user *data.User2) error {
 func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
 	user := &data.User2{}
 
-	err := repo.Database.Where("id = ?", id).Preload("blocked").First(user).Error
+	err := repo.Database.Where("id = ?", id).First(user).Error
 
 	if err != nil {
 		return nil, err

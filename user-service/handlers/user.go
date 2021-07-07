@@ -198,6 +198,7 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
+	println(resp.Email)
 	json.NewEncoder(w).Encode(resp)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -343,21 +344,43 @@ func (handler *UserHandler) Verify(w http.ResponseWriter, r *http.Request) {
 
 func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("updating")
-	var updateUserRequest services.UpdateUserRequest
 
-	err := json.NewDecoder(r.Body).Decode(&updateUserRequest)
-	fmt.Println(updateUserRequest.ID)
-	if err != nil {
-		w.WriteHeader(http.StatusBadGateway)
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
 		return
 	}
-	fmt.Print(err)
 
-	err = handler.Service.UpdateEditUser(&updateUserRequest) //ovde saljem update User request
+	var updateUserRequest services.UpdateUserRequest
+	err := json.NewDecoder(r.Body).Decode(&updateUserRequest) //ovde se nalazi token sa informacijama
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	tknStr := updateUserRequest.Token
+	tokenObj := &data.Token{}
+
+	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusConflict)
+		return
+	}
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	fmt.Printf("%x\n", tokenObj.UserID)
+	err = handler.Service.UpdateEditUser(&updateUserRequest, tokenObj.UserID) //ovde saljem update User request
 	if err != nil {
 		fmt.Println(err)
 
-		w.WriteHeader(http.StatusExpectationFailed)
+		w.WriteHeader(http.StatusAlreadyReported)
 	}
 	fmt.Println("Updated.")
 	w.WriteHeader(http.StatusCreated)

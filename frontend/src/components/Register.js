@@ -5,8 +5,9 @@ import {Form, Container,Col,Button,Image} from 'react-bootstrap';
 import {serviceConfig} from '../applicationSettings.js'
 import 'react-datepicker/dist/react-datepicker.css'
 import logo from "../resources/nothingramBeli.png";
+import DatePicker from "react-datepicker";
 // import {DatePickerComponent} from "@syncfusion/ej2-react-calendars";
-import DatePick from '../components/DateOfBirth.js'
+// import DatePick from '../components/DateOfBirth.js'
 import { withRouter } from 'react-router'
 
 
@@ -46,6 +47,7 @@ class RegisterUser extends React.Component{
         this.handleGenderFemale = this.handleGenderFemale.bind(this);
         this.handleNotification = this.handleNotification.bind(this);
         this.handleCheckNotif = this.handleCheckNotif.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
        
 
     }
@@ -267,12 +269,20 @@ class RegisterUser extends React.Component{
                             </Form.Group>
                         </Form.Row>
                         {/* <DatePickerComponent placeholder="Insert date" value={_dateOfBirth} onChange={this.handleChange}></DatePickerComponent> */}
-                        <DatePick 
+                        {/* <DatePick 
                        id="_dateOfBirth"
                        value={_dateOfBirth}
                        
                        placeholder="insert date"
-                       ></DatePick>  
+                       ></DatePick>   */}
+                       <DatePicker
+      value={_dateOfBirth}
+      id="_dateOfBirth"
+      onChange={this.handleChangeDate}
+      
+      isClearable
+      placeholderText="I have been cleared!"
+    />
      
                         <div>
                         <div>

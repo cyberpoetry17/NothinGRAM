@@ -10,7 +10,7 @@ import PostFeed from './components/PostFeed';
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
-import UpdateUser from './components/Update'
+import Update from './components/Update';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 
 export default function App() {
@@ -40,7 +40,7 @@ export default function App() {
                 <Link to="/addPost">Add post</Link>
                 </li>
                 <li>
-                  <Link to="/update">Update</Link>
+                  <Link to="/update">Update user</Link>
                 </li>
               </ul>
             </nav>
@@ -49,6 +49,9 @@ export default function App() {
         <Switch>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path = "/update">
+            <Update />
           </Route>
           <Route path="/dislike">
             <Dislike/>
@@ -71,9 +74,7 @@ export default function App() {
           <Route path = "/">
             <Home/>
           </Route>
-          <Route path = "/update">
-            <UpdateUser />
-          </Route>
+
         </Switch>
       </BrowserRouter>
 

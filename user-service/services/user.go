@@ -16,7 +16,7 @@ type UserService struct {
 }
 
 type UpdateUserRequest struct {
-	ID                   uuid.UUID   `json:"id"`
+	Token                string      `json:"token"`
 	Name                 string      `json:"name"`
 	Surname              string      `  json:"surname"`
 	Email                string      `  json:"email"`
@@ -31,6 +31,7 @@ type UpdateUserRequest struct {
 	Private              bool        `json:"private"`
 	Taggable             bool        `  json:"taggable"`
 	ReceiveNotifications bool        `json:"notifications"`
+	//Verify               bool        `json:"verify"`
 }
 
 type RegisterRequest struct {
@@ -162,8 +163,8 @@ func TimeFormating(date string) time.Time {
 	return dateStamp
 }
 
-func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
-	user, error := service.Repo.GetById(r.ID)
+func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) error {
+	user, error := service.Repo.GetById(ID)
 	if error != nil {
 		fmt.Println("ovo ovde je greska")
 		return error
@@ -215,7 +216,7 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
 	user.ReceiveNotifications = r.ReceiveNotifications
 	user.Taggable = r.Taggable
 	user.Role = r.Role
-	// user.DateOfBirth = nil
+	user.DateOfBirth = TimeFormating(r.DateOfBirth)
 	errorUpdatingUser := service.Repo.Database.Save(&user).Error
 	if errorUpdatingUser != nil {
 		return errorUpdatingUser

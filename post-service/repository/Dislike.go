@@ -31,7 +31,7 @@ func (repo DislikeRepo) GetAllDislikesForPost (postId string) []data.Dislike{
 }
 
 func (repo DislikeRepo) RemoveDislike (dislike *data.Dislike) error{
-	return repo.Database.Delete(dislike).Error
+	return repo.Database.Where("postid=? and userid=?",dislike.PostId,dislike.UserId).Delete(&dislike).Error
 }
 
 func (repo DislikeRepo) CheckIfUserDislikedPost (dislike *data.Dislike) bool{

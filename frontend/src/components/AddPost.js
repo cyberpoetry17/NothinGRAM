@@ -48,9 +48,14 @@ function AddPost() {
         // tags.forEach(element => {
         //     //setS
         // });
-        console.log("tagovi:")
-        console.log(post)
-    },[post])
+        console.log("post:")
+        console.log(JSON.stringify(post))
+        axios({
+            method : 'post',
+            url :'http://localhost:8005/createpost',
+            data:JSON.stringify(post),
+        });
+    },[post.LocationID])
     useEffect(()=>{
         axios({
             method : 'get',
@@ -80,11 +85,6 @@ function AddPost() {
         }).then((res)=>{
             console.log(res.data)
             setPost({...post, LocationID:res.data})
-            axios({
-                method : 'post',
-                url :'http://localhost:8005/createpost',
-                data:JSON.stringify(post),
-            });
         });
         
     }

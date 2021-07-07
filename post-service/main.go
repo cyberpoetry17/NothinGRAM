@@ -77,6 +77,8 @@ func tagHandleFuncs(router *mux.Router, tagHandler *handlerss.TagHandler) {
 	router.HandleFunc("/editTag/", tagHandler.EditTag).Methods("POST")
 	router.HandleFunc("/removeTag/", tagHandler.DeleteTag).Methods("DELETE")
 	router.HandleFunc("/filterpublicmaterialbytagid/{tagid}",tagHandler.FilterPublicMaterialByTagId).Methods("GET")
+	router.HandleFunc("/getAllTagsNames",tagHandler.GetAllTagNames).Methods("GET")
+	router.HandleFunc("/getAllTags",tagHandler.GetAllTags).Methods("GET")
 }
 
 func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {

@@ -16,7 +16,6 @@ type UserService struct {
 }
 
 type UpdateUserRequest struct {
-	Token                string      `json:"token"`
 	Name                 string      `json:"name"`
 	Surname              string      `  json:"surname"`
 	Email                string      `  json:"email"`
@@ -212,6 +211,8 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 	//newDate := TimeFormating(r.DateOfBirth)
 
 	user.Gender = r.Gender
+	fmt.Println(user.Gender)
+
 	user.Private = r.Private
 	user.ReceiveNotifications = r.ReceiveNotifications
 	user.Taggable = r.Taggable

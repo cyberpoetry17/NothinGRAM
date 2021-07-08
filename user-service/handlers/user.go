@@ -137,30 +137,6 @@ func (handler *UserHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(tokenString)
 }
 
-// func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
-// 	c, err := r.Cookie("token")
-// 	tknStr := c.Value
-
-// 	token := &data.Token{}
-// 	tkn, err := jwt.ParseWithClaims(tknStr, token, func(token *jwt.Token) (interface{}, error) {
-// 		return []byte("secret"), nil
-// 	})
-// 	if err != nil {
-// 		if err == jwt.ErrSignatureInvalid {
-// 			w.WriteHeader(http.StatusUnauthorized)
-// 			return
-// 		}
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	if !tkn.Valid {
-// 		w.WriteHeader(http.StatusUnauthorized)
-// 		return
-// 	}
-
-// 	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
-// }
-
 func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getById")
 	setupResponse(&w, r)
@@ -170,14 +146,7 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	splitToken := strings.Split(token, "Bearer ")
 	token = splitToken[1]
-	// var tokenStruct authorizationID
-	// err := json.NewDecoder(r.Body).Decode(&tokenStruct) //ovde se nalazi token sa informacijama
-	// if err != nil {
-	// 	w.WriteHeader(http.StatusUnauthorized)
-	// 	return
-	// }
-	println("aaaaaa token je sledeci:")
-	print(token)
+
 	tknStr := token
 	tokenObj := &data.Token{}
 	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
@@ -315,6 +284,8 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	newUser.SetPassword(newUser.Password)
 	err = handler.Service.CreateUser(newUser)
 	if err != nil {
 		fmt.Println(err)

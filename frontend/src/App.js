@@ -67,7 +67,7 @@ export default function App() {
             </nav>
           </div> */}
 
-        <Switch>
+        <Switch >
           <Route path="/profile/:username" component={Profile}/>
           <Route path="/login">
             <Login />

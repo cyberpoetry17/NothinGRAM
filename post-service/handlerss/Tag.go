@@ -84,3 +84,15 @@ func (handler *TagHandler) FilterPublicMaterialByTagId(w http.ResponseWriter, r 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 }
+
+func (handler *TagHandler) GetAllTagNames(w http.ResponseWriter, r *http.Request) {
+	tags := handler.Service.GetAllTagsNames()
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tags)
+}
+
+func (handler *TagHandler) GetAllTags(w http.ResponseWriter, r *http.Request) {
+	tags := handler.Service.GetAllTags()
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tags)
+}

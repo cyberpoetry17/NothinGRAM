@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {serviceConfig} from '../applicationSettings.js'
 import logo from "../resources/nothingramBeli.png";
 import '../styles/Login.css';
+import { withRouter } from 'react-router'
 
 
 
@@ -14,7 +15,7 @@ class Login extends React.Component{
         this.state = {
             _email: "",
             _password: "",
-            message: ""
+            mess: "Invalid login credentials.Please try again."
         }
         this.child = React.createRef();
         this.handleChange = this.handleChange.bind(this);
@@ -39,45 +40,49 @@ class Login extends React.Component{
     }
 
     login(){
-        const {_email,_password} = this.state
+        const {_email,_password,mess} = this.state
 
         const LoginDTO = { email: _email, password: _password}
-        const userLogged = { email: null,username: null,token: null}
+        // const userLogged = { email: null,username: null,token: null}
 
         const requestOpt = {
             method: 'POST',
             headers:{'Content-Type': 'aplication/json'},
-            body: JSON.stringify(LoginDTO)
+            body: JSON.stringify(LoginDTO),
+            credentials: 'same-origin'// ,'access-control-allow-origin' : '*'
         }
 
         fetch(`${serviceConfig.baseURL}/login`,requestOpt)
             .then(response => {
+               
                 if(!response.ok){
                     console.log("neuspelo");
-                    return Promise.reject(response);
-                    
+                   
+                    console.log("neuspelo");
+                    return Promise.reject(response);   
                 }
                 console.log("USPELO");
+                this.props.history.push('/home');
                 return response.json();
             })
-         
             .then((data) => {
+                this.setState({mess: data.message})
                 console.log(data.token);
                 if(data != null){
                     if(data.token != null){
-                        userLogged.username = data.username;
-                        userLogged.email = data.email;
-                        userLogged.token = data.token;
-                        localStorage.setItem('user', userLogged)
-                        this.props.history.push('/home');
+                        localStorage.setItem('token', data.token)
                     }}
+               
             })
-            .catch(response => {
-
-            })
+            .catch((error) => {
+               alert(mess)
+              });
+            
+            
+            
+           
     }
     
-
     render(){
         const {_email, _password} = this.state;
 
@@ -136,4 +141,4 @@ class Login extends React.Component{
     }
 }
 
-export default Login;
+export default withRouter(Login);

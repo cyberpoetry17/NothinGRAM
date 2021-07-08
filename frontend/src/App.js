@@ -3,15 +3,19 @@ import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-import Post from './components/Post'
+//import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
-import Test from "./components/Test"
+//import Test from "./components/Test"
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
+
+import Update from './components/Update';
+
 import Profile from './components/Profile'
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
+
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
 
@@ -41,6 +45,10 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/addPost">ADD POST</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/update">UPDATE USER</Nav.Link>
+              </Nav.Item>
+             
           </Nav>
           {/* <div>
             <nav>
@@ -63,6 +71,9 @@ export default function App() {
                 <li>
                 <Link to="/addPost">Add post</Link>
                 </li>
+                <li>
+                  <Link to="/update">Update user</Link>
+                </li>
               </ul>
             </nav>
           </div> */}
@@ -72,6 +83,9 @@ export default function App() {
           <Route path="/login">
             <Login />
           </Route>
+          <Route path="/update">
+            <Update />
+          </Route>  
           <Route path="/dislike">
             <Dislike/>
           </Route>
@@ -93,6 +107,7 @@ export default function App() {
           <Route path = "/">
             <Home/>
           </Route>
+
         </Switch>
 
       </BrowserRouter>

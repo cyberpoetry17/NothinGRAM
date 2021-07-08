@@ -7,11 +7,17 @@ import (
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
 type MutedHandler struct {
 	Service *services.MutedService
+}
+
+type MutedRequest struct {
+	Token     string
+	MutedUser uuid.UUID
 }
 
 func (handler *MutedHandler) CreateMutedUser(w http.ResponseWriter, r *http.Request) {

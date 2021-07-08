@@ -25,6 +25,28 @@ func (handler *PostHandler) Hello(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (handler *PostHandler) GetNonPrivatePosts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting non private posts..")
+	json.NewEncoder(w).Encode(handler.Service.GetNonPrivatePosts())
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+}
+
+func (handler *PostHandler) GetPostsByUserID(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts for specified user..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(handler.Service.GetPostsByUserID(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+}
+
 func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
 	var post data.Post
@@ -63,6 +85,24 @@ func (handler *PostHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	}
 	if exists {
 		w.WriteHeader(http.StatusOK)
+		fmt.Println("EXISTS")
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func (handler *PostHandler) GetUsernameByPostUserID(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getting username by id..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	username := handler.Service.GetUsernameByPostUserID(id)
+	if username != "" {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(username)
 		fmt.Println("EXISTS")
 	} else {
 		w.WriteHeader(http.StatusNotFound)

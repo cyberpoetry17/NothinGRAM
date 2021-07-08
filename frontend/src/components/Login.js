@@ -7,6 +7,7 @@ import '../styles/Login.css';
 import { withRouter } from 'react-router'
 
 
+
 class Login extends React.Component{
     constructor(props){
         super(props);
@@ -48,7 +49,7 @@ class Login extends React.Component{
             method: 'POST',
             headers:{'Content-Type': 'aplication/json'},
             body: JSON.stringify(LoginDTO),
-            //credentials: 'same-origin' ,'access-control-allow-origin' : '*'
+            credentials: 'same-origin'// ,'access-control-allow-origin' : '*'
         }
 
         fetch(`${serviceConfig.baseURL}/login`,requestOpt)

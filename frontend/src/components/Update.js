@@ -67,9 +67,9 @@ class Update extends React.Component {
     this.updateUser();
   }
 
-  // componentWillMount(){
-  //   this.renderMyData();
-  // }
+  componentWillMount(){
+    this.renderMyData();
+  }
 
   renderMyData() {
     var token = localStorage.getItem("token");
@@ -152,6 +152,7 @@ class Update extends React.Component {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      credentials: 'same-origin',
       body: JSON.stringify(updateUser),
     };
 

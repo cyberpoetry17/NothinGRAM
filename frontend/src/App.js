@@ -10,15 +10,47 @@ import PostFeed from './components/PostFeed';
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
+
 import Update from './components/Update';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
+
+import Profile from './components/Profile'
+
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {Nav} from 'react-bootstrap';
+
 
 export default function App() {
   return (
 
     <>
+
       <BrowserRouter>
-          <div>
+          <Nav className="navbar" activeKey="/" >
+              <Nav.Item>
+                <Nav.Link href="/">HOME</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/pic">PICTURE</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/login">SIGN IN</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/register">SIGN UP!</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/posts">POSTS FEED</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/addPost">ADD POST</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/update">UPDATE USER</Nav.Link>
+              </Nav.Item>
+             
+          </Nav>
+          {/* <div>
             <nav>
               <ul>
                 <li>
@@ -44,15 +76,16 @@ export default function App() {
                 </li>
               </ul>
             </nav>
-          </div>
+          </div> */}
 
-        <Switch>
+        <Switch >
+          <Route path="/profile/:username" component={Profile}/>
           <Route path="/login">
             <Login />
           </Route>
-          <Route path = "/update">
+          <Route path="/update">
             <Update />
-          </Route>
+          </Route>  
           <Route path="/dislike">
             <Dislike/>
           </Route>
@@ -62,10 +95,10 @@ export default function App() {
           <Route path="/pic">
             <AddImg/>
           </Route>
-          <Route path="/posts">
+          <Route className="main" path="/posts">
             <PostFeed/>
           </Route>
-          <Route path="/addPost">
+          <Route  path="/addPost">
             <AddPost/>
           </Route>
           <Route path="/register">
@@ -76,8 +109,8 @@ export default function App() {
           </Route>
 
         </Switch>
-      </BrowserRouter>
 
+      </BrowserRouter>
     </>
 
 

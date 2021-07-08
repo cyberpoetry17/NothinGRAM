@@ -20,3 +20,7 @@ func (service *DislikeService) GetAllDislikesForPost (postId string) []data.Disl
 func (service *DislikeService) RemoveDislike (dislike *data.Dislike) error{
 	return service.Repo.RemoveDislike(dislike)
 }
+
+func (service *DislikeService) CheckIfUserDislikedPost (dislike *data.Dislike) bool{
+	return service.Repo.CheckIfUserDislikedPost(dislike)
+}

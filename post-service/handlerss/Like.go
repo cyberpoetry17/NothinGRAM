@@ -68,7 +68,25 @@ func (handler *LikeHandler) GetAllLikesForPost (w http.ResponseWriter,r *http.Re
 		}
 	} else {
 		_ = json.NewEncoder(w).Encode(0)
-		w.WriteHeader(http.StatusNotFound)
+
+	}
+}
+
+func (handler *LikeHandler) CheckIfUserLikedPost (w http.ResponseWriter,r *http.Request){
+	var like data.Like
+	err := json.NewDecoder(r.Body).Decode(&like)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	liked := handler.Service.CheckIfUserLikedPost(&like)
+
+	if liked != false {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(true)
+	} else {
+		_ = json.NewEncoder(w).Encode(false)
 
 	}
 }

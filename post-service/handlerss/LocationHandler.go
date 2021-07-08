@@ -23,13 +23,15 @@ func (handler *LocationHandler) CreateLocation(w http.ResponseWriter, r *http.Re
 		return
 	}
 	fmt.Println(location)
-	err = handler.Service.CreateLocation(&location)
+
+	err,id := handler.Service.CreateLocation(&location)
 	if err != nil{
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(id)
 }
 
 func (handler *LocationHandler) DeleteLocation(w http.ResponseWriter, r *http.Request) {

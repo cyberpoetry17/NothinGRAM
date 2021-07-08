@@ -3,13 +3,14 @@ package services
 import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
+	"github.com/google/uuid"
 )
 
 type LocationService struct {
 	Repo *repository.LocationRepo
 }
 
-func (service *LocationService) CreateLocation (location *data.Location) error{
+func (service *LocationService) CreateLocation (location *data.Location) (error,uuid.UUID){
 	return service.Repo.CreateLocation(location)
 }
 

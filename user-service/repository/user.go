@@ -17,15 +17,51 @@ func (repo *UserRepo) CreateUser(user *data.User2) error {
 	fmt.Println(result.RowsAffected)
 	return nil
 }
-func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
-	user := &data.User2{}
 
-	err := repo.Database.Where("id = ?", id).Preload("blocked").First(user).Error
+func (repo *UserRepo) GetAll() []data.User2{
+	var users []data.User2
+	repo.Database.
+		Find(&users)
+	return users
+}
 
-	if err != nil {
-		return nil, err
+func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2,error) {
+	var users []data.User2
+	var backUser data.User2
+	users = repo.GetAll()
+	for _,element := range users{
+		if element.ID == id {
+			backUser = element
+			return &backUser,nil
+		}
 	}
-	return user, nil
+	return &backUser,nil
+}
+
+func (repo *UserRepo) GetUserByUsernameForProfile(id uuid.UUID) *data.User2{
+	var users []data.User2
+	var backUser data.User2
+	users = repo.GetAll()
+	for _,element := range users{
+		if element.ID == id {
+			backUser = element
+			return &backUser
+		}
+	}
+	return &backUser
+}
+
+func (repo *UserRepo) GetUsernameById(id uuid.UUID) string {
+	var users []data.User2
+	var backUser string
+	users = repo.GetAll()
+	for _,element := range users{
+		if element.ID == id {
+			backUser = element.Username
+			return backUser
+		}
+	}
+	return backUser
 }
 
 func (repo *UserRepo) GetByEmail(email string) (*data.User2, error) {

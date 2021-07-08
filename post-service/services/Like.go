@@ -20,3 +20,7 @@ func (service *LikeService) GetAllLikesForPost (postId string) []data.Like{
 func (service *LikeService) RemoveLike (like *data.Like) error{
 	return service.Repo.RemoveLike(like)
 }
+
+func (service *LikeService) CheckIfUserLikedPost (like *data.Like) bool{
+	return service.Repo.CheckIfUserLikedPost(like)
+}

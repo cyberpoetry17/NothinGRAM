@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -10,13 +11,13 @@ type LocationRepo struct {
 	Database *gorm.DB
 }
 
-func (repo LocationRepo) CreateLocation(location *data.Location) error {
+func (repo LocationRepo) CreateLocation(location *data.Location) (error,uuid.UUID) {
 	result := repo.Database.Create(location)
 	if(result.Error != nil){
-		return result.Error
+		return result.Error,location.IDLoc
 	}
 	fmt.Println(result.RowsAffected)
-	return nil
+	return nil,location.IDLoc
 }
 
 func (repo LocationRepo) GetLocationForPost (postId string) *data.Location{

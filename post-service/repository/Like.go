@@ -22,7 +22,7 @@ func (repo LikeRepo) CreateLike(like *data.Like) error {
 func (repo LikeRepo) GetAllLikesForPost (postId string) []data.Like{
 	var likes []data.Like
 	var backList []data.Like
-	repo.Database.Preload("Posts").Find(&likes)
+	repo.Database.Find(&likes)
 	for _,element := range likes{
 		if element.PostId.String() == postId {
 			backList = append(backList,element)
@@ -32,5 +32,16 @@ func (repo LikeRepo) GetAllLikesForPost (postId string) []data.Like{
 }
 
 func (repo LikeRepo) RemoveLike (like *data.Like) error{
-	return repo.Database.Delete(like).Error
+	return repo.Database.Where("postid=? and userid=?",like.PostId,like.UserId).Delete(&like).Error
+}
+
+func (repo LikeRepo) CheckIfUserLikedPost (like *data.Like) bool{
+	var likes []data.Like
+	likes = repo.GetAllLikesForPost(like.PostId.String())
+	for _,element := range likes{
+		if element.UserId == like.UserId{
+			return true
+		}
+	}
+	return false
 }

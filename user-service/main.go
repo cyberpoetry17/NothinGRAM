@@ -31,9 +31,9 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
-	router.HandleFunc("/user", handler.GetById).Methods("GET")
+	router.HandleFunc("/user", handler.GetById).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/register", handler.CreateUser).Methods(http.MethodPost, http.MethodOptions)
-	router.HandleFunc("/update", handler.UpdateUser).Methods("POST")
+	router.HandleFunc("/update", handler.UpdateUser).Methods(http.MethodPut, http.MethodOptions)
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 	router.HandleFunc("/logout", handler.Logout).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")

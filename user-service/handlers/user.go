@@ -167,14 +167,18 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	if (*r).Method == "OPTIONS" {
 		return
 	}
-
-	var tokenStruct authorizationID
-	err := json.NewDecoder(r.Body).Decode(&tokenStruct) //ovde se nalazi token sa informacijama
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	tknStr := tokenStruct.Token
+	token := r.Header.Get("Authorization")
+	splitToken := strings.Split(token, "Bearer ")
+	token = splitToken[1]
+	// var tokenStruct authorizationID
+	// err := json.NewDecoder(r.Body).Decode(&tokenStruct) //ovde se nalazi token sa informacijama
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusUnauthorized)
+	// 	return
+	// }
+	println("aaaaaa token je sledeci:")
+	print(token)
+	tknStr := token
 	tokenObj := &data.Token{}
 	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
@@ -225,7 +229,8 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	messageStatus := resp["message"].(string)
 
 	if messageStatus == "Email address not found" || messageStatus == "Invalid login credentials. Please try again" {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
+		var resp = map[string]interface{}{"status": false, "message": "Invalid login credentials. Please try again"}
 		json.NewEncoder(w).Encode(resp)
 		return
 
@@ -350,13 +355,17 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := r.Header.Get("Authorization")
+	splitToken := strings.Split(token, "Bearer ")
+	token = splitToken[1]
+
 	var updateUserRequest services.UpdateUserRequest
 	err := json.NewDecoder(r.Body).Decode(&updateUserRequest) //ovde se nalazi token sa informacijama
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	tknStr := updateUserRequest.Token
+	tknStr := token
 	tokenObj := &data.Token{}
 
 	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
@@ -383,6 +392,6 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAlreadyReported)
 	}
 	fmt.Println("Updated.")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 }

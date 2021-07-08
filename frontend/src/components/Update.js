@@ -59,17 +59,17 @@ handleSubmit(e){
   // }
 
   renderMyData(){
-    var _token = localStorage.getItem("token")
+    var token = localStorage.getItem("token")
     var user2 = null
 
-    const RequestDTO = { token: _token}
+    // const RequestDTO = { token: _token}
         
         // const userLogged = { email: null,username: null,token: null}
-
+       
         const requestOpt = {
-            method: 'POST',
-            headers:{'Content-Type': 'aplication/json'},
-            body: JSON.stringify(RequestDTO),
+            method: 'GET',
+            headers:{'Content-Type': 'aplication/json','Authorization': `Bearer ${token}`},
+            // body: JSON.stringify(RequestDTO),
             credentials: 'same-origin'//,'access-control-allow-origin' : '*'
         }
     fetch(`${serviceConfig.baseURL}/user`,requestOpt)
@@ -89,8 +89,9 @@ handleSubmit(e){
   }
 
   updateUser(){
+    var token = localStorage.getItem("token")
     const {
-      _token,
+     
       _name,
       _surname,
       _username,
@@ -108,7 +109,7 @@ handleSubmit(e){
       _gender} = this.state;
 
   const updateUser = {
-      token: _token,
+     
       email: _email,
       password: _password,
       name: _name,
@@ -126,8 +127,8 @@ handleSubmit(e){
       date: _dateOfBirth 
   }
   const requestOptions = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`},
     body: JSON.stringify(updateUser)};
 
 
@@ -170,7 +171,7 @@ handleSubmit(e){
                   <Form  style={{textAlign:"center"}} onSubmit={this.handleSubmit}>
                       <Form.Group >
                           <Form.Control
-                              
+                              required
                               id="_name"
                               value={_name}
                               type="text"
@@ -180,7 +181,7 @@ handleSubmit(e){
                       </Form.Group>
                       <Form.Group>
                           <Form.Control
-                              
+                              requested
                               id="_surname"
                               value={_surname}
                               type="text"
@@ -190,7 +191,7 @@ handleSubmit(e){
                       </Form.Group>
                       <Form.Group>
                           <Form.Control
-                              
+                              requested
                               id="_username"
                               value={_username}
                               pattern="^[A-Za-z0-9]{0,10}$"
@@ -199,7 +200,7 @@ handleSubmit(e){
                           />
                       </Form.Group>
                       <Form.Control
-                                    
+                                    requested
                                     id="_password"
                                     type="password"
                                     value={_password}
@@ -207,7 +208,7 @@ handleSubmit(e){
                                     onChange={this.handleChange}
                                 />
                                   <Form.Control
-                                    
+                                    requested
                                     id="_email"
                                     type="_email"
                                     value={_email}
@@ -215,7 +216,7 @@ handleSubmit(e){
                                     onChange={this.handleChange}
                                 />
                                  <Form.Control
-                                    
+                                    requested
                                     id="_phone"
                                     type="_phone"
                                     value={_phone}

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
@@ -31,17 +30,19 @@ func initializeHandlers(service *services.UserService, serviceBlocked *services.
 func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
-	c:=cors.New(cors.Options{AllowedOrigins: []string{"*"},AllowCredentials: true})
-	hand := c.Handler(router)
+	// c := cors.New(cors.Options{AllowedOrigins: []string{"*"}, AllowCredentials: true})
+	// hand := c.Handler(router)
 
 	router.HandleFunc("/", handler.Hello).Methods("GET")
-	router.HandleFunc("/user/{userId}", handler.GetById).Methods("GET")
+	router.HandleFunc("/user", handler.GetById).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/register", handler.CreateUser).Methods(http.MethodPost, http.MethodOptions)
-	router.HandleFunc("/update", handler.UpdateUser).Methods("POST")
+	router.HandleFunc("/update", handler.UpdateUser).Methods(http.MethodPut, http.MethodOptions)
+	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
+	router.HandleFunc("/logout", handler.Logout).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
 	router.HandleFunc("/login", handler.LoginUser).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/username/{usernamebyid}", handler.GetUsernameById).Methods("GET")
-	router.HandleFunc("/getuserbyusername/{username}",handler.GetUserByUsernameForProfile).Methods("GET")
+	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods("GET")
 
 	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
@@ -54,7 +55,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/follow", followerHandler.FollowUser).Methods("POST")
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), hand))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }
 
 func init() {

@@ -53,6 +53,18 @@ func (repo *PostRepo) GetAll() []data.Post{
 	return posts
 }
 
+func (repo *PostRepo) GetNonPrivatePosts() []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetAll()
+	for _,element := range posts{
+		if element.Private == false{
+			frontList = append(frontList,element)
+		}
+	}
+	return frontList
+}
+
 func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
 	var posts []data.Post
 	var frontList []data.Post

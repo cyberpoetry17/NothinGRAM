@@ -39,10 +39,18 @@ export class Profile extends React.Component{
         const user = this.state.user;
         return(
             <>
-            <img/>Bice slika<h1>{user.name}</h1>
+            <div className="profile">
+                    <div className="post__headerLeft">
+                        <img src="" alt="" className="post__profilePic"/>slika
+                        <div className="profile__header">
+                            <h1 style={{marginLeft:"8px"}}>{user.name}</h1>
+                            <button className="follow_but">Follow</button>
+                        </div>
+                    </div>
+                </div>
         {data.map((post,i) => (
         <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath}/>
+            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private}/>
         </div>
         ))}
         </>

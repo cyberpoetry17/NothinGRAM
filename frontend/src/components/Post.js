@@ -6,7 +6,7 @@ import { Like } from './Like';
 import {Dislike} from './Dislike';
 import "../styles/post-style.css";
 
-export default function Post({userid,postid,picpath}){
+export default function Post({userid,postid,picpath,privatepost}){
     
     var [username,setUsername] = React.useState();
     var [likes,setLikes] = React.useState(0);
@@ -78,8 +78,8 @@ export default function Post({userid,postid,picpath}){
     }
 
     React.useEffect(()=>GetUsernameByUserId(),[])
-    React.useEffect(() => {const interval = setInterval(()=>{GetLikesForPost()},2000); return () => clearInterval(interval);},[]);
-    React.useEffect(()=>{const interval = setInterval(()=>{GetDislikesForPost()},2000); return () => clearInterval(interval);},[]);
+    React.useEffect(() => {const interval = setInterval(()=>{GetLikesForPost()},200000); return () => clearInterval(interval);},[]);
+    React.useEffect(()=>{const interval = setInterval(()=>{GetDislikesForPost()},200000); return () => clearInterval(interval);},[]);
 
     const render = () =>{
         return(
@@ -87,7 +87,7 @@ export default function Post({userid,postid,picpath}){
             <div className="post">
                     <div className="post__headerLeft">
                         <Link to={"/profile/"+userid}>{username}</Link>
-                        <h3 style={{marginLeft:"8px"}}>{postid}(vrv se sklanja)</h3>
+                        <h3 style={{marginLeft:"8px"}}>Private:{String(privatepost)}</h3>
                     </div>
             <div className="post__body">
                 <img className="postImg" src={picpath} width="100" height="400"/>

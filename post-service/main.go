@@ -84,6 +84,7 @@ func tagHandleFuncs(router *mux.Router, tagHandler *handlerss.TagHandler) {
 }
 
 func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {
+	router.HandleFunc("/getnonprivateposts", handler.GetNonPrivatePosts).Methods("GET")
 	router.HandleFunc("/", handler.Hello).Methods("GET")
 	router.HandleFunc("/createpost", handler.CreatePost).Methods("POST")
 	router.HandleFunc("/allpostsbyuserid/{userid}",handler.GetPostsByUserID).Methods("GET")

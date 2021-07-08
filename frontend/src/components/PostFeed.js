@@ -17,15 +17,13 @@ export class PostFeed extends React.Component{
     }
 
     GetAllPosts(){
-        axios.get('http://localhost:8005/').then((response)=>{
+        axios.get('http://localhost:8005/getnonprivateposts').then((response)=>{
             const data = response.data;
             this.setState({posts:data});
             console.log(this.state.posts)
         })
         .catch(()=>{alert('didnt retrieve ')});
     }
-
-    
     
     render(){
         const data = this.state.posts;
@@ -33,7 +31,7 @@ export class PostFeed extends React.Component{
             <>
         {data.map((post,i) => (
         <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath}/>
+            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private}/>
         </div>
         ))}
         </>

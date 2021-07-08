@@ -1,7 +1,7 @@
-import React from 'react';
 import { app } from './base';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
+import React,{useState,useEffect} from 'react'
 import { Like } from './Like';
 import {Dislike} from './Dislike';
 import "../styles/post-style.css";
@@ -11,7 +11,11 @@ export default function Post({userid,postid,picpath,privatepost}){
     var [username,setUsername] = React.useState();
     var [likes,setLikes] = React.useState(0);
     var [dislikes,setDislikes] = React.useState(0);
-
+    useEffect(()=>{
+        GetLikesForPost()
+        GetDislikesForPost()
+    },[])
+    React.useEffect(()=>GetUsernameByUserId(),[])
     const GetUsernameByUserId = () =>{
         return axios.get('http://localhost:8005/getusernamebyid/'+userid).then((response) =>{
             setUsername(response.data.substring(1,(response.data.length)-2));
@@ -33,7 +37,7 @@ export default function Post({userid,postid,picpath,privatepost}){
     const CheckIfUserLikedPost = () =>{
         axios({method:'post',url:'http://localhost:8005/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then((response)=>{
             if(response.data == false){             //moralo je ovde umesto u likethispost()
-                axios({method:'post',url:'http://localhost:8005/createlike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
+                axios({method:'post',url:'http://localhost:8005/createlike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then(()=>GetLikesForPost());
             }else if(response.data == true){
                 alert("You already liked this post");
             }
@@ -44,7 +48,7 @@ export default function Post({userid,postid,picpath,privatepost}){
     const CheckIfUserDislikedPost = () => {
         axios({method:'post',url:'http://localhost:8005/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then((response)=>{
             if(response.data == false){
-                axios({method:'post',url:'http://localhost:8005/createdislike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
+                axios({method:'post',url:'http://localhost:8005/createdislike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then(()=>GetDislikesForPost());
             }else if (response.data == true){
                 alert("You already disliked this post");
             }
@@ -54,7 +58,7 @@ export default function Post({userid,postid,picpath,privatepost}){
     const DoINeedToRemoveDislike = () => {
         axios({method:'post',url:'http://localhost:8005/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then((response)=>{
             if(response.data == true){
-                axios({method:'post',url:'http://localhost:8005/deletedislike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
+                axios({method:'post',url:'http://localhost:8005/deletedislike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then(()=>GetDislikesForPost());
             }
         });
     }
@@ -62,7 +66,7 @@ export default function Post({userid,postid,picpath,privatepost}){
     const DoINeedToRemoveLike = () => {
         axios({method:'post',url:'http://localhost:8005/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then((response)=>{
             if(response.data == true){
-                axios({method:'post',url:'http://localhost:8005/deletelike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})});
+                axios({method:'post',url:'http://localhost:8005/deletelike',headers:{},data:JSON.stringify({userid:"00000000-0000-0000-0000-000000000030",postid})}).then(()=>GetLikesForPost());
             }
         });
     }
@@ -77,9 +81,7 @@ export default function Post({userid,postid,picpath,privatepost}){
         CheckIfUserDislikedPost();
     }
 
-    React.useEffect(()=>GetUsernameByUserId(),[])
-    React.useEffect(() => {const interval = setInterval(()=>{GetLikesForPost()},200000); return () => clearInterval(interval);},[]);
-    React.useEffect(()=>{const interval = setInterval(()=>{GetDislikesForPost()},200000); return () => clearInterval(interval);},[]);
+    
 
     const render = () =>{
         return(

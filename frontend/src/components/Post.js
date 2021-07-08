@@ -78,21 +78,23 @@ export default function Post({userid,postid,picpath}){
     }
 
     React.useEffect(()=>GetUsernameByUserId(),[])
-    React.useEffect(()=>GetLikesForPost(),[])
-    React.useEffect(()=>GetDislikesForPost(),[])
+    React.useEffect(() => {const interval = setInterval(()=>{GetLikesForPost()},2000); return () => clearInterval(interval);},[]);
+    React.useEffect(()=>{const interval = setInterval(()=>{GetDislikesForPost()},2000); return () => clearInterval(interval);},[]);
+
+    const render = () =>{
         return(
             <>
             <div className="post">
-                <div className="post__header">
                     <div className="post__headerLeft">
                         <Link to={"/profile/"+userid}>{username}</Link>
                         <h3 style={{marginLeft:"8px"}}>{postid}(vrv se sklanja)</h3>
                     </div>
+            <div className="post__body">
+                <img className="postImg" src={picpath} width="100" height="400"/>
+            </div>
+            <div className="post__header">
                 <button className="like_but" onClick={LikeThisPost}>Like</button><p>{likes}</p>
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>{dislikes}</p>
-            </div>
-            <div className="post__body">
-                <img className="postImg" src={picpath} width="100" height="400"/>OVDE DODATI SLIKU
             </div>
             <div >
                 <p>Comments</p>
@@ -105,6 +107,10 @@ export default function Post({userid,postid,picpath}){
             </div>
         </div>
         </>
+        )
+    }
+        return(
+            render()
     );
 
 }

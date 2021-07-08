@@ -80,6 +80,10 @@ func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
 	return user, nil
 }
 
+func (service *UserService) GetUserByUsernameForProfile(id uuid.UUID) *data.User2 {
+	return service.Repo.GetUserByUsernameForProfile(id)
+}
+
 func (service *UserService) GetUsernameById(id uuid.UUID) string {
 	return service.Repo.GetUsernameById(id)
 }

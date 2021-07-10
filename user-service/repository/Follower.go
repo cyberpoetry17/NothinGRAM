@@ -19,7 +19,7 @@ func (repo *FollowerRepo) FollowUser(follower *data.Follower) error {
 }
 
 func (repo *FollowerRepo) UnfollowUser(follower *data.Follower) error {
-	result := repo.Database.Delete(follower)
+	result := repo.Database.Where("idfollower=? and iduser=?", follower.IDFollower, follower.IDUser).Delete(follower)
 	if result.Error != nil {
 		return result.Error
 	}

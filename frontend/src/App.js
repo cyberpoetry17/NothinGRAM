@@ -1,9 +1,10 @@
-import React, { useEffect,useState,useRef } from 'react'
+import React from 'react'
 import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-//import Post from './components/Post'
+import UserHomepage from './components/UserHomepage';
+import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
 //import Test from "./components/Test"
@@ -19,10 +20,10 @@ import {Nav} from 'react-bootstrap';
 import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
 
-export default function App() { 
+export default function App() {
 
   return (
-    
+
     <>
 
       <BrowserRouter>
@@ -52,7 +53,7 @@ export default function App() {
               <Nav.Item >
                 <Nav.Link href="/verification">User Verification</Nav.Link>
               </Nav.Item>
-              : 
+              :
               <label>Nistagram</label>
               }
           </Nav>
@@ -95,7 +96,7 @@ export default function App() {
           </Route>
           <Route path="/update">
             <Update />
-          </Route>  
+          </Route>
           <Route path="/dislike">
             <Dislike/>
           </Route>
@@ -119,7 +120,7 @@ export default function App() {
 
       </BrowserRouter>
     </>
-    
+
 
   );
 }

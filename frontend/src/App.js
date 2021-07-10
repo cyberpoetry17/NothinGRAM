@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect,useState,useRef } from 'react'
 import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
@@ -10,19 +10,19 @@ import PostFeed from './components/PostFeed';
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
-
 import Update from './components/Update';
-
-import Profile from './components/Profile'
-
+import Profile from './components/Profile';
+import Verification from './components/Verification'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
+import { version } from 'react-dom';
+import jwt_decode from 'jwt-decode';
 
+export default function App() { 
 
-export default function App() {
   return (
-
+    
     <>
 
       <BrowserRouter>
@@ -48,7 +48,13 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/update">UPDATE USER</Nav.Link>
               </Nav.Item>
-             
+              {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
+              <Nav.Item >
+                <Nav.Link href="/verification">User Verification</Nav.Link>
+              </Nav.Item>
+              : 
+              <label>Nistagram</label>
+              }
           </Nav>
           {/* <div>
             <nav>
@@ -79,6 +85,7 @@ export default function App() {
           </div> */}
 
         <Switch >
+          <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">
             <PostFeed/>
@@ -112,7 +119,7 @@ export default function App() {
 
       </BrowserRouter>
     </>
-
+    
 
   );
 }

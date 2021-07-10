@@ -28,13 +28,13 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
         });
     }
     
-    const GetLikesForPost = () =>{                                                         //jos nisam namestio skroz da
+    const GetLikesForPost = () =>{                                                         
         return axios.get('http://localhost:8005/alllikesforpost/'+postid).then((response)=>{
             setLikes(response.data)
         });
     }
 
-    const GetDislikesForPost = () =>{                                                         //jos nisam namestio skroz da
+    const GetDislikesForPost = () =>{                                                        
         return axios.get('http://localhost:8005/alldislikesforpost/'+postid).then((response)=>{
             setDislikes(response.data)
         });
@@ -137,6 +137,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
     const render = () =>{
         return(
             <>
+            <div className="post__center">
             <div className="post">
                 <div className="post__header">
                     <div className="post__headerLeft">
@@ -161,6 +162,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
                         Komentar isto dobaviti
                 </p>
             </div>
+        </div>
         </div>
         </>
         )

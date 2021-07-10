@@ -13,9 +13,15 @@
 }
 .post{
     background-color: whitesmoke;
-    max-width: 1200px;
+    max-width: 900px;
     width: 90vw;
     padding: 16px;
+}
+
+.post__center{
+    margin: auto;
+    width: 50%;
+    padding: 10px;
 }
 
 .profile{

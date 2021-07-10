@@ -187,12 +187,23 @@ func (handler *UserHandler) GetUserByUsernameForProfile(w http.ResponseWriter, r
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	idUser, errorParsing := uuid.Parse(id)
-	if errorParsing != nil {
+	resp := handler.Service.GetUserByUsernameForProfile(id)
+	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *UserHandler) GetUserIdByUsernameForProfile(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	fmt.Println("get Id by username..")
+	vars := mux.Vars(r)
+	id := vars["username"]
+
+	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	resp := handler.Service.GetUserByUsernameForProfile(idUser)
+	resp := handler.Service.GetUserIdByUsernameForProfile(id)
 	json.NewEncoder(w).Encode(resp)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

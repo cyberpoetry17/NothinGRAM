@@ -43,6 +43,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/login", handler.LoginUser).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/username/{usernamebyid}", handler.GetUsernameById).Methods("GET")
 	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods(http.MethodGet)
+	router.HandleFunc("/getuseridbyusername/{username}", handler.GetUserIdByUsernameForProfile).Methods(http.MethodGet)
 
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 
@@ -54,7 +55,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
 	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
 
-	router.HandleFunc("/follow", followerHandler.FollowUser).Methods("POST")
+	router.HandleFunc("/follow", followerHandler.FollowUser).Methods(http.MethodPost)
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))

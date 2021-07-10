@@ -141,7 +141,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
             <div className="post">
                 <div className="post__header">
                     <div className="post__headerLeft">
-                        <Link to={"/profile/"+userid}>{username}</Link>
+                        <Link to={"/profile/"+username}>{username}</Link>
                         <h3 style={{marginLeft:"8px"}}>Private:{String(privatepost)}</h3>
                     </div>
                     <button className="report_but" onClick={ReportPost}>Report</button>

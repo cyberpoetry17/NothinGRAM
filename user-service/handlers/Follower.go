@@ -14,6 +14,7 @@ type FollowerHandler struct {
 }
 
 func (handler *FollowerHandler) FollowUser(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w,r)
 	var follower data.Follower
 	err := json.NewDecoder(r.Body).Decode(&follower)
 	if err != nil {
@@ -30,6 +31,7 @@ func (handler *FollowerHandler) FollowUser(w http.ResponseWriter, r *http.Reques
 }
 
 func (handler *FollowerHandler) UnfollowUser(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w,r)
 	var follower data.Follower
 	err := json.NewDecoder(r.Body).Decode(&follower)
 	if err != nil {

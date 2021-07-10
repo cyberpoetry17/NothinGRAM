@@ -33,6 +33,20 @@ func (handler *PostHandler) GetNonPrivatePosts(w http.ResponseWriter, r *http.Re
 
 }
 
+func (handler *PostHandler) GetNonPrivatePostsForUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting non private posts for user..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(handler.Service.GetNonPrivatePostsForUser(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+}
+
 func (handler *PostHandler) GetPostsByUserID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Getting all posts for specified user..")
 	vars := mux.Vars(r)

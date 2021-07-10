@@ -80,6 +80,9 @@ export default function App() {
 
         <Switch >
           <Route path="/profile/:username" component={Profile}/>
+          <Route className="main" path="/posts">
+            <PostFeed/>
+          </Route>
           <Route path="/login">
             <Login />
           </Route>
@@ -94,9 +97,6 @@ export default function App() {
           </Route>
           <Route path="/pic">
             <AddImg/>
-          </Route>
-          <Route className="main" path="/posts">
-            <PostFeed/>
           </Route>
           <Route  path="/addPost">
             <AddPost/>

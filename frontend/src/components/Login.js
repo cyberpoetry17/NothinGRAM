@@ -32,10 +32,6 @@ class Login extends React.Component{
         this.login();
     }
 
-    componentDidMount(){
-      
-    }
-
     login(){
         const {_email,_password,mess} = this.state
 

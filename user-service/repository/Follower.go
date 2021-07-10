@@ -26,3 +26,18 @@ func (repo *FollowerRepo) UnfollowUser(follower *data.Follower) error {
 
 	return nil
 }
+func (repo *FollowerRepo) GetAll() []data.Follower{
+	var followers []data.Follower
+	repo.Database.
+		Find(&followers)
+	return followers
+}
+func (repo *FollowerRepo) FollowStatusForProfile(follower *data.Follower) bool {
+	var result = repo.GetAll()
+	for _,element := range result{
+		if element.IDFollower == follower.IDFollower && element.IDUser == follower.IDUser{
+			return true
+		}
+	}
+	return false
+}

@@ -18,14 +18,26 @@ export class Profile extends React.Component{
           followed:false
         };
       }
-    componentDidMount(){
+    async componentDidMount(){
+        await this.IsProfileFollowedByLoggedUser();
         this.GetUserByUserId();
         this.GetAllPostsForUserDependingOnFollowage();
         
     }
 
-    async GetUserByUserId(){
-        await axios.get('http://localhost:8004/getuserbyusername/'+this.props.match.params.username).then((response)=>{
+    async IsProfileFollowedByLoggedUser(){
+        var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
+        await axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
+            const data = response.data
+            axios.post('http://localhost:8004/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data})).then((response)=>{
+            this.setState({followed:response.data})
+            console.log(this.state.followed)
+        })
+    })
+    }
+
+    GetUserByUserId(){
+        axios.get('http://localhost:8004/getuserbyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({user:data});
         })
@@ -54,22 +66,20 @@ export class Profile extends React.Component{
         var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
         axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data
-        if(this.state.followed == false){
-        axios.post('http://localhost:8004/follow',JSON.stringify({idfollower:userfollowing,iduser:data})).then(
-            ()=>{
-                alert('You have followed user with userid' + this.state.userid);
-                this.setState({followed:true});
+            if(this.state.followed == false){
+                axios.post('http://localhost:8004/follow',JSON.stringify({idfollower:userfollowing,iduser:data})).then(
+                ()=>{
+                    alert('You have followed user with userid' + this.state.userid);
+                    this.setState({followed:true});
+                }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
+            }else if (this.state.followed == true){
+                axios.post('http://localhost:8004/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data})).then(
+                ()=>{
+                    alert('You have unfollowed user with userid' + this.state.userid);
+                    this.setState({followed:false});
+                }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
             }
-        ).then(()=>this.GetAllPostsForUserDependingOnFollowage())
-        }else if (this.state.followed == true){
-            axios.post('http://localhost:8004/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data})).then(
-            ()=>{
-                alert('You have unfollowed user with userid' + this.state.userid);
-                this.setState({followed:false});
-            }
-        ).then(()=>this.GetAllPostsForUserDependingOnFollowage())
-        }
-    }).catch(()=>{alert('didnt retrieve user by username')});
+        }).catch(()=>{alert('didnt retrieve user by username')});
     }
 
     render(){

@@ -56,6 +56,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
 
 	router.HandleFunc("/follow", followerHandler.FollowUser).Methods(http.MethodPost)
+	router.HandleFunc("/getfollowstatus", followerHandler.FollowStatusForProfile).Methods(http.MethodPost)
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))

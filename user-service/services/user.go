@@ -16,7 +16,6 @@ type UserService struct {
 }
 
 type UpdateUserRequest struct {
-	ID                   uuid.UUID   `json:"id"`
 	Name                 string      `json:"name"`
 	Surname              string      `  json:"surname"`
 	Email                string      `  json:"email"`
@@ -31,6 +30,7 @@ type UpdateUserRequest struct {
 	Private              bool        `json:"private"`
 	Taggable             bool        `  json:"taggable"`
 	ReceiveNotifications bool        `json:"notifications"`
+	//Verify               bool        `json:"verify"`
 }
 
 type RegisterRequest struct {
@@ -72,12 +72,20 @@ func (service *UserService) UserExists(userId string) (bool, error) {
 	return exists, nil
 }
 
-func (service *UserService) GetUserById(id uuid.UUID) (*data.User2, error) {
-	user, err := service.Repo.GetById(id)
+func (service *UserService) GetUserById(ID uuid.UUID) (*data.User2, error) {
+	user, err := service.Repo.GetById(ID)
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (service *UserService) GetUserByUsernameForProfile(id uuid.UUID) *data.User2 {
+	return service.Repo.GetUserByUsernameForProfile(id)
+}
+
+func (service *UserService) GetUsernameById(id uuid.UUID) string {
+	return service.Repo.GetUsernameById(id)
 }
 
 func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
@@ -89,7 +97,8 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 		return resp
 	}
 	//setuje vreme
-	expiresAt := time.Now().Add(time.Minute * 1000)
+
+	expiresAt := time.Now().Local().Add(time.Minute * 10000)
 	//poredi hesirane passworde da vidi da li su jednaki
 	errf := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(r.Password))
 	if errf != nil && errf == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
@@ -161,8 +170,8 @@ func TimeFormating(date string) time.Time {
 	return dateStamp
 }
 
-func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
-	user, error := service.Repo.GetById(r.ID)
+func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) error {
+	user, error := service.Repo.GetById(ID)
 	if error != nil {
 		fmt.Println("ovo ovde je greska")
 		return error
@@ -210,11 +219,13 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest) error {
 	//newDate := TimeFormating(r.DateOfBirth)
 
 	user.Gender = r.Gender
+	fmt.Println(user.Gender)
+
 	user.Private = r.Private
 	user.ReceiveNotifications = r.ReceiveNotifications
 	user.Taggable = r.Taggable
 	user.Role = r.Role
-	// user.DateOfBirth = nil
+	user.DateOfBirth = TimeFormating(r.DateOfBirth)
 	errorUpdatingUser := service.Repo.Database.Save(&user).Error
 	if errorUpdatingUser != nil {
 		return errorUpdatingUser

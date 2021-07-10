@@ -6,6 +6,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 type PostRepo struct {
@@ -50,22 +53,81 @@ func (repo *PostRepo) GetAll() []data.Post{
 	return posts
 }
 
-func (repo *PostRepo) AddTagToPost(tag data.Tag,postId uuid.UUID) error{
+func (repo *PostRepo) GetNonPrivatePosts() []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetAll()
+	for _,element := range posts{
+		if element.Private == false{
+			frontList = append(frontList,element)
+		}
+	}
+	return frontList
+}
+
+func (repo *PostRepo) GetNonPrivatePostsForUser(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetPostsByUserID(id)
+	for _,element := range posts{
+		if element.Private == false{
+			frontList = append(frontList,element)
+		}
+	}
+	return frontList
+}
+
+func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	repo.Database.
+		Preload("Tags").
+		Preload("Comments").
+		Preload("Likes").
+		Preload("Dislikes").
+		Find(&posts)
+	for _,element := range posts{
+		if element.UserID.String() == id{
+			frontList = append(frontList, element)
+		}
+	}
+	return frontList
+}
+
+
+func(repo *PostRepo) GetUsernameByPostUserID(userid string) string {
+	var backString string
+	var posts = repo.GetAll()
+	for _,element := range posts{
+		if element.UserID.String() == userid{
+			response, _ := http.Get("http://localhost:8004/username/{"+userid+"}")
+			backString,_:=ioutil.ReadAll(response.Body)
+			return string(backString)
+		}
+	}
+	return backString
+}
+
+func (repo *PostRepo) AddTagToPost(tag *data.Tag,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if(element.ID == postId){
-			element.Tags = append(element.Tags, tag)
+			log.Println(tag.ID.String())
+			//element.Tags = append(element.Tags, *tag)
 			//repo.Database.Model(&data.Post{}).Association("Tags").Append(tag)
 			////return nil
+			tag.Posts = append(tag.Posts, element)
+			err :=  repo.Database.Save(&tag).Error
 			//err := repo.Database.Save(&element).Error	//ovo radi ali kreira novi tag
-
+			//repo.Database.Model(&element).Association("Tags").Append(&tag)
 			//err:=repo.Database.Session(&gorm.Session{FullSaveAssociations: true}).Save(element).Error
-			err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID.String(),element.ID.String()).Error
+			//err := repo.Database.Raw("INSERT INTO posts_tags (tag_id,post_id) VALUES (?,?)",tag.ID,element.ID).Error
 
 			return err
 		}
 	}
 	return nil
 }
+
 func (repo *PostRepo) AddLocationToPost(location data.Location,postId uuid.UUID) error{
 	for _, element := range repo.GetAll(){
 		if element.ID == postId {

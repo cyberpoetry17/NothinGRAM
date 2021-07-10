@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -12,6 +13,11 @@ type TagRepo struct {
 }
 
 func (repo *TagRepo) CreateTag(tag *data.Tag) error {
+	for _,el := range  repo.GetAllTags(){
+		if el.TagName == tag.TagName{
+			return errors.New("TagName exists !")
+		}
+	}
 	result := repo.Database.Create(tag)
 	if(result.Error != nil){
 		return result.Error
@@ -19,6 +25,7 @@ func (repo *TagRepo) CreateTag(tag *data.Tag) error {
 	fmt.Println(result.RowsAffected)
 	return nil //sta s ovim nilom
 }
+
 
 //BY ID
 func (repo *TagRepo) TagExists(tagId uuid.UUID) bool {
@@ -89,6 +96,21 @@ func (repo *TagRepo) FilterPublicMaterialByTag(tagId string) []data.Post{
 		fmt.Println(el.ID)
 	}
 	return backList//frontList
+}
+
+func (repo *TagRepo) getById(tagId uuid.UUID) data.Tag{
+	var tag data.Tag
+	repo.Database.Where("id = ?", tagId).Find(&tag)
+	return tag
+}
+
+func (repo *TagRepo) GetAllTagsNames() []string{
+	tags := repo.GetAllTags()
+	var tagNames []string
+	for _,element := range tags{
+		tagNames = append(tagNames, element.TagName)
+	}
+	return tagNames
 }
 //func (repo *TagRepo) AddPostToTag(tag *data.Tag, post)error{
 //	repo.Database.

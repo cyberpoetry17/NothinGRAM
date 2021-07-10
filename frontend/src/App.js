@@ -7,18 +7,51 @@ import UserHomepage from './components/UserHomepage';
 import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
-import Test from "./components/Test"
+//import Test from "./components/Test"
 import AddPost  from './components/AddPost';
 import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
+
+import Update from './components/Update';
+
+import Profile from './components/Profile'
+
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import {Nav} from 'react-bootstrap';
+
 
 export default function App() {
   return (
 
     <>
+
       <BrowserRouter>
-          <div>
+          <Nav className="navbar" activeKey="/" >
+              <Nav.Item>
+                <Nav.Link href="/">HOME</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/pic">PICTURE</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/login">SIGN IN</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/register">SIGN UP!</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/posts">POSTS FEED</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/addPost">ADD POST</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/update">UPDATE USER</Nav.Link>
+              </Nav.Item>
+
+          </Nav>
+          {/* <div>
             <nav>
               <ul>
                 <li>
@@ -39,13 +72,23 @@ export default function App() {
                 <li>
                 <Link to="/addPost">Add post</Link>
                 </li>
+                <li>
+                  <Link to="/update">Update user</Link>
+                </li>
               </ul>
             </nav>
-          </div>
+          </div> */}
 
-        <Switch>
+        <Switch >
+          <Route path="/profile/:username" component={Profile}/>
+          <Route className="main" path="/posts">
+            <PostFeed/>
+          </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/update">
+            <Update />
           </Route>
           <Route path="/dislike">
             <Dislike/>
@@ -56,22 +99,19 @@ export default function App() {
           <Route path="/pic">
             <AddImg/>
           </Route>
-          <Route path="/posts">
-            <PostFeed/>
-          </Route>
-          <Route path="/addPost">
+          <Route  path="/addPost">
             <AddPost/>
           </Route>
           <Route path="/register">
             <RegisterUser />
-          </Route>
-          <Route path="/userhomepage" component={UserHomepage} />
+          </Route> 
           <Route path = "/">
             <Home/>
           </Route>
-        </Switch>
-      </BrowserRouter>
 
+        </Switch>
+
+      </BrowserRouter>
     </>
 
 

@@ -41,3 +41,7 @@ func (service *TagService) GetAllTags() []data.Tag{
 func (service *TagService) FilterPublicMaterialByTags(tagId string) []data.Post{
 	return service.Repo.FilterPublicMaterialByTag(tagId)
 }
+
+func (service *TagService) GetAllTagsNames() []string{
+	return service.Repo.GetAllTagsNames()
+}

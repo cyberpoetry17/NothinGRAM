@@ -178,6 +178,7 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *UserHandler) GetUserByUsernameForProfile(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
 	fmt.Println("getById")
 	vars := mux.Vars(r)
 	id := vars["username"]

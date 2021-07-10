@@ -1,5 +1,5 @@
 import { app } from './base';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
+import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { Like } from './Like';
@@ -7,17 +7,21 @@ import {Dislike} from './Dislike';
 import jwt_decode from 'jwt-decode';
 import "../styles/post-style.css";
 
-export default function Post({userid,postid,picpath,privatepost}){
+export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
     
     var [username,setUsername] = React.useState();
     var [likes,setLikes] = React.useState(0);
     var [dislikes,setDislikes] = React.useState(0);
-    var tokenInfo = jwt_decode(localStorage.getItem('token'))
+    let history = useHistory();
+    var tokenInfo;
+
     useEffect(()=>{
         GetLikesForPost()
         GetDislikesForPost()
     },[])
-    React.useEffect(()=>GetUsernameByUserId(),[])
+
+    React.useEffect(()=>GetUsernameByUserId(),[]);
+
     const GetUsernameByUserId = () =>{
         return axios.get('http://localhost:8005/getusernamebyid/'+userid).then((response) =>{
             setUsername(response.data.substring(1,(response.data.length)-2));
@@ -44,7 +48,7 @@ export default function Post({userid,postid,picpath,privatepost}){
                 alert("You already liked this post");
             }
         });
-
+    
     }
 
     const CheckIfUserDislikedPost = () => {
@@ -74,25 +78,73 @@ export default function Post({userid,postid,picpath,privatepost}){
     }
 
     const LikeThisPost = () =>{
-        DoINeedToRemoveDislike();
-        CheckIfUserLikedPost();
+        try{
+            tokenInfo = jwt_decode(localStorage.getItem('token'));
+        }catch(e){
+            tokenInfo = "";
+            console.error(e);
+        }
+        if(tokenInfo!=""){
+            DoINeedToRemoveDislike();
+            CheckIfUserLikedPost();
+        }else{
+            alert("You are not logged in.You will be redirected to login.");
+            history.push('/login');
+        }
     }
 
     const DislikeThisPost = () =>{
-        DoINeedToRemoveLike();
-        CheckIfUserDislikedPost();
+        try{
+            tokenInfo = jwt_decode(localStorage.getItem('token'));
+        }catch(e){
+            tokenInfo = "";
+            console.error(e);
+        }
+        if(tokenInfo!=""){
+            DoINeedToRemoveLike();
+            CheckIfUserDislikedPost();
+        }else{
+            alert("You are not logged in.You will be redirected to login.");
+            history.push('/login');
+        }
     }
 
-    
+    const CheckIfUserReportedPost = () =>{
+        axios({method:'post',url:'http://localhost:8005/checkifreportedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+            if(response.data == false){
+                axios({method:'post',url:'http://localhost:8005/reportpost',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>{alert("Post has been reported.")});
+            }else if(response.data == true){
+                alert("You already reported this post");
+            }
+        });
+    }
+
+    const ReportPost = () => {
+        try{
+            tokenInfo = jwt_decode(localStorage.getItem('token'));
+        }catch(e){
+            tokenInfo = "";
+            console.error(e);
+        }
+        if(tokenInfo!=""){
+            CheckIfUserReportedPost();
+        }else{
+            alert("You are not logged in.You will be redirected to login.");
+            history.push('/login');
+        }
+    }
 
     const render = () =>{
         return(
             <>
             <div className="post">
+                <div className="post__header">
                     <div className="post__headerLeft">
                         <Link to={"/profile/"+userid}>{username}</Link>
                         <h3 style={{marginLeft:"8px"}}>Private:{String(privatepost)}</h3>
                     </div>
+                    <button className="report_but" onClick={ReportPost}>Report</button>
+                </div>
             <div className="post__body">
                 <img className="postImg" src={picpath} width="100" height="400"/>
             </div>

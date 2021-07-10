@@ -27,7 +27,7 @@ export class Profile extends React.Component{
     }
 
     GetAllPostsForUser(){
-        axios.get('http://localhost:8005/allpostsbyuserid/'+this.props.match.params.username).then((response)=>{
+        axios.get('http://localhost:8005/getnonprivateposts/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({posts:data});
         })

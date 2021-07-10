@@ -39,6 +39,10 @@ func (service *PostService) GetNonPrivatePosts() []data.Post{
 	return service.PostRepo.GetNonPrivatePosts()
 }
 
+func (service *PostService) GetNonPrivatePostsForUser(id string) []data.Post{
+	return service.PostRepo.GetNonPrivatePostsForUser(id)
+}
+
 func (service *PostService) GetPostsByUserID(id string) []data.Post{
 	return service.PostRepo.GetPostsByUserID(id)
 }

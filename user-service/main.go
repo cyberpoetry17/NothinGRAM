@@ -42,7 +42,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
 	router.HandleFunc("/login", handler.LoginUser).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/username/{usernamebyid}", handler.GetUsernameById).Methods("GET")
-	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods("GET")
+	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods(http.MethodGet)
 
 	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")

@@ -39,6 +39,17 @@
     font-size: large;
 }
 
+.report_but{
+    border: none;
+    background-color: whitesmoke;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+}
+.report_but:focus{
+    outline: none;
+}
+
 .follow_but{
     border: none;
     cursor: pointer;

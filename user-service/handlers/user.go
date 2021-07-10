@@ -305,6 +305,7 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if (*r).Method == "OPTIONS" {
 		return
 	}
+
 	// //var user data.User2
 	var user services.RegisterRequest
 	//var user data.User2

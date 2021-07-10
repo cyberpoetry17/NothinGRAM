@@ -1,11 +1,10 @@
 import React from 'react';
 import {Form, Button, Container,Image} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import {withRouter} from 'react-router';
 import {serviceConfig} from '../applicationSettings.js'
 import logo from "../resources/nothingramBeli.png";
 import '../styles/Login.css';
-import { withRouter } from 'react-router'
-
 
 
 class Login extends React.Component{
@@ -22,8 +21,6 @@ class Login extends React.Component{
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
- 
-  
 
     handleChange(e){
         const { id, value } = e.target;
@@ -54,12 +51,12 @@ class Login extends React.Component{
 
         fetch(`${serviceConfig.baseURL}/login`,requestOpt)
             .then(response => {
-               
+
                 if(!response.ok){
                     console.log("neuspelo");
-                   
+
                     console.log("neuspelo");
-                    return Promise.reject(response);   
+                    return Promise.reject(response);
                 }
                 console.log("USPELO");
                 this.props.history.push('/home');
@@ -72,17 +69,17 @@ class Login extends React.Component{
                     if(data.token != null){
                         localStorage.setItem('token', data.token)
                     }}
-               
+
             })
             .catch((error) => {
                alert(mess)
               });
-            
-            
-            
-           
+
+
+
+
     }
-    
+
     render(){
         const {_email, _password} = this.state;
 

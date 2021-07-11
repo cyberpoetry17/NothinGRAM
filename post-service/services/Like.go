@@ -24,3 +24,4 @@ func (service *LikeService) RemoveLike (like *data.Like) error{
 func (service *LikeService) CheckIfUserLikedPost (like *data.Like) bool{
 	return service.Repo.CheckIfUserLikedPost(like)
 }
+

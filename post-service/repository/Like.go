@@ -31,6 +31,18 @@ func (repo LikeRepo) GetAllLikesForPost (postId string) []data.Like{
 	return backList
 }
 
+func (repo LikeRepo) GetAllLikedByUser (userid string) []data.Like{
+	var likes []data.Like
+	var backList []data.Like
+	repo.Database.Preload("Posts").Find(&likes)
+	for _,element := range likes{
+		if element.UserId == userid {
+			backList = append(backList,element)
+		}
+	}
+	return backList
+}
+
 func (repo LikeRepo) RemoveLike (like *data.Like) error{
 	return repo.Database.Where("postid=? and userid=?",like.PostId,like.UserId).Delete(&like).Error
 }

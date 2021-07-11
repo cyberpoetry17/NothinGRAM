@@ -94,6 +94,23 @@ func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
 	return frontList
 }
 
+func (repo *PostRepo) GetPostByPostID(id string) data.Post{
+	var posts []data.Post
+	var frontList data.Post
+	repo.Database.
+		Preload("Tags").
+		Preload("Comments").
+		Preload("Likes").
+		Preload("Dislikes").
+		Find(&posts)
+	for _,element := range posts{
+		if element.ID.String() == id{
+			frontList = element
+		}
+	}
+	return frontList
+}
+
 
 func(repo *PostRepo) GetUsernameByPostUserID(userid string) string {
 	var backString string

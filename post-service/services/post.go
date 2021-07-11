@@ -9,6 +9,8 @@ import (
 type PostService struct {
 	PostRepo *repository.PostRepo
 	TagRepo  *repository.TagRepo
+	LikeRepo *repository.LikeRepo
+	DislikeRepo *repository.DislikeRepo
 }
 
 //verovatno treba da vrati neku vrednost
@@ -49,4 +51,28 @@ func (service *PostService) GetPostsByUserID(id string) []data.Post{
 
 func (service *PostService) GetUsernameByPostUserID(userid string) string{
 	return service.PostRepo.GetUsernameByPostUserID(userid)
+}
+
+func (service *PostService) GetLikedByUser(userid string) []data.Post{
+	var likedPosts []data.Like
+	var frontList []data.Post
+	service.LikeRepo.Database.Find(&likedPosts)
+	for _,element := range likedPosts{
+		if element.UserId == userid {
+			frontList = append(frontList, service.PostRepo.GetPostByPostID(element.PostId.String()))
+		}
+	}
+	return frontList
+}
+
+func (service *PostService) GetDislikedByUser(userid string) []data.Post{
+	var dislikedPosts []data.Dislike
+	var frontList []data.Post
+	service.DislikeRepo.Database.Find(&dislikedPosts)
+	for _,element := range dislikedPosts{
+		if element.UserId == userid {
+			frontList = append(frontList, service.PostRepo.GetPostByPostID(element.PostId.String()))
+		}
+	}
+	return frontList
 }

@@ -30,9 +30,9 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/">HOME</Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link href="/pic">PICTURE</Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
               <Nav.Item>
                 <Nav.Link href="/login">SIGN IN</Nav.Link>
               </Nav.Item>
@@ -102,9 +102,9 @@ export default function App() {
           <Route path="/like">
             <Like/>
           </Route>
-          <Route path="/pic">
+          {/* <Route path="/pic">
             <AddImg/>
-          </Route>
+          </Route> */}
           <Route  path="/addPost">
             <AddPost/>
           </Route>

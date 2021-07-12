@@ -39,3 +39,15 @@ func (repo *CommentRepo) GetAllComments() []data.Comment{
 	repo.Database.Find(&comments)
 	return comments
 }
+
+func (repo *CommentRepo) GetAllByPostId(postid string) ([]data.Comment,error){
+	var comments []data.Comment
+	var frontList []data.Comment
+	result := repo.Database.Find(&comments)
+	for _,element := range comments{
+		if element.PostId.String() == postid{
+			frontList = append(frontList,element)
+		}
+	}
+	return frontList,result.Error
+}

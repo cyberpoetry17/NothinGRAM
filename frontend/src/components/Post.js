@@ -6,18 +6,22 @@ import { Like } from './Like';
 import {Dislike} from './Dislike';
 import jwt_decode from 'jwt-decode';
 import "../styles/post-style.css";
+import Comment from './Comment';
+import CommentInput from './CommentInput';
 
 export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
     
     var [username,setUsername] = React.useState();
     var [likes,setLikes] = React.useState(0);
     var [dislikes,setDislikes] = React.useState(0);
+    var [comments,setComments] = React.useState();
     let history = useHistory();
     var tokenInfo;
 
     useEffect(()=>{
         GetLikesForPost()
         GetDislikesForPost()
+        GetCommentsForPost()
     },[])
 
     React.useEffect(()=>GetUsernameByUserId(),[]);
@@ -25,6 +29,12 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
     const GetUsernameByUserId = () =>{
         return axios.get('http://localhost:8005/getusernamebyid/'+userid).then((response) =>{
             setUsername(response.data.substring(1,(response.data.length)-2));
+        });
+    }
+
+    const GetCommentsForPost = () =>{
+        axios.get('http://localhost:8005/getcommentsforpost/'+postid).then((response)=>{
+            setComments(response.data)
         });
     }
     
@@ -154,13 +164,15 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>{dislikes}</p>
             </div>
             <div >
+                <CommentInput postid={postid} getcoms={GetCommentsForPost}/>
                 <p>Comments</p>
-                <p style={{backgroundColor:"white"}}>
-                    <span style={{fontWeight:"500",marginRight:"6px"}}>
-                        Ovde ubaciti ime metodom
-                    </span>
-                        Komentar isto dobaviti
-                </p>
+                        {comments ? (
+                            comments.map((comment,i)=>(
+                                <div className="feed" key={i}>
+                                    <Comment comments={comment.Comment} posteduser={comment.UserId}></Comment>
+                                </div>
+                            ))
+                        ):<></>}
             </div>
         </div>
         </div>

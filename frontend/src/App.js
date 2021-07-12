@@ -44,6 +44,9 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/posts">POSTS FEED</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/addPost">ADD POST</Nav.Link>
+              </Nav.Item>
               {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
               <Nav.Item >
                 <Nav.Link href="/verification">User Verification</Nav.Link>

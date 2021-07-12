@@ -61,6 +61,32 @@ func (handler *PostHandler) GetPostsByUserID(w http.ResponseWriter, r *http.Requ
 
 }
 
+func (handler *PostHandler) GetLikedByUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts user liked..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(handler.Service.GetLikedByUser(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *PostHandler) GetDislikedByUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts user disliked..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(handler.Service.GetDislikedByUser(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
 	var post data.Post

@@ -26,7 +26,7 @@
 
 .profile{
     display: flex;
-    width: 1200px;
+    width: 100%;
     background-color: gray;
     
 }

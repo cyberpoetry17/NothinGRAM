@@ -49,17 +49,30 @@ func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
 // 	return &backUser,nil
 // }
 
-func (repo *UserRepo) GetUserByUsernameForProfile(id uuid.UUID) *data.User2 {
+func (repo *UserRepo) GetUserByUsernameForProfile(id string) *data.User2 {
 	var users []data.User2
 	var backUser data.User2
 	users = repo.GetAll()
 	for _, element := range users {
-		if element.ID == id {
+		if element.Username == id {
 			backUser = element
 			return &backUser
 		}
 	}
 	return &backUser
+}
+
+func (repo *UserRepo) GetUserIdByUsernameForProfile(id string) string {
+	var users []data.User2
+	var backUser string
+	users = repo.GetAll()
+	for _, element := range users {
+		if element.Username == id {
+			backUser = element.ID.String()
+			return backUser
+		}
+	}
+	return backUser
 }
 
 func (repo *UserRepo) GetUsernameById(id uuid.UUID) string {

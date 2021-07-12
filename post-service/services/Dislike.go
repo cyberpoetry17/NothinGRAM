@@ -24,3 +24,13 @@ func (service *DislikeService) RemoveDislike (dislike *data.Dislike) error{
 func (service *DislikeService) CheckIfUserDislikedPost (dislike *data.Dislike) bool{
 	return service.Repo.CheckIfUserDislikedPost(dislike)
 }
+
+func (service *DislikeService) GetDislikedForUser (userid string) []data.Dislike{
+	var dislikes []data.Dislike
+	var frontList []data.Dislike
+	dislikes = service.Repo.GetAllDislikedByUser(userid)
+	for _,element := range dislikes{
+		frontList = append(frontList, element)
+	}
+	return frontList
+}

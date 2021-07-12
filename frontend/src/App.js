@@ -1,9 +1,10 @@
-import React, { useEffect,useState,useRef } from 'react'
+import React from 'react'
 import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-//import Post from './components/Post'
+import UserHomepage from './components/UserHomepage';
+import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
 //import Test from "./components/Test"
@@ -18,11 +19,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
 import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
+import UserInteractedContent from './components/UserInteractedContent';
 
-export default function App() { 
+export default function App() {
 
   return (
-    
+
     <>
 
       <BrowserRouter>
@@ -42,18 +44,19 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/posts">POSTS FEED</Nav.Link>
               </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="/addPost">ADD POST</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="/update">UPDATE USER</Nav.Link>
-              </Nav.Item>
               {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
               <Nav.Item >
                 <Nav.Link href="/verification">User Verification</Nav.Link>
               </Nav.Item>
-              : 
-              <label>Nistagram</label>
+              :
+              null
+              }
+              {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
+              <Nav.Item >
+                <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Your liked/disliked content</Nav.Link>
+              </Nav.Item>
+              :
+              null
               }
           </Nav>
           {/* <div>
@@ -85,6 +88,7 @@ export default function App() {
           </div> */}
 
         <Switch >
+          <Route path="/userinteracted/:username" component={UserInteractedContent}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">
@@ -95,7 +99,7 @@ export default function App() {
           </Route>
           <Route path="/update">
             <Update />
-          </Route>  
+          </Route>
           <Route path="/dislike">
             <Dislike/>
           </Route>
@@ -119,7 +123,7 @@ export default function App() {
 
       </BrowserRouter>
     </>
-    
+
 
   );
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type LocationRepo struct {
@@ -12,6 +13,11 @@ type LocationRepo struct {
 }
 
 func (repo LocationRepo) CreateLocation(location *data.Location) (error,uuid.UUID) {
+	for _,el := range repo.GetAll(){
+		if(strings.ToLower(el.Country) == strings.ToLower(location.Country) && strings.ToLower(el.City)== strings.ToLower(location.City) && strings.ToLower(el.Address)== strings.ToLower(location.Address)){
+			return  nil, el.IDLoc
+		}
+	}
 	result := repo.Database.Create(location)
 	if(result.Error != nil){
 		return result.Error,location.IDLoc

@@ -1,5 +1,6 @@
 import { app } from './base';
 import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
+import {Carousel} from 'react-bootstrap';
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { Like } from './Like';
@@ -15,6 +16,9 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     var [likes,setLikes] = React.useState(0);
     var [dislikes,setDislikes] = React.useState(0);
     var [comments,setComments] = React.useState();
+    const [media, setMedia] = useState([])
+    const [loaded, setLoaded]= useState(false)
+    const [firstTime, setFirstTime] = useState(true)
     let history = useHistory();
     var tokenInfo;
 
@@ -22,9 +26,30 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
         GetLikesForPost()
         GetDislikesForPost()
         GetCommentsForPost()
+        GetMediaForPost()
     },[])
 
+    useEffect(()=>{
+        if(firstTime){
+            setFirstTime(false)
+            return
+        }
+        setLoaded(true)
+        console.log("media",media)
+    },[media])
+
     React.useEffect(()=>GetUsernameByUserId(),[]);
+
+    const GetMediaForPost = ()=>{
+        var Url ='http://localhost:8005/GetMediaForPost?PostId='+postid
+        axios({
+            method : 'get',
+            url :Url,
+            data:JSON.stringify(postid)
+        }).then(res=>{
+            setMedia({...media, media : res.data})
+        });
+    }
 
     const GetUsernameByUserId = () =>{
         return axios.get('http://localhost:8005/getusernamebyid/'+userid).then((response) =>{
@@ -157,7 +182,18 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
                     <button className="report_but" onClick={ReportPost}>Report</button>
                 </div>
             <div className="post__body">
-                <img className="postImg" src={picpath} width="100" height="400"/>
+                {loaded?
+                    <Carousel width="100" height="100">
+                    {media.media.map(el=>(
+                        <Carousel.Item>
+                            <img className="d-block w-100" width="100" height="400" src={el.Link} alt="my pic"/>
+                        </Carousel.Item>
+                    ))}
+                    </Carousel>
+                :
+                <p>No pic !!!</p>
+                }
+                
             </div>
             <div className="post__headerLeft"><h5>{username}</h5><h5 style={{marginLeft:"8px",fontWeight:'normal'}}>{description}</h5></div>
             <div className="post__header">

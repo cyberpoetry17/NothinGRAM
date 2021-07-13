@@ -19,13 +19,15 @@ import PlacesAutocomplete, {
 const filter = createFilterOptions();
 
 function AddPost() {
-    const [post, setPost] = useState({description:'', ImgPaths:[], private:true, UserID:"",city:"",country:"",LocationID:"",tags:[]})
+    const [post, setPost] = useState({description:'', ImgPaths:[], private:false, UserID:"",city:"",country:"",LocationID:"",tags:[]})
     const [tagNames, setTagNames] = useState([])
     const [location,setLocation] = useState({city:"",address:"",country:""})
     const [open, toggleOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [dialogValue, setDialogValue] = useState({ TagName: '',id :'',Posts:[]});
     const [firstTime, setFristTime]= useState(true)
+    var tokenInfo;
+    let history = useHistory()
     
     const handleClose = () => {
         setDialogValue({
@@ -50,12 +52,6 @@ function AddPost() {
         });
         handleClose();
     };
-    var tokenInfo;
-    let history = useHistory()
-
-    const ispisi = ()=>{
-        console.log(JSON.stringify(post))
-    }
 
     const setPrivate= ()=>{
         setPost({...post,private:true})
@@ -64,18 +60,22 @@ function AddPost() {
     const setPublic= ()=>{
         setPost({...post,private:false})
     }
+
     useEffect(()=>{
         console.log("tagovi izmenjeni")
         console.log(post.tags)
     },[post.tags])
+
     useEffect(()=>{
         console.log("kao radi")
         console.log(tagNames)
     },[tagNames])
+
     useEffect(()=>{
         console.log("lokacija")
         console.log(location)
     },[location])
+
     useEffect(()=>{
         if(firstTime){
             setFristTime(false)
@@ -91,9 +91,11 @@ function AddPost() {
             history.push("/posts")
         });
     },[post.LocationID])
+
     useEffect(()=>{
         console.log("pic paths:",post.ImgPaths)
     },[post.ImgPaths])
+
     useEffect(()=>{
         if(localStorage.getItem('token')== null){
             alert("You need to log in to add post !!!")
@@ -109,6 +111,7 @@ function AddPost() {
         post.UserID = tokenInfo.UserID
         getAllTags()
     },[])
+
     const getAllTags = ()=>{
         axios({
             method : 'get',
@@ -117,6 +120,7 @@ function AddPost() {
             setTagNames(res.data)
         });
     }
+
     const fileChange = async (e)=>{
         var lis = []
         for(let i=0; i<e.target.files.length; i++){
@@ -131,9 +135,11 @@ function AddPost() {
         }
         setPost({...post,ImgPaths: lis})
     }
+
     const setTags = (e,newV)=>{
         setPost({...post,tags: newV})
     }
+
     const  add = ()=>{
         axios({
             method : 'post',
@@ -167,14 +173,14 @@ function AddPost() {
                             <Form.Group>
                                 <Form.File multiple id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
                             </Form.Group>
-                            <Form.Group>
+                            {/* <Form.Group>
                                 {['radio'].map((type) => (
                                     <div key={`inline-${type}`} className="mb-3">
                                     <Form.Check inline label="PRIVATE" name="group1" type={type} id={`inline-${type}-1`} onChange={setPrivate}/>
                                     <Form.Check inline label="NOT PRIVATE" name="group1" type={type} id={`inline-${type}-2`} onChange= {setPublic}/>
                                     </div>
                                 ))}
-                            </Form.Group>
+                            </Form.Group> */}
                             <div>
                                 <Row>
                                     <Col>
@@ -250,6 +256,7 @@ function AddPost() {
                             style={{ width: 300 }}
                             renderInput={(params) => <TextField id="textField12" {...params} label="Hashtag" variant="outlined" />}
                             />
+                            
                             <Carousel width="100" height="100">
                                 {post.ImgPaths.map(path=>(
                                     <Carousel.Item>

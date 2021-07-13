@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -25,4 +26,11 @@ func (repo *MediaRepo) RemoveMedia(media *data.Media) error {
 
 func (repo *MediaRepo) EditMedia(media *data.Media) error {
 	return repo.Database.Save(media).Error
+}
+
+func (repo *MediaRepo) GetMediaForPost(postID uuid.UUID) (error,[]data.Media) {
+	var mediaToReturn []data.Media
+	fmt.Println(postID.String())
+	err := repo.Database.Where("\"PostId\" = ?",postID.String()).Find(&mediaToReturn).Error
+	return err,mediaToReturn
 }

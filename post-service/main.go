@@ -48,6 +48,7 @@ func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) 
 	router.HandleFunc("/addMedia/", mediaHandler.CreateMedia).Methods("POST")
 	router.HandleFunc("/EditMedia/", mediaHandler.EditMedia).Methods("POST")
 	router.HandleFunc("RemoveMedia/", mediaHandler.RemoveMedia).Methods("DELETE")
+	router.HandleFunc("/GetMediaForPost",mediaHandler.GetMediaForPost).Methods("GET")
 }
 
 func locationHandleFuncs(router *mux.Router, locationHandler *handlerss.LocationHandler) {

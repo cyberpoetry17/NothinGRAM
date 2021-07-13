@@ -1,9 +1,11 @@
 package services
 
 import (
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
 	"github.com/google/uuid"
+	"time"
 )
 
 type PostService struct {
@@ -11,11 +13,32 @@ type PostService struct {
 	TagRepo  *repository.TagRepo
 	LikeRepo *repository.LikeRepo
 	DislikeRepo *repository.DislikeRepo
+	MediaRepo	*repository.MediaRepo
 }
 
 //verovatno treba da vrati neku vrednost
-func (service *PostService) CreatePost(post *data.Post) error {
-	return service.PostRepo.CreatePost(post)
+func (service *PostService) CreatePost(postDto *DTO.PostDTO) error {
+	var postToAdd data.Post
+	postToAdd.Tags = postDto.Tags
+	postToAdd.LocationID = postDto.LocationID
+	postToAdd.UserID = postDto.UserID
+	postToAdd.Private = postDto.Private
+	postToAdd.Description = postDto.Description
+	postToAdd.Timestamp = time.Now()
+
+	err,idPost := service.PostRepo.CreatePost(&postToAdd)
+	if err != nil {
+		return err
+	}
+	for _,el := range postDto.ImgPaths{
+		var media data.Media
+		media.PostId = idPost
+		media.Type = data.Picture
+		media.Link = el
+		service.MediaRepo.CreateMedia(&media)
+	}
+
+	return err
 }
 
 func (service *PostService) PostExists(desc string) (bool, error) {

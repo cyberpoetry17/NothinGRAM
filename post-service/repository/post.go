@@ -15,21 +15,21 @@ type PostRepo struct {
 	Database *gorm.DB
 }
 
-func (repo *PostRepo) CreatePost(post *data.Post) error {
+func (repo *PostRepo) CreatePost(post *data.Post) (error,uuid.UUID) {
 	var location data.Location
 	if post.UserID.String() =="00000000-0000-0000-0000-000000000000"{
-		return errors.New("User id required")
+		return errors.New("User id required"),post.ID
 	}
 	if post.LocationID == uuid.Nil {
 		repo.Database.Find(&location).Where("country = dumb")
 		post.LocationID = location.IDLoc
 	}
-		result := repo.Database.Create(post)
-		if result.Error == nil {
-			return result.Error
-		}
-		fmt.Println(result.RowsAffected)
-		return nil //sta s ovim nilom
+	result := repo.Database.Create(post)
+	if result.Error == nil {
+		return result.Error,post.ID
+	}
+	fmt.Println(result.RowsAffected)
+	return nil,post.ID //sta s ovim nilom
 }
 
 func (repo *PostRepo) PostExists(desc string) bool {

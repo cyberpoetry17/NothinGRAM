@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
-	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -89,7 +88,7 @@ func (handler *PostHandler) GetDislikedByUser(w http.ResponseWriter, r *http.Req
 
 func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
-	var post data.Post
+	var post DTO.PostDTO
 	fmt.Println(post.Description)
 	//time2 :=time.Now()
 	//fmt.Println(json.NewEncoder(w).Encode(time2))

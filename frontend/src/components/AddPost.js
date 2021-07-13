@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { app } from './base';
-import {Form,Container,Row,Col,Button} from 'react-bootstrap';
+import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import jwt_decode from 'jwt-decode';
 import Dialog from '@material-ui/core/Dialog';
@@ -19,7 +19,7 @@ import PlacesAutocomplete, {
 const filter = createFilterOptions();
 
 function AddPost() {
-    const [post, setPost] = useState({description:'', picpath:'', private:true, UserID:"",city:"",country:"",LocationID:"",tags:[]})
+    const [post, setPost] = useState({description:'', ImgPaths:[], private:true, UserID:"",city:"",country:"",LocationID:"",tags:[]})
     const [tagNames, setTagNames] = useState([])
     const [location,setLocation] = useState({city:"",address:"",country:""})
     const [open, toggleOpen] = useState(false);
@@ -92,6 +92,9 @@ function AddPost() {
         });
     },[post.LocationID])
     useEffect(()=>{
+        console.log("pic paths:",post.ImgPaths)
+    },[post.ImgPaths])
+    useEffect(()=>{
         if(localStorage.getItem('token')== null){
             alert("You need to log in to add post !!!")
             history.push("/login")
@@ -115,14 +118,18 @@ function AddPost() {
         });
     }
     const fileChange = async (e)=>{
-        const file = e.target.files[0]
-        //console.log("ispis",app.storage().ref())
-        const storageRef = app.storage().ref()
-        const fileRef = storageRef.child(file.name)
-        await fileRef.put(file)
-        var a = await fileRef.getDownloadURL()
-        console.log(a)
-        setPost({...post,picpath:a})
+        var lis = []
+        for(let i=0; i<e.target.files.length; i++){
+            const file = e.target.files[i]
+            //console.log("ispis",app.storage().ref())
+            const storageRef = app.storage().ref()
+            const fileRef = storageRef.child(file.name)
+            await fileRef.put(file)
+            var a = await fileRef.getDownloadURL()
+            console.log("file paths:",a)          
+            lis.push(a)
+        }
+        setPost({...post,ImgPaths: lis})
     }
     const setTags = (e,newV)=>{
         setPost({...post,tags: newV})
@@ -158,7 +165,7 @@ function AddPost() {
                                 <Form.Control  placeholder="Enter description" onChange={e => setPost({...post, description:e.target.value})}/>
                             </Form.Group>
                             <Form.Group>
-                                <Form.File id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
+                                <Form.File multiple id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
                             </Form.Group>
                             <Form.Group>
                                 {['radio'].map((type) => (
@@ -243,7 +250,16 @@ function AddPost() {
                             style={{ width: 300 }}
                             renderInput={(params) => <TextField id="textField12" {...params} label="Hashtag" variant="outlined" />}
                             />
-                            <img width="100" height="100" src={post.picpath} alt="my pic"/><br/>
+                            <Carousel width="100" height="100">
+                                {post.ImgPaths.map(path=>(
+                                    <Carousel.Item>
+                                        <img className="d-block w-100" width="100" height="100" src={path} alt="my pic"/>
+                                    </Carousel.Item>
+                                    
+                                ))}
+                            </Carousel>
+                            
+                            {/* <img width="100" height="100" src={post.ImgPaths[1]} alt="my pic"/><br/> */}
                             <Button onClick={add}>ADD POST</Button>
                         </Form>
                     </Col>

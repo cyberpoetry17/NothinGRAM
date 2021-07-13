@@ -9,7 +9,7 @@ import "../styles/post-style.css";
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 
-export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
+export default function Post({userid,postid,picpath,privatepost,tokenInfo,description}){
     
     var [username,setUsername] = React.useState();
     var [likes,setLikes] = React.useState(0);
@@ -159,6 +159,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo}){
             <div className="post__body">
                 <img className="postImg" src={picpath} width="100" height="400"/>
             </div>
+            <div className="post__headerLeft"><h5>{username}</h5><h5 style={{marginLeft:"8px",fontWeight:'normal'}}>{description}</h5></div>
             <div className="post__header">
                 <button className="like_but" onClick={LikeThisPost}>Like</button><p>{likes}</p>
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>{dislikes}</p>

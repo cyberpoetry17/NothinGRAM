@@ -24,9 +24,9 @@ export default function CommentInput({postid,getcoms}){
     }
 
     return <div className="comment_input">
-        <textarea className="comment_textarea" name="" id="" cols="30" rows="1" placeholder="write a comment.." value={comment} onChange={(e)=>setComment(e.target.value)}>
+        <textarea className="comment_textarea" name="" id="" cols="30" rows="1" placeholder="Write a comment.." value={comment} onChange={(e)=>setComment(e.target.value)}>
 
         </textarea>
-        <button className="comment_but" onClick={PostComment}>Post comment</button>
+        <button className="comment_but" onClick={PostComment}>Post</button>
     </div>
 }

@@ -95,3 +95,23 @@
     border-bottom-style: groove;
     background-color: white;
 }
+
+.comment_input{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment_textarea{
+    border: none;
+    width: 100%;
+    resize: none;
+}
+
+.comment_textarea:focus{
+    outline: none;
+}
+
+.comment_but{
+    background-color: white;
+    border: none;
+}

@@ -29,3 +29,12 @@ func (repo *CommentService) RemoveComment(comment *data.Comment) error {
 func (repo *CommentService) GetAllComments() []data.Comment{
 	return repo.Repo.GetAllComments()
 }
+
+func (repo *CommentService) GetAllByPostId(postid string) ([]data.Comment,error){
+	comments,err := repo.Repo.GetAllByPostId(postid)
+	if err != nil{
+		return nil,err
+	}
+	return comments,err
+
+}

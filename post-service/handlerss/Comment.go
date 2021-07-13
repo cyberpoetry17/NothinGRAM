@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -48,6 +49,27 @@ func (handler *CommentHandler) EditComment(w http.ResponseWriter, r *http.Reques
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *CommentHandler) GetAllByPostId (w http.ResponseWriter,r *http.Request){
+	vars := mux.Vars(r)
+	id := vars["postid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	comments,err := handler.Service.GetAllByPostId(id)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if len(comments)!=0 {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(comments)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+	}
 }
 
 func (handler *CommentHandler) DeleteComment(w http.ResponseWriter, r *http.Request) {

@@ -73,6 +73,7 @@ func commentHandleFuncs(router *mux.Router, commentHandler *handlerss.CommentHan
 	router.HandleFunc("/addComment/", commentHandler.CreateComment).Methods("POST")
 	router.HandleFunc("/editComment/", commentHandler.EditComment).Methods("POST")
 	router.HandleFunc("/removeComment/", commentHandler.DeleteComment).Methods("DELETE")
+	router.HandleFunc("/getcommentsforpost/{postid}",commentHandler.GetAllByPostId).Methods("GET")
 }
 
 func tagHandleFuncs(router *mux.Router, tagHandler *handlerss.TagHandler) {

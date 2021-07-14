@@ -28,8 +28,8 @@ func (repo LocationRepo) CreateLocation(location *data.Location) (error,uuid.UUI
 
 func (repo LocationRepo) GetLocationForPost (postId string) *data.Location{
 	var location data.Location
-	repo.Database.Find(&location).Where("PostId = ?",postId)
 	repo.Database.Preload("Posts",&location)
+	repo.Database.Where("Id = ?",postId).Find(&location)
 	return &location
 }
 

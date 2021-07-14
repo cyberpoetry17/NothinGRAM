@@ -10,12 +10,13 @@ import "../styles/post-style.css";
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 
-export default function Post({userid,postid,picpath,privatepost,tokenInfo,description}){
+export default function Post({userid,postid,picpath,privatepost,tokenInfo,description,location}){
     
     var [username,setUsername] = React.useState();
     var [likes,setLikes] = React.useState(0);
     var [dislikes,setDislikes] = React.useState(0);
     var [comments,setComments] = React.useState();
+    var [locationdesc,setLocationdesc] = React.useState({id:'',country:'',city:'',address:'',posts:[]});
     const [media, setMedia] = useState([])
     const [loaded, setLoaded]= useState(false)
     const [firstTime, setFirstTime] = useState(true)
@@ -27,6 +28,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
         GetDislikesForPost()
         GetCommentsForPost()
         GetMediaForPost()
+        GetLocationForPostByLocationId()
     },[])
 
     useEffect(()=>{
@@ -48,6 +50,13 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
             data:JSON.stringify(postid)
         }).then(res=>{
             setMedia({...media, media : res.data})
+        });
+    }
+
+    const GetLocationForPostByLocationId = () =>{
+        axios.get('http://localhost:8005/locationforpost/'+location).then((response) =>{
+            setLocationdesc(response.data);
+            console.log(response.data)
         });
     }
 
@@ -195,7 +204,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
                 }
                 
             </div>
-            <div className="post__headerLeft"><h5>{username}</h5><h5 style={{marginLeft:"8px",fontWeight:'normal'}}>{description}</h5></div>
+            <div className="post__headerLeft"><h5>{username}</h5><h5 style={{marginLeft:"8px",fontWeight:'normal'}}>{description}</h5><h5>@{locationdesc.city},{locationdesc.country}</h5></div>
             <div className="post__header">
                 <button className="like_but" onClick={LikeThisPost}>Like</button><p>{likes}</p>
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>{dislikes}</p>

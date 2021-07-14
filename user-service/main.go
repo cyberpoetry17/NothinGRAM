@@ -59,6 +59,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/follow", followerHandler.FollowUser).Methods(http.MethodPost)
 	router.HandleFunc("/getfollowstatus", followerHandler.FollowStatusForProfile).Methods(http.MethodPost)
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
+	router.HandleFunc("/getallfollowedforloggeduser/{userid}", followerHandler.FollowedByUser).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }

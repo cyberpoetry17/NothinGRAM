@@ -26,6 +26,7 @@ function AddPost() {
     const [value, setValue] = useState(null);
     const [dialogValue, setDialogValue] = useState({ TagName: '',id :'',Posts:[]});
     const [firstTime, setFristTime]= useState(true)
+    const [addPost, setAddPost] = useState(false)
     var tokenInfo;
     let history = useHistory()
     
@@ -52,14 +53,6 @@ function AddPost() {
         });
         handleClose();
     };
-
-    const setPrivate= ()=>{
-        setPost({...post,private:true})
-    }
-
-    const setPublic= ()=>{
-        setPost({...post,private:false})
-    }
 
     useEffect(()=>{
         console.log("tagovi izmenjeni")
@@ -90,7 +83,7 @@ function AddPost() {
         }).then(()=>{
             history.push("/posts")
         });
-    },[post.LocationID])
+    },[addPost])
 
     useEffect(()=>{
         console.log("pic paths:",post.ImgPaths)
@@ -148,6 +141,14 @@ function AddPost() {
         }).then((res)=>{
             console.log(res.data)
             setPost({...post, LocationID:res.data})
+            var URL = 'http://localhost:8004/GetUserProfilePrivacy/'+post.UserID
+            axios({
+                method : 'get',
+                url :URL,
+            }).then((res2)=>{
+                setPost({...post, private:res2.data})
+                setAddPost(true)
+            });
         });
         
     }

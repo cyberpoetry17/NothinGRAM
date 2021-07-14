@@ -38,6 +38,7 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/login">SIGN IN</Nav.Link>
               </Nav.Item>
+              
               <Nav.Item>
                 <Nav.Link href="/register">SIGN UP!</Nav.Link>
               </Nav.Item>
@@ -61,6 +62,13 @@ export default function App() {
               {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
               <Nav.Item >
                 <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Your liked/disliked content</Nav.Link>
+              </Nav.Item>
+              :
+              null
+              }
+              {window.localStorage.getItem('token') ? 
+              <Nav.Item>
+                <Nav.Link href="/update">Update</Nav.Link>
               </Nav.Item>
               :
               null

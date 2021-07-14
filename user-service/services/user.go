@@ -236,3 +236,8 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 	}
 	return nil
 }
+
+func (service *UserService) GetUserProfilePrivacy(ID uuid.UUID) (bool,error) {
+	user,err := service.Repo.GetById(ID)
+	return user.Private,err
+}

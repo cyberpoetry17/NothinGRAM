@@ -5,6 +5,7 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
 	"github.com/google/uuid"
+	"strings"
 	"time"
 )
 
@@ -15,6 +16,8 @@ type PostService struct {
 	DislikeRepo *repository.DislikeRepo
 	MediaRepo	*repository.MediaRepo
 }
+var extensions =[]string {"mp4","mov","avi","wmv","m4a"}
+const Pi = 3
 
 //verovatno treba da vrati neku vrednost
 func (service *PostService) CreatePost(postDto *DTO.PostDTO) error {
@@ -35,6 +38,17 @@ func (service *PostService) CreatePost(postDto *DTO.PostDTO) error {
 		media.PostId = idPost
 		media.Type = data.Picture
 		media.Link = el
+		for _, e := range extensions {
+			split := strings.Split(media.Link, "?")
+			if(len(split)==0){
+				continue
+			}
+			if(strings.HasSuffix(split[0], e)){
+				media.Type= data.Video
+				break
+			}
+		}
+
 		service.MediaRepo.CreateMedia(&media)
 	}
 

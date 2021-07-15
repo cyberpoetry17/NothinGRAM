@@ -26,12 +26,14 @@ func (repo *FollowerRepo) UnfollowUser(follower *data.Follower) error {
 
 	return nil
 }
+
 func (repo *FollowerRepo) GetAll() []data.Follower{
 	var followers []data.Follower
 	repo.Database.
 		Find(&followers)
 	return followers
 }
+
 func (repo *FollowerRepo) FollowStatusForProfile(follower *data.Follower) bool {
 	var result = repo.GetAll()
 	for _,element := range result{
@@ -40,4 +42,15 @@ func (repo *FollowerRepo) FollowStatusForProfile(follower *data.Follower) bool {
 		}
 	}
 	return false
+}
+
+func (repo *FollowerRepo) FollowedByUser(userid string) []string {
+	var result = repo.GetAll()
+	var frontList []string
+	for _,element := range result{
+		if element.IDFollower.String() == userid{
+			frontList = append(frontList,element.IDUser.String())
+		}
+	}
+	return frontList
 }

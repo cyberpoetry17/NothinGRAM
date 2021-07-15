@@ -13,6 +13,7 @@ import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
 import Update from './components/Update';
 import Profile from './components/Profile';
+import FollowerFeed from './components/FollowerFeed'
 import Verification from './components/Verification'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -42,9 +43,20 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/register">SIGN UP!</Nav.Link>
               </Nav.Item>
+              {window.localStorage.getItem('token') ? 
+              <>
+              <Nav.Item>
+              <Nav.Link href="/userfeed">MY FEED</Nav.Link>
+              </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/posts">POSTS FEED</Nav.Link>
               </Nav.Item>
+              </>
+              :
+              <Nav.Item>
+                <Nav.Link href="/posts">POSTS FEED</Nav.Link>
+              </Nav.Item>
+              }
               {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
               <Nav.Item >
                <Nav.Link href="/addPost">ADD POST</Nav.Link>
@@ -104,6 +116,7 @@ export default function App() {
 
         <Switch >
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
+          <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">

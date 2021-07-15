@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
@@ -66,5 +67,25 @@ func (handler *FollowerHandler) FollowStatusForProfile(w http.ResponseWriter, r 
 		_ = json.NewEncoder(w).Encode(false)
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
+	}
+}
+
+func (handler *FollowerHandler) FollowedByUser (w http.ResponseWriter,r *http.Request){
+	setupResponse(&w,r)
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	followed := handler.Service.FollowedByUser(id)
+
+	if len(followed)!=0 {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(followed)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+
 	}
 }

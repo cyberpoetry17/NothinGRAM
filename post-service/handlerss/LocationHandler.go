@@ -64,6 +64,7 @@ func (handler *LocationHandler) GetLocationForPost (w http.ResponseWriter,r *htt
 
 	if location != nil {
 		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(location)
 		fmt.Println("Location id : %s",location.IDLoc)
 	} else {
 		w.WriteHeader(http.StatusNotFound)

@@ -19,14 +19,14 @@ import PlacesAutocomplete, {
 const filter = createFilterOptions();
 
 function AddPost() {
-    const [post, setPost] = useState({description:'', ImgPaths:[], private:false, UserID:"",city:"",country:"",LocationID:"",tags:[]})
-    const [tagNames, setTagNames] = useState([])
-    const [location,setLocation] = useState({city:"",address:"",country:""})
+    const [post, setPost] = useState({description:'', ImgPaths:[], private:false, UserID:"",city:"",country:"",LocationID:"",tags:[]});
+    const [tagNames, setTagNames] = useState([]);
+    const [location,setLocation] = useState({city:"",address:"",country:""});
     const [open, toggleOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [dialogValue, setDialogValue] = useState({ TagName: '',id :'',Posts:[]});
-    const [firstTime, setFristTime]= useState(true)
-    const [addPost, setAddPost] = useState(false)
+    const [firstTime, setFristTime]= useState(true);
+    const [addPost, setAddPost] = useState(false);
     var tokenInfo;
     let history = useHistory()
     
@@ -68,22 +68,6 @@ function AddPost() {
         console.log("lokacija")
         console.log(location)
     },[location])
-
-    useEffect(()=>{
-        if(firstTime){
-            setFristTime(false)
-            return
-        }
-        console.log("post:")
-        console.log(JSON.stringify(post))
-        axios({
-            method : 'post',
-            url :'http://localhost:8005/createpost',
-            data:JSON.stringify(post),
-        }).then(()=>{
-            history.push("/posts")
-        });
-    },[addPost])
 
     useEffect(()=>{
         console.log("pic paths:",post.ImgPaths)
@@ -133,24 +117,29 @@ function AddPost() {
         setPost({...post,tags: newV})
     }
 
-    const  add = ()=>{
-        axios({
+    const  add = async ()=>{
+        const res_1 = await axios({
             method : 'post',
             url :'http://localhost:8005/createlocation',
             data:JSON.stringify(location),
-        }).then((res)=>{
-            console.log(res.data)
-            setPost({...post, LocationID:res.data})
-            var URL = 'http://localhost:8004/GetUserProfilePrivacy/'+post.UserID
-            axios({
-                method : 'get',
-                url :URL,
-            }).then((res2)=>{
-                setPost({...post, private:res2.data})
-                setAddPost(true)
-            });
+        });
+
+
+        const URL = 'http://localhost:8004/GetUserProfilePrivacy?PostId='+post.UserID
+        const res_2 = await axios({
+            method : 'get',
+            url :URL,
         });
         
+        const newPost = {...post , private:false, LocationID: res_1.data};
+        await axios({
+            method : 'post',
+            url :'http://localhost:8005/createpost',
+            data:JSON.stringify(newPost),
+        })
+
+        setPost({...post, private:res_2.data, LocationID: res_1.data})
+        history.push("/posts")
     }
     // const handleSelect = async value => {
     //     const results = await geocodeByAddress(value);
@@ -172,7 +161,7 @@ function AddPost() {
                                 <Form.Control  placeholder="Enter description" onChange={e => setPost({...post, description:e.target.value})}/>
                             </Form.Group>
                             <Form.Group>
-                                <Form.File multiple id="exampleFormControlFile1" label="Example file input" onChange={fileChange}/>
+                                <Form.File multiple id="exampleFormControlFile1" label="Example file input" onChange={fileChange} accept=".mp4,.jpg,.jpeg,.png"/>
                             </Form.Group>
                             {/* <Form.Group>
                                 {['radio'].map((type) => (
@@ -301,6 +290,7 @@ function AddPost() {
                     </form>
                 </Dialog>
             </Container>
+            
         </div>
     )
 }

@@ -423,19 +423,20 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *UserHandler) GetUserProfilePrivacy(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	idString := vars["UserId"]
+	setupResponse(&w,r)
+	idString := r.URL.Query().Get("PostId")
 	userId,err := uuid.Parse(idString)
 	if err != nil{
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-	private,err := handler.Service.GetUserProfilePrivacy(userId)
+	private, err := handler.Service.GetUserProfilePrivacy(userId)
 	if err != nil{
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+	//w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	json.NewEncoder(w).Encode(private)
 }

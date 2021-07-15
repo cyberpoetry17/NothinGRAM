@@ -9,6 +9,7 @@ import jwt_decode from 'jwt-decode';
 import "../styles/post-style.css";
 import Comment from './Comment';
 import CommentInput from './CommentInput';
+import { Ellipsis } from 'react-bootstrap/esm/PageItem';
 
 export default function Post({userid,postid,picpath,privatepost,tokenInfo,description}){
     
@@ -35,6 +36,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
             return
         }
         setLoaded(true)
+        console.log(description)
         console.log("media",media)
     },[media])
 
@@ -168,6 +170,13 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
             history.push('/login');
         }
     }
+    
+    const isItVideo =  (element)=>{
+        if(element.Path.includes("mp4")){
+            return true
+        }
+        return false
+    }
 
     const render = () =>{
         return(
@@ -183,11 +192,22 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
                 </div>
             <div className="post__body">
                 {loaded?
-                    <Carousel width="100" height="100">
+                    <Carousel>
+
                     {media.media.map(el=>(
-                        <Carousel.Item>
-                            <img className="d-block w-100" width="100" height="400" src={el.Link} alt="my pic"/>
+                        el.Type== 0 ? 
+                        <Carousel.Item margin="auto">
+                                <img className="d-block w-100" height="400" width="300" src={el.Link} alt="my pic"/>
                         </Carousel.Item>
+                        :
+                        <Carousel.Item margin="auto">
+                            <video  className="d-block w-100" height="400" width="300" controls>
+                            <source lassName="d-block"  src={el.Link} type="video/mp4"/>
+                            Your browser does not support the video tag.
+                            </video>
+                        </Carousel.Item>
+                        
+                    
                     ))}
                     </Carousel>
                 :

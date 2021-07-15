@@ -130,6 +130,22 @@ func (handler *PostHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (handler *PostHandler) GetTagsForPost (w http.ResponseWriter,r *http.Request){
+	vars := mux.Vars(r)
+	id := vars["postid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	tags,err := handler.Service.GetTagsForPost(id)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = json.NewEncoder(w).Encode(tags)
+}
+
 func (handler *PostHandler) GetUsernameByPostUserID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getting username by id..")
 	vars := mux.Vars(r)

@@ -17,6 +17,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     var [dislikes,setDislikes] = React.useState(0);
     var [comments,setComments] = React.useState();
     var [locationdesc,setLocationdesc] = React.useState();
+    var [tags,setTags] = React.useState();
     const [media, setMedia] = useState([])
     const [loaded, setLoaded]= useState(false)
     const [firstTime, setFirstTime] = useState(true)
@@ -29,6 +30,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
         GetCommentsForPost()
         GetMediaForPost()
         GetLocationForPostByLocationId()
+        GetTagsForPostByLocationId()
     },[])
 
     useEffect(()=>{
@@ -56,7 +58,14 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     const GetLocationForPostByLocationId = () =>{
         axios.get('http://localhost:8005/locationforpost/'+location).then((response) =>{
             if(response.data.country != "dumb")
-            setLocationdesc("@"+response.data.city+","+response.data.country);
+                setLocationdesc("@"+response.data.city+","+response.data.country);
+        });
+    }
+
+    const GetTagsForPostByLocationId = () =>{
+        axios.get('http://localhost:8005/tagsforpost/'+postid).then((response) =>{
+            if(response.data != null)
+                setTags(response.data.map((tag)=>("#"+tag)));
         });
     }
 
@@ -204,7 +213,10 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
                 }
                 
             </div>
-            <div className="post__headerLeft"><h5>{username}</h5><h5 style={{marginLeft:"8px",fontWeight:'normal'}}>{description}</h5><h5>{locationdesc}</h5></div>
+            <div className="post__headerLeft">
+                <h5>{username}</h5><h5 style={{marginLeft:"8px",fontWeight:'normal'}}>{description}</h5>
+                <h5 style={{marginLeft:"8px"}}>{locationdesc}</h5><h5 style={{marginLeft:"8px"}}>{tags}</h5>
+            </div>
             <div className="post__header">
                 <button className="like_but" onClick={LikeThisPost}>Like</button><p>{likes}</p>
                 <button className="dislike_but" onClick={DislikeThisPost}>Dislike</button><p>{dislikes}</p>

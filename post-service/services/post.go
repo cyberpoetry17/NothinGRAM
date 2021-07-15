@@ -76,6 +76,14 @@ func (service *PostService) GetUsernameByPostUserID(userid string) string{
 	return service.PostRepo.GetUsernameByPostUserID(userid)
 }
 
+func (service *PostService) GetTagsForPost(postid string) ([]string,error){
+	tags,err := service.PostRepo.GetTagsForPost(postid)
+	if err != nil{
+		return nil,err
+	}
+	return tags,err
+}
+
 func (service *PostService) GetLikedByUser(userid string) []data.Post{
 	var likedPosts []data.Like
 	var frontList []data.Post

@@ -98,6 +98,7 @@ func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {
 	router.HandleFunc("/getusernamebyid/{userid}", handler.GetUsernameByPostUserID).Methods("GET")
 	router.HandleFunc("/getlikedbyuser/{userid}", handler.GetLikedByUser).Methods("GET")
 	router.HandleFunc("/getdislikedbyuser/{userid}", handler.GetDislikedByUser).Methods("GET")
+	router.HandleFunc("/tagsforpost/{postid}", handler.GetTagsForPost).Methods("GET")
 }
 
 func reportHandleFuncs(handler *handlerss.ReportedPostHandler, router *mux.Router) {

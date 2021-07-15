@@ -64,12 +64,7 @@ func (handler *CommentHandler) GetAllByPostId (w http.ResponseWriter,r *http.Req
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if len(comments)!=0 {
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(comments)
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
-	}
+	_ = json.NewEncoder(w).Encode(comments)
 }
 
 func (handler *CommentHandler) DeleteComment(w http.ResponseWriter, r *http.Request) {

@@ -53,6 +53,21 @@ func (repo *PostRepo) GetAll() []data.Post{
 	return posts
 }
 
+func (repo *PostRepo) GetTagsForPost(postid string) ([]string,error){
+	var posts []data.Post
+	var frontList []string
+	result := repo.Database.Preload("Tags").Find(&posts)
+	for _,element := range posts{
+		if element.ID.String() == postid && element.Tags != nil{
+			for _,el := range element.Tags{
+				frontList = append(frontList,el.TagName)
+			}
+
+		}
+	}
+	return frontList,result.Error
+}
+
 func (repo *PostRepo) GetNonPrivatePosts() []data.Post{
 	var posts []data.Post
 	var frontList []data.Post

@@ -47,13 +47,13 @@ export class UserInteractedContent extends React.Component{
             <h1>Liked posts</h1>
         {data.map((post,i) => (
         <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} location={post.LocationID}/>
+            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private}  description={post.description} location={post.LocationID}/>
         </div>
         ))}
             <h1>Disliked posts</h1>
         {dataDisl.map((post,i) => (
         <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} location={post.LocationID}/>
+            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location={post.LocationID}/>
         </div>
         ))}
         </>

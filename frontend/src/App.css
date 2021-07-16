@@ -70,6 +70,30 @@
   color: black;
 }
 
+.navbarprofile {
+  overflow: hidden;
+  background-color: gray;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.navbarprofile a {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.navbarprofile a:hover {
+  background: #ddd;
+  color: black;
+}
+
 .main {
   padding: 16px;
   margin-top: 30px;

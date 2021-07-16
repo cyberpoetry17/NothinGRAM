@@ -56,7 +56,7 @@ class Login extends React.Component{
                 }
                 console.log("USPELO");
                 
-                this.props.history.push('/home');
+                this.props.history.push('/userfeed');
                 window.location.reload();
                 return response.json();
             })

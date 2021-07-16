@@ -6,6 +6,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {useState,useEffect} from 'react'
 import queryString from 'query-string';
+import {Nav} from 'react-bootstrap';
 
 export class Profile extends React.Component{
 
@@ -93,7 +94,29 @@ export class Profile extends React.Component{
                         <img src="" alt="" className="post__profilePic"/>slika
                         <div className="profile__header">
                             <h1 style={{marginLeft:"8px"}}>{user.name}</h1>
-                            <button className="follow_but" onClick={this.FollowUser.bind(this)}>{this.state.followed ? "Unfollow" : "Follow"} </button>
+                            {this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username ? 
+                                <div style={{marginLeft:"8px",fontWeight:'normal'}}>
+                                <BrowserRouter>
+                                <Nav className="navbarprofile" activeKey="/" >
+                                    <Nav.Item>
+                                        <Nav.Link href="/addPost">ADD POST</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Your liked/disliked content</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link href="/verification">User Verification</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link href="/update">Update</Nav.Link>
+                                    </Nav.Item>
+                                </Nav>
+                                </BrowserRouter>
+                                </div>
+                            :
+                                <button className="follow_but" onClick={this.FollowUser.bind(this)}>{this.state.followed ? "Unfollow" : "Follow"} </button>
+                            }
+                            
                         </div>
                     </div>
                 </div>

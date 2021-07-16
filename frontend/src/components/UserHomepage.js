@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {withRouter} from 'react-router';
 import jwt_decode from 'jwt-decode';
 import validateJWS from './JWTValidation';
-import jwt from 'json-web-token';
+// import jwt from 'json-web-token';
 
 class UserHomepage extends Component {
     constructor(props) {

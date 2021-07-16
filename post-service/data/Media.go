@@ -6,8 +6,8 @@ import (
 )
 type MediaType int
 const(
-	picture MediaType = iota
-	video
+	Picture MediaType = iota
+	Video
 )
 
 type Media struct{

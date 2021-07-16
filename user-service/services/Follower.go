@@ -16,3 +16,11 @@ func (service *FollowerService) FollowUser(follower *data.Follower) error {
 func (service *FollowerService) UnfollowUser(follower *data.Follower) error {
 	return service.Repo.UnfollowUser(follower)
 }
+
+func (service *FollowerService) FollowStatusForProfile(follower *data.Follower) bool {
+	return service.Repo.FollowStatusForProfile(follower)
+}
+
+func (service *FollowerService) FollowedByUser(userid string) []string {
+	return service.Repo.FollowedByUser(userid)
+}

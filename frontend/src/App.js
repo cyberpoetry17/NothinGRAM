@@ -13,12 +13,14 @@ import Dislike from './components/Dislike';
 import RegisterUser from './components/Register'
 import Update from './components/Update';
 import Profile from './components/Profile';
+import FollowerFeed from './components/FollowerFeed'
 import Verification from './components/Verification'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
 import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
+import UserInteractedContent from './components/UserInteractedContent';
 
 export default function App() {
 
@@ -28,64 +30,48 @@ export default function App() {
 
       <BrowserRouter>
           <Nav className="navbar" activeKey="/" >
+              {window.localStorage.getItem('token') ? 
               <Nav.Item>
-                <Nav.Link href="/">HOME</Nav.Link>
+              <Nav.Link href={"/profile/"+jwt_decode(localStorage.getItem('token')).Username}>My profile</Nav.Link>
               </Nav.Item>
+              :
               <Nav.Item>
-                <Nav.Link href="/pic">PICTURE</Nav.Link>
+              <Nav.Link href="/">HOME</Nav.Link>
               </Nav.Item>
+              }
+              {window.localStorage.getItem('token') ? 
+              <>
               <Nav.Item>
-                <Nav.Link href="/login">SIGN IN</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="/register">SIGN UP!</Nav.Link>
+              <Nav.Link href="/userfeed">MY FEED</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/posts">POSTS FEED</Nav.Link>
               </Nav.Item>
+              </>
+              :
               <Nav.Item>
-                <Nav.Link href="/addPost">ADD POST</Nav.Link>
+                <Nav.Link href="/posts">POSTS FEED</Nav.Link>
               </Nav.Item>
+              }
+              {window.localStorage.getItem('token') ? 
               <Nav.Item>
-                <Nav.Link href="/update">UPDATE USER</Nav.Link>
-              </Nav.Item>
-              {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
-              <Nav.Item >
-                <Nav.Link href="/verification">User Verification</Nav.Link>
+              <Nav.Link href="/" onClick={()=>{window.localStorage.removeItem('token');this.props.history.push('/');}}>SIGN OUT</Nav.Link>
               </Nav.Item>
               :
-              <label>Nistagram</label>
+              <>
+              <Nav.Item>
+              <Nav.Link href="/login">SIGN IN</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/register">SIGN UP!</Nav.Link>
+              </Nav.Item>
+              </>
               }
           </Nav>
-          {/* <div>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/pic">Picture</Link>
-                </li>
-                <li>
-                  <Link to="/login">Sign in</Link>
-                </li>
-                <li>
-                  <Link to="/register">Sign up!</Link>
-                </li>
-                <li>
-                  <Link to="/posts">Post feed</Link>
-                </li>
-                <li>
-                <Link to="/addPost">Add post</Link>
-                </li>
-                <li>
-                  <Link to="/update">Update user</Link>
-                </li>
-              </ul>
-            </nav>
-          </div> */}
 
         <Switch >
+          <Route path="/userinteracted/:username" component={UserInteractedContent}/>
+          <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">
@@ -103,9 +89,9 @@ export default function App() {
           <Route path="/like">
             <Like/>
           </Route>
-          <Route path="/pic">
+          {/* <Route path="/pic">
             <AddImg/>
-          </Route>
+          </Route> */}
           <Route  path="/addPost">
             <AddPost/>
           </Route>

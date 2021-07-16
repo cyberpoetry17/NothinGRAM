@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
-	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -61,9 +60,35 @@ func (handler *PostHandler) GetPostsByUserID(w http.ResponseWriter, r *http.Requ
 
 }
 
+func (handler *PostHandler) GetLikedByUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts user liked..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(handler.Service.GetLikedByUser(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *PostHandler) GetDislikedByUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts user disliked..")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(handler.Service.GetDislikedByUser(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func (handler *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
-	var post data.Post
+	var post DTO.PostDTO
 	fmt.Println(post.Description)
 	//time2 :=time.Now()
 	//fmt.Println(json.NewEncoder(w).Encode(time2))
@@ -103,6 +128,22 @@ func (handler *PostHandler) Verify(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
+}
+
+func (handler *PostHandler) GetTagsForPost (w http.ResponseWriter,r *http.Request){
+	vars := mux.Vars(r)
+	id := vars["postid"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	tags,err := handler.Service.GetTagsForPost(id)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = json.NewEncoder(w).Encode(tags)
 }
 
 func (handler *PostHandler) GetUsernameByPostUserID(w http.ResponseWriter, r *http.Request) {

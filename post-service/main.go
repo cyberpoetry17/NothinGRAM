@@ -21,7 +21,7 @@ func initializeRepository(database *gorm.DB) (*repository.PostRepo,*repository.T
 }
 
 func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRepo, repoComment *repository.CommentRepo, repoLike *repository.LikeRepo,repoDislike *repository.DislikeRepo, repoMedia *repository.MediaRepo,repoLocation *repository.LocationRepo,repoReport *repository.ReportedPostRepo) (*services.PostService,*services.TagService,*services.CommentService,*services.LikeService,*services.DislikeService,*services.MediaService,*services.LocationService,*services.ReportedPostService) {
-	return &services.PostService{PostRepo: repoPost,TagRepo: repoTag}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation},&services.ReportedPostService{Repo: repoReport}
+	return &services.PostService{PostRepo: repoPost,TagRepo: repoTag,LikeRepo:repoLike,DislikeRepo: repoDislike,MediaRepo: repoMedia}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation},&services.ReportedPostService{Repo: repoReport}
 }
 
 func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService, serviceMedia *services.MediaService,serviceLocation *services.LocationService,serviceReport *services.ReportedPostService) (*handlerss.PostHandler,*handlerss.TagHandler,*handlerss.CommentHandler,*handlerss.LikeHandler,*handlerss.DislikeHandler,*handlerss.MediaHandler,*handlerss.LocationHandler,*handlerss.ReportedPostHandler) {
@@ -48,6 +48,7 @@ func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) 
 	router.HandleFunc("/addMedia/", mediaHandler.CreateMedia).Methods("POST")
 	router.HandleFunc("/EditMedia/", mediaHandler.EditMedia).Methods("POST")
 	router.HandleFunc("RemoveMedia/", mediaHandler.RemoveMedia).Methods("DELETE")
+	router.HandleFunc("/GetMediaForPost",mediaHandler.GetMediaForPost).Methods("GET")
 }
 
 func locationHandleFuncs(router *mux.Router, locationHandler *handlerss.LocationHandler) {
@@ -73,6 +74,7 @@ func commentHandleFuncs(router *mux.Router, commentHandler *handlerss.CommentHan
 	router.HandleFunc("/addComment/", commentHandler.CreateComment).Methods("POST")
 	router.HandleFunc("/editComment/", commentHandler.EditComment).Methods("POST")
 	router.HandleFunc("/removeComment/", commentHandler.DeleteComment).Methods("DELETE")
+	router.HandleFunc("/getcommentsforpost/{postid}",commentHandler.GetAllByPostId).Methods("GET")
 }
 
 func tagHandleFuncs(router *mux.Router, tagHandler *handlerss.TagHandler) {
@@ -94,6 +96,9 @@ func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {
 	router.HandleFunc("/addTagToPost", handler.AddTagToPost).Methods("POST")
 	router.HandleFunc("/addlocationtopost", handler.AddLocationToPost).Methods("POST")
 	router.HandleFunc("/getusernamebyid/{userid}", handler.GetUsernameByPostUserID).Methods("GET")
+	router.HandleFunc("/getlikedbyuser/{userid}", handler.GetLikedByUser).Methods("GET")
+	router.HandleFunc("/getdislikedbyuser/{userid}", handler.GetDislikedByUser).Methods("GET")
+	router.HandleFunc("/tagsforpost/{postid}", handler.GetTagsForPost).Methods("GET")
 }
 
 func reportHandleFuncs(handler *handlerss.ReportedPostHandler, router *mux.Router) {

@@ -80,12 +80,7 @@ func (handler *FollowerHandler) FollowedByUser (w http.ResponseWriter,r *http.Re
 	}
 	followed := handler.Service.FollowedByUser(id)
 
-	if len(followed)!=0 {
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(followed)
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		return
 
-	}
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(followed)
 }

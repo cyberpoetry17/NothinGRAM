@@ -40,7 +40,13 @@ func (handler *PostHandler) GetNonPrivatePostsForUser(w http.ResponseWriter, r *
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(w).Encode(handler.Service.GetNonPrivatePostsForUser(id))
+	posts,err := handler.Service.GetNonPrivatePostsForUser(id)
+	if err != nil {
+		//TODO log
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = json.NewEncoder(w).Encode(posts)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 

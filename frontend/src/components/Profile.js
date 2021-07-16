@@ -49,16 +49,16 @@ export class Profile extends React.Component{
         axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
             this.setState({userid:response.data})
             console.log(this.state.followed)
-            if(this.state.followed == false){
+            if(this.state.followed == false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username){
                 axios.get('http://localhost:8005/getnonprivateposts/'+response.data).then((response)=>{
                     const data = response.data;
                     this.setState({posts:data});
-                }).catch(()=>{alert('didnt retrieve ')});
-            }else if(this.state.followed == true){
+                }).catch(()=>{alert('didnt retrieve non private posts')});
+            }else if(this.state.followed == true || this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username){
                 axios.get('http://localhost:8005/allpostsbyuserid/'+this.state.userid).then((response)=>{
                 const data = response.data;
                 this.setState({posts:data})
-                })
+                }).catch(()=>alert('didnt retrieve all posts for user'))
             }
         }).catch(()=>{alert('didnt retrieve user by username')});
     }
@@ -120,7 +120,7 @@ export class Profile extends React.Component{
                         </div>
                     </div>
                 </div>
-        {data.map((post,i) => (
+        {data?.map((post,i) => (
         <div className="feed" key={i}>
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>
         </div>

@@ -62,13 +62,9 @@ func (handler *LocationHandler) GetLocationForPost (w http.ResponseWriter,r *htt
 	}
 	location := handler.Service.GetLocationForPost(id)
 
-	if location != nil {
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(location)
-		fmt.Println("Location id : %s",location.IDLoc)
-	} else {
-		w.WriteHeader(http.StatusNotFound)
-	}
+
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(location)
 }
 
 func (handler *LocationHandler) FilterPublicMaterialByLocationId(w http.ResponseWriter, r *http.Request) {

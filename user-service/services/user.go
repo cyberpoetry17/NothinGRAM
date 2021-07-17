@@ -223,6 +223,7 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 
 	user.Private = r.Private
 	user.ReceiveNotifications = r.ReceiveNotifications
+	println(r.ReceiveNotifications)
 	user.Taggable = r.Taggable
 	user.Role = r.Role
 	user.DateOfBirth = TimeFormating(r.DateOfBirth)

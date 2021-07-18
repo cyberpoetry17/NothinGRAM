@@ -8,19 +8,22 @@ import (
 
 type StoryType int
 const(
-	media MediaType = iota
-	post
+	MediaT StoryType = iota
+	PostT
 )
 
 type Story struct{
-	ID uuid.UUID `gorm:"column:id;PRIMARY_KEY"      json:"id"`
+	IdStory uuid.UUID `gorm:"column:IdStory;PRIMARY_KEY"      json:"IdStory"`
 	Time time.Time `gorm:"column:Time;not null"      json:"Time"`
-	Post Post `gorm:"foreignkey:ID"   json:"Post"`
-	Media Media `gorm:"foreignkey:ID"   json:"Media"`
+	MediaID uuid.UUID `gorm:"column:MediaID"   json:"MediaID"`
+	PostID uuid.UUID `gorm:"column:PostID"   json:"PostID"`
+	Type StoryType `gorm:"column:Type"  json:"Type"`
 }
 
 func (story *Story) BeforeCreate(scope *gorm.DB) error {
-	story.ID = uuid.New()
+	if(story.IdStory.String() == "00000000-0000-0000-0000-000000000000") {
+		story.IdStory = uuid.New()
+	}
 	return nil
 
 }

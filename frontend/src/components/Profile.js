@@ -101,6 +101,9 @@ export class Profile extends React.Component{
                                     <Nav.Item>
                                         <Nav.Link href="/addPost">ADD POST</Nav.Link>
                                     </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/addStory">ADD STORY</Nav.Link>
+                                    </Nav.Item>
                                     <Nav.Item >
                                         <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Your liked/disliked content</Nav.Link>
                                     </Nav.Item>

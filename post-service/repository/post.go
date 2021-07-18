@@ -25,7 +25,7 @@ func (repo *PostRepo) CreatePost(post *data.Post) (error,uuid.UUID) {
 		post.LocationID = location.IDLoc
 	}
 	result := repo.Database.Create(post)
-	if result.Error == nil {
+	if result.Error != nil {
 		return result.Error,post.ID
 	}
 	fmt.Println(result.RowsAffected)

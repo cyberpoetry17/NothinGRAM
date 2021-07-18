@@ -24,7 +24,8 @@ export class UserInteractedContent extends React.Component{
             response.data.map((follow) =>(      //kao da nece da settuje state od dobavljenih podataka pa moram jednu u drugoj da pozivam
                 axios.get('http://localhost:8005/allpostsbyuserid/'+follow).then((response)=>{
                 const data = response.data;
-                this.setState({followerposts:this.state.followerposts.concat(data)});
+                if (data!= null)
+                    this.setState({followerposts:this.state.followerposts.concat(data)});
             })
             .catch(()=>{alert('didnt retrieve ')})
             ))

@@ -35,7 +35,7 @@ func (service *PostService) CreatePost(postDto *DTO.PostDTO) error {
 	}
 	for _,el := range postDto.ImgPaths{
 		var media data.Media
-		media.PostId = idPost
+		media.PostId = &idPost
 		media.Type = data.Picture
 		media.Link = el
 		for _, e := range extensions {
@@ -49,7 +49,10 @@ func (service *PostService) CreatePost(postDto *DTO.PostDTO) error {
 			}
 		}
 
-		service.MediaRepo.CreateMedia(&media)
+		err=service.MediaRepo.CreateMedia(&media)
+		if err !=nil{
+			return err
+		}
 	}
 
 	return err

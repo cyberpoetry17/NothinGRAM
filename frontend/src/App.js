@@ -21,6 +21,7 @@ import {Nav} from 'react-bootstrap';
 import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
+import AddStory from './components/AddStory';
 
 export default function App() {
 
@@ -95,6 +96,10 @@ export default function App() {
           <Route  path="/addPost">
             <AddPost/>
           </Route>
+          <Route  path="/addStory">
+            <AddStory/>
+          </Route>
+
           <Route path="/register">
             <RegisterUser />
           </Route> 

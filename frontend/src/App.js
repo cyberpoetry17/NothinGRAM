@@ -15,6 +15,7 @@ import Update from './components/Update';
 import Profile from './components/Profile';
 import FollowerFeed from './components/FollowerFeed'
 import Verification from './components/Verification'
+import ProfileRequests from './components/ProfileRequests'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
@@ -72,6 +73,7 @@ export default function App() {
 
         <Switch >
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
+          <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>

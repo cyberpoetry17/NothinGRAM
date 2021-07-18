@@ -20,9 +20,9 @@ export class UserInteractedContent extends React.Component{
     }
 
     async GetUserIdByUsername(){
-        await axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
+        await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
-            this.setState({userid:data});
+            this.setState({userid:data.UserId});
         })
     }
 

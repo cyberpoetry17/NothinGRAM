@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
@@ -149,27 +150,61 @@ func (service *UserService) ChangePassword(r *LoginRequest) error {
 	return nil
 
 }
-func TimeFormating(date string) time.Time {
-	fmt.Printf("Input : %s\n", date)
 
-	//convert string to time.Time type
-	layOut := "2006-01-02"
-	dateStamp, err := time.Parse(layOut, date)
+// func TimeFormating(date string) time.Time {
+// 	fmt.Printf("Input : %s\n", date)
 
-	if err != nil {
-		fmt.Println(err)
+// 	//convert string to time.Time type  2019-04-09T22:00:00.000Z
+// 	fmt.Println(date)
+// 	layOut := "2006-07-25"
+// 	dateStamp, err := time.Parse(layOut, date)
+
+// 	if err != nil {
+// 		fmt.Println(err)
+
+// 	}
+
+// 	fmt.Printf("Output(local date) : %s\n", dateStamp)
+// 	fmt.Printf("Output(UTC) : %s\n", dateStamp)
+
+// 	convertedDateString := dateStamp.Format(layOut)
+
+// 	fmt.Printf("Final output : %s\n", convertedDateString)
+// 	return dateStamp
+// }
+
+func (service *UserService) ParseString(info string) time.Time {
+	s := strings.Split(info, ":")
+	println(s)
+	firstPart := s[0]
+	println(firstPart)
+	dateString := ""
+	//runes := []rune(firstPart)
+	for i := 0; i < len(firstPart)-3; i++ {
+		dateString += string(firstPart[i])
 
 	}
-
-	// fmt.Printf("Output(local date) : %s\n", dateStamp.Local())
-	// fmt.Printf("Output(UTC) : %s\n", dateStamp)
-
-	//convertedDateString := dateStamp.Format(layOut)
-
-	//.Printf("Final output : %s\n", convertedDateString)
-	return dateStamp
+	println(dateString)
+	t, err := time.Parse("2006-01-02T15:04:05.000Z", info)
+	if err != nil {
+		println("Time parsing not supported!")
+	}
+	return t
 }
 
+// func (service *UserService) ParseLayout(value string) (time.Time, error) {
+// 	layout := time.RFC3339[:len(value)]
+// 	return time.Parse(layout, value)
+// }
+// func (service *UserService) ParseString(info string) time.Time {
+
+// 	// println(dateString)
+// 	t, err := time.Parse("2006-01-21T", info)
+// 	if err != nil {
+// 		println("Time parsing not supported!")
+// 	}
+// 	return t
+// }
 func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) error {
 	user, error := service.Repo.GetById(ID)
 	if error != nil {
@@ -226,7 +261,7 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 	println(r.ReceiveNotifications)
 	user.Taggable = r.Taggable
 	user.Role = r.Role
-	user.DateOfBirth = TimeFormating(r.DateOfBirth)
+	user.DateOfBirth = service.ParseString(r.DateOfBirth)
 	errorUpdatingUser := service.Repo.Database.Save(&user).Error
 	if errorUpdatingUser != nil {
 		return errorUpdatingUser

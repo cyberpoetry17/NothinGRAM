@@ -99,7 +99,7 @@ class AdvancedUpdate extends React.Component {
             _taggable: user2.taggable
 
           });
-          //console.log(this.user)
+          console.log(this.user)
         })
         .catch((error) => {
           console.error(error);
@@ -112,38 +112,28 @@ class AdvancedUpdate extends React.Component {
     updateUser() {
       var token = localStorage.getItem("token");
       const {
-        _name,
-        _surname,
-        _username,
-        _dateOfBirth,
-        _phone,
-        _web,
-        _email,
-        _password,
-        _bio,
-        _role,
         _notify,
         _private,
         _taggable,
-        _gender,
+
 
       } = this.state;
   
       const updateUser = {
-        email: _email,
-        password: _password,
-        name: _name,
-        surname: _surname,
-        phone: _phone,
-        username: _username,
-        bio: _bio,
-        role: _role,
+        email: this.state._email,
+        password: this.state._password,
+        name: this.state._name,
+        surname: this.state._surname,
+        phone: this.state._phone,
+        username: this.state._username,
+        bio:this.state._bio,
+        role: this.state._role,
         notifications: _notify,
         private: _private,
         taggable: _taggable,
-        gender: _gender,
-        web: _web,
-        date: _dateOfBirth,
+        gender: this.state._gender,
+        web: this.state._web,
+        date: this.state._dateOfBirth,
       };
       const requestOptions = {
         method: "PUT",
@@ -158,13 +148,17 @@ class AdvancedUpdate extends React.Component {
       fetch(`${serviceConfig.baseURL}/update`, requestOptions)
         .then((response) => {
           if (!response.ok) {
+            console.log("AAAAAAAAAAAAAAA");
             return Promise.reject(response);
           }
-          this.props.history.push("/update");
+          //this.props.history.push("/advancedUpdate");
+          console.log("ehhh...");
+          console.log(updateUser.name);
           alert("Succesfully updated.")
         })
         .catch((response) => {
           if (response.status === 400) {
+            console.log(updateUser.notifications);
             alert("error!");
           }
         });
@@ -192,7 +186,7 @@ class AdvancedUpdate extends React.Component {
                   checked={_notify}
                   onChange={this.handleNotification}
                 />
-                <label>Receive notifications</label>
+                <label>Receive notifications from users</label>
               </div>
               </Form>
               <Form>
@@ -218,7 +212,7 @@ class AdvancedUpdate extends React.Component {
                   checked={_taggable}
                   onChange={this.handleTaggable}
                 />
-                <label>Make profile private</label>
+                <label>Allow others to tag you on posts</label>
               </div>
               </Form>
 

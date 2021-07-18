@@ -3,8 +3,8 @@ import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-import UserHomepage from './components/UserHomepage';
-import Post from './components/Post'
+// import UserHomepage from './components/UserHomepage';
+// import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
 //import Test from "./components/Test"
@@ -14,11 +14,12 @@ import RegisterUser from './components/Register'
 import Update from './components/Update';
 import Profile from './components/Profile';
 import Verification from './components/Verification'
+import AdvancedUpdate from './components/AdvancedUpdate';
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
-import { version } from 'react-dom';
-import jwt_decode from 'jwt-decode';
+// import { version } from 'react-dom';
+// import jwt_decode from 'jwt-decode';
 
 export default function App() {
 
@@ -47,7 +48,10 @@ export default function App() {
                 <Nav.Link href="/addPost">ADD POST</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="/update">UPDATE USER</Nav.Link>
+                <Nav.Link href="/update">EDIT USER</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/advancedUpdate">. . .</Nav.Link>
               </Nav.Item>
               {window.localStorage.getItem('token') ?           //ternarni operator kaze ako postoji token u local storage onda prikazi link verifikaciju ako ne postoji onda ne
               <Nav.Item >
@@ -96,6 +100,9 @@ export default function App() {
           </Route>
           <Route path="/update">
             <Update />
+          </Route>
+          <Route path="/advancedUpdate">
+            <AdvancedUpdate />
           </Route>
           <Route path="/dislike">
             <Dislike/>

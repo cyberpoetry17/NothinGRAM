@@ -20,9 +20,9 @@ export class UserInteractedContent extends React.Component{
     }
 
     async GetUserIdByUsername(){
-        await axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
+        await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
-            this.setState({userid:data});
+            this.setState({userid:data.UserId});
         })
     }
 
@@ -45,13 +45,13 @@ export class UserInteractedContent extends React.Component{
         return(
             <>
             <h1>Liked posts</h1>
-        {data.map((post,i) => (
+        {data?.map((post,i) => (
         <div className="feed" key={i}>
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private}  description={post.description} location={post.LocationID}/>
         </div>
         ))}
             <h1>Disliked posts</h1>
-        {dataDisl.map((post,i) => (
+        {dataDisl?.map((post,i) => (
         <div className="feed" key={i}>
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location={post.LocationID}/>
         </div>

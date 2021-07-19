@@ -60,16 +60,8 @@ func (handler *DislikeHandler) GetAllDislikesForPost (w http.ResponseWriter,r *h
 	}
 	dislikes := handler.Service.GetAllDislikesForPost(id)
 
-	if len(dislikes)!=0 {
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(len(dislikes))
-		for i,dislikes := range dislikes{
-			fmt.Println("%d : %s", i,dislikes.IDD)
-		}
-	} else {
-		_ = json.NewEncoder(w).Encode(0)
-
-	}
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(len(dislikes))
 }
 
 func (handler *DislikeHandler) CheckIfUserDislikedPost (w http.ResponseWriter,r *http.Request){

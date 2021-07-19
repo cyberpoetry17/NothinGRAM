@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"time"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
@@ -84,7 +85,7 @@ func (service *UserService) GetUserByUsernameForProfile(id string) *data.User2 {
 	return service.Repo.GetUserByUsernameForProfile(id)
 }
 
-func (service *UserService) GetUserIdByUsernameForProfile(id string) string {
+func (service *UserService) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
 	return service.Repo.GetUserIdByUsernameForProfile(id)
 }
 

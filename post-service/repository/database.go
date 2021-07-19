@@ -30,7 +30,7 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	} else {
 		fmt.Printf("Successfully connected to your database for posts!!!")
 	}
-	database.AutoMigrate(&data.Location{},&data.Post{},&data.Tag{},&data.Comment{},&data.Like{},&data.Dislike{},&data.User{},&data.Media{},&data.ReportedPost{})
+	database.AutoMigrate(&data.Story{},&data.Location{},&data.Post{},&data.Tag{},&data.Comment{},&data.Like{},&data.Dislike{},&data.User{},&data.Media{},&data.ReportedPost{})
 	loc := data.Location{IDLoc: uuid.UUID{},Country: "dumb",City: "dumb",Address: "dumb"}
 	var location data.Location
 	var count int64

@@ -25,7 +25,7 @@ func (repo *PostRepo) CreatePost(post *data.Post) (error,uuid.UUID) {
 		post.LocationID = location.IDLoc
 	}
 	result := repo.Database.Create(post)
-	if result.Error == nil {
+	if result.Error != nil {
 		return result.Error,post.ID
 	}
 	fmt.Println(result.RowsAffected)
@@ -80,16 +80,16 @@ func (repo *PostRepo) GetNonPrivatePosts() []data.Post{
 	return frontList
 }
 
-func (repo *PostRepo) GetNonPrivatePostsForUser(id string) []data.Post{
+func (repo *PostRepo) GetNonPrivatePostsForUser(id string) ([]data.Post,error){
 	var posts []data.Post
 	var frontList []data.Post
-	posts = repo.GetPostsByUserID(id)
+	result := repo.Database.Find(&posts)
 	for _,element := range posts{
-		if element.Private == false{
+		if element.ID.String()==id && element.Private == false{
 			frontList = append(frontList,element)
 		}
 	}
-	return frontList
+	return frontList,result.Error
 }
 
 func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{

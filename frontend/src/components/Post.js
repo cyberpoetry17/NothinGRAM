@@ -245,7 +245,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
                 <CommentInput postid={postid} getcoms={GetCommentsForPost}/>
                 <p>Comments</p>
                         {comments ? (
-                            comments.map((comment,i)=>(
+                            comments?.map((comment,i)=>(
                                 <div className="feed" key={i}>
                                     <Comment comments={comment.Comment} posteduser={comment.UserId}></Comment>
                                 </div>

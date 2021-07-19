@@ -12,13 +12,18 @@ const(
 
 type Media struct{
 	ID uuid.UUID `gorm:"column:id;PRIMARY_KEY"      json:"id"`
-	Link string `gorm:"column:Link;not null"      json:"Link"`
-	Type MediaType `gorm:"column:Type;not null"      json:"Type"`
-	PostId  uuid.UUID `gorm:"column:PostId;not null"   json:"PostId"`
+	Link string `gorm:"column:Link"      json:"Link"`
+	Type MediaType `gorm:"column:Type"      json:"Type"`
+	StoryId *uuid.UUID `gorm:"column:StoryId"   json:"StoryId"`
+	PostId  *uuid.UUID `gorm:"column:PostId"   json:"PostId"`
+
 }
 
 func (media *Media) BeforeCreate(scope *gorm.DB) error {
-	media.ID = uuid.New()
+	if(media.ID.String() == "00000000-0000-0000-0000-000000000000") {
+		media.ID = uuid.New()
+	}
+
 	return nil
 
 }

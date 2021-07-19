@@ -31,12 +31,28 @@ export class Verification extends React.Component{
                     <Col></Col>
                     <Col>
                         <Form className="justify-content-md-center">
+                        <Row>
+                        <Col>
                             <Form.Group controlId="exampleForm.ControlInput1">
-                                <Form.Label>Enter name and surname</Form.Label>
-                                <Form.Control  placeholder="Enter description" />
+                                <Form.Label>Enter your name </Form.Label>
+                                <Form.Control  placeholder="Enter name " />
                             </Form.Group>
+                            </Col>
+                            <Col>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                                <Form.Label>Enter your surname</Form.Label>
+                                <Form.Control  placeholder="Enter surname" />
+                            </Form.Group>
+                            </Col>
+                            <Col>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                                <Form.Label>Enter your username</Form.Label>
+                                <Form.Control  placeholder="Enter username" />
+                            </Form.Group>
+                            </Col>
+                        </Row>
                             <Form.Group>
-                                <Form.File id="exampleFormControlFile1" label="Example file input" />
+                                <Form.File id="exampleFormControlFile1" label="Input your face picture" />
                             </Form.Group>
                             <Select options={options}/>
                             <img width="100" height="100" alt="my pic"/><br/>

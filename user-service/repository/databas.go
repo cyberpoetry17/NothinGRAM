@@ -28,6 +28,7 @@ func SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort string) *
 	database.AutoMigrate(&data.Follower{})
 	database.AutoMigrate(&data.Blocked{})
 	database.AutoMigrate(&data.Muted{})
+	database.AutoMigrate(&data.FollowerRequest{})
 
 	// users := []data.User2{
 	// 	{Name: "Frodo", Surname: "Baggins", Email: "baggins@gmail.com", Username: "Saviour of the Middle Earth", Private: true, DateOfBirth: "12345", Gender: 1, PhoneNumber: "003345", Website: "OneRingToRuleThemAllButMe.com", Taggable: false, ReceiveNotifications: false, Password: "mypreci0us", Verified: true, Biography: "true", Role: 1},

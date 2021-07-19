@@ -28,9 +28,9 @@ export class Profile extends React.Component{
 
     async IsProfileFollowedByLoggedUser(){
         var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-        await axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
+        await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data
-            axios.post('http://localhost:8004/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data})).then((response)=>{
+            axios.post('http://localhost:8004/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
             this.setState({followed:response.data})
             console.log(this.state.followed)
         })
@@ -46,35 +46,42 @@ export class Profile extends React.Component{
     }
 
     GetAllPostsForUserDependingOnFollowage(){
-        axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
-            this.setState({userid:response.data})
+        axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+            this.setState({userid:response.data.UserId})
             console.log(this.state.followed)
-            if(this.state.followed == false){
-                axios.get('http://localhost:8005/getnonprivateposts/'+response.data).then((response)=>{
+            if(this.state.followed == false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username){
+                axios.get('http://localhost:8005/getnonprivateposts/'+this.state.userid).then((response)=>{
                     const data = response.data;
                     this.setState({posts:data});
-                }).catch(()=>{alert('didnt retrieve ')});
-            }else if(this.state.followed == true){
+                }).catch(()=>{alert('didnt retrieve non private posts')});
+            }else if(this.state.followed == true || this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username){
                 axios.get('http://localhost:8005/allpostsbyuserid/'+this.state.userid).then((response)=>{
                 const data = response.data;
                 this.setState({posts:data})
-                })
+                }).catch(()=>alert('didnt retrieve all posts for user'))
             }
         }).catch(()=>{alert('didnt retrieve user by username')});
     }
 
     FollowUser(event){
         var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-        axios.get('http://localhost:8004/getuseridbyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data
             if(this.state.followed == false){
-                axios.post('http://localhost:8004/follow',JSON.stringify({idfollower:userfollowing,iduser:data})).then(
+                if(data.Private == false){
+                axios.post('http://localhost:8004/follow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
                 ()=>{
                     alert('You have followed user with userid' + this.state.userid);
                     this.setState({followed:true});
                 }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
+                }else{
+                    axios.post('http://localhost:8004/createfollowrequest',JSON.stringify({idfollower:userfollowing,idfollowed:data.UserId})).then(
+                ()=>{
+                    alert('Follow request sent');
+                })
+                }
             }else if (this.state.followed == true){
-                axios.post('http://localhost:8004/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data})).then(
+                axios.post('http://localhost:8004/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
                 ()=>{
                     alert('You have unfollowed user with userid' + this.state.userid);
                     this.setState({followed:false});
@@ -101,6 +108,9 @@ export class Profile extends React.Component{
                                     <Nav.Item>
                                         <Nav.Link href="/addPost">ADD POST</Nav.Link>
                                     </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link href="/addStory">ADD STORY</Nav.Link>
+                                    </Nav.Item>
                                     <Nav.Item >
                                         <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Your liked/disliked content</Nav.Link>
                                     </Nav.Item>
@@ -109,6 +119,9 @@ export class Profile extends React.Component{
                                     </Nav.Item>
                                     <Nav.Item >
                                         <Nav.Link href="/update">Update</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link href={"/requests/"+jwt_decode(localStorage.getItem('token')).Username}>Requests</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                                 </BrowserRouter>
@@ -120,7 +133,7 @@ export class Profile extends React.Component{
                         </div>
                     </div>
                 </div>
-        {data.map((post,i) => (
+        {data?.map((post,i) => (
         <div className="feed" key={i}>
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>
         </div>

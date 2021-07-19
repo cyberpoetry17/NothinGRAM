@@ -15,12 +15,14 @@ import Update from './components/Update';
 import Profile from './components/Profile';
 import FollowerFeed from './components/FollowerFeed'
 import Verification from './components/Verification'
+import ProfileRequests from './components/ProfileRequests'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
 import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
+import AddStory from './components/AddStory';
 
 export default function App() {
 
@@ -71,6 +73,7 @@ export default function App() {
 
         <Switch >
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
+          <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
@@ -95,6 +98,10 @@ export default function App() {
           <Route  path="/addPost">
             <AddPost/>
           </Route>
+          <Route  path="/addStory">
+            <AddStory/>
+          </Route>
+
           <Route path="/register">
             <RegisterUser />
           </Route> 

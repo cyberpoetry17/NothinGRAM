@@ -117,7 +117,8 @@ handleSubmit(e){
           _role: user2.role,
           _notify: user2.notifications,
           _private: user2.private,
-          _taggable: user2.taggable
+          _taggable: user2.taggable,
+          _dateOfBirth: Date.parse(user2.date)
         });
         console.log(this.user.notify)
       })

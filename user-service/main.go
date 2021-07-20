@@ -20,14 +20,14 @@ func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.
 	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}, &repository.FollowerRepo{Database: database}, &repository.FollowerRequestRepo{Database: database}
 }
 
-func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo, repoFollowerRequest *repository.FollowerRequestRepo) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService,*services.FollowerRequestService) {
-	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower},&services.FollowerRequestService{Repo: repoFollowerRequest}
+func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo, repoFollowerRequest *repository.FollowerRequestRepo) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService, *services.FollowerRequestService) {
+	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower}, &services.FollowerRequestService{Repo: repoFollowerRequest}
 }
 
-func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService,serviceFollowerRequest *services.FollowerRequestService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler,*handlers.FollowerRequestHandler) {
-	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower},&handlers.FollowerRequestHandler{Service: serviceFollowerRequest}
+func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService, serviceFollowerRequest *services.FollowerRequestService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler, *handlers.FollowerRequestHandler) {
+	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}, &handlers.FollowerRequestHandler{Service: serviceFollowerRequest}
 }
-func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler,handlerFollowerRequest *handlers.FollowerRequestHandler) {
+func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler, handlerFollowerRequest *handlers.FollowerRequestHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	// c := cors.New(cors.Options{AllowedOrigins: []string{"*"}, AllowCredentials: true})
@@ -44,7 +44,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/username/{usernamebyid}", handler.GetUsernameById).Methods("GET")
 	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods(http.MethodGet)
 	router.HandleFunc("/getuseridandprivatebyusername/{username}", handler.GetUserIdByUsernameForProfile).Methods(http.MethodGet)
-	router.HandleFunc("/GetUserProfilePrivacy",handler.GetUserProfilePrivacy).Methods(http.MethodGet,http.MethodOptions)
+	router.HandleFunc("/GetUserProfilePrivacy", handler.GetUserProfilePrivacy).Methods(http.MethodGet, http.MethodOptions)
 
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 
@@ -61,8 +61,8 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/unfollow", followerHandler.UnfollowUser).Methods("POST")
 	router.HandleFunc("/getallfollowedforloggeduser/{userid}", followerHandler.FollowedByUser).Methods(http.MethodGet)
 
-	router.HandleFunc("/createfollowrequest",handlerFollowerRequest.CreateFollowRequest).Methods(http.MethodPost)
-	router.HandleFunc("/getallrequests/{userid}",handlerFollowerRequest.GetAllRequests).Methods(http.MethodGet)
+	router.HandleFunc("/createfollowrequest", handlerFollowerRequest.CreateFollowRequest).Methods(http.MethodPost)
+	router.HandleFunc("/getallrequests/{userid}", handlerFollowerRequest.GetAllRequests).Methods(http.MethodGet)
 	router.HandleFunc("/deleterequest/{requestid}", handlerFollowerRequest.DeleteRequest).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
@@ -92,8 +92,8 @@ func main() {
 	// handle err
 	time.Local = loc //
 
-	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower,repoFollowerRequest := initializeRepository(db)
-	serviceUser, serviceBLocked, serviceMuted, serviceFollower,serviceFollowerRequest := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower,repoFollowerRequest)
-	handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest := initializeHandlers(serviceUser, serviceBLocked, serviceMuted, serviceFollower,serviceFollowerRequest)
-	handleFuncUser(handlerUser, handlerBlocked, handlerMuted, handlerFollower,handlerFollowerRequest)
+	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower, repoFollowerRequest := initializeRepository(db)
+	serviceUser, serviceBLocked, serviceMuted, serviceFollower, serviceFollowerRequest := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower, repoFollowerRequest)
+	handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest := initializeHandlers(serviceUser, serviceBLocked, serviceMuted, serviceFollower, serviceFollowerRequest)
+	handleFuncUser(handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest)
 }

@@ -157,7 +157,7 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusAlreadyReported)
 		return
 	}
 	if !tkn.Valid {
@@ -269,25 +269,6 @@ func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-func parseString(info string) time.Time {
-	s := strings.Split(info, ":")
-	println(s)
-	firstPart := s[0]
-	println(firstPart)
-	dateString := ""
-	//runes := []rune(firstPart)
-	for i := 0; i < len(firstPart)-3; i++ {
-		dateString += string(firstPart[i])
-
-	}
-	println(dateString)
-	t, err := time.Parse("2006-01-02", dateString)
-	if err != nil {
-		println("Time parsing not supported!")
-	}
-	return t
-}
-
 func createUserFromDTO(dto services.RegisterRequest, date time.Time) *data.User2 {
 	var user data.User2
 	user.DateOfBirth = date
@@ -329,7 +310,7 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	DateOfBirthTime := parseString(user.DateOfBirth)
+	DateOfBirthTime := handler.Service.ParseString(user.DateOfBirth)
 	newUser := createUserFromDTO(user, DateOfBirthTime)
 	fmt.Println(user)
 	existsByUsername := handler.Service.Repo.UserExistsByUsername(newUser.Username)
@@ -418,8 +399,9 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusAlreadyReported)
 	}
 	fmt.Println("Updated.")
-	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
 }
 
 func (handler *UserHandler) GetUserProfilePrivacy(w http.ResponseWriter, r *http.Request) {

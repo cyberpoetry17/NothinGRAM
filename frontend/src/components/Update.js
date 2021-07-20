@@ -3,6 +3,9 @@ import { serviceConfig } from "../applicationSettings";
 import { Container, Button } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import "../styles/Login.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 // import { withRouter } from 'react-router'
 
 class Update extends React.Component {
@@ -30,10 +33,15 @@ class Update extends React.Component {
     };
     this.child = React.createRef();
     this.handleChange = this.handleChange.bind(this);
-    this.handleGenderFemale = this.handleGenderFemale.bind(this);
-    this.handleGenderMale = this.handleGenderMale.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleGenderFemale = this.handleGenderFemale.bind(this);
+    // this.handleGenderMale = this.handleGenderMale.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onChangeDate = this.onChangeDate.bind(this);
+    this.handleNotification = this.handleNotification.bind(this);
+    this.handleTaggable = this.handleTaggable.bind(this);
+    this.handlePrivate = this.handlePrivate.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    
   }
 
   handleChange(e) {
@@ -41,22 +49,28 @@ class Update extends React.Component {
     this.setState({ [id]: value });
   }
 
-  handleGenderMale() {
-    this.setState({ _gender: 0 });
-  }
-  handleGenderFemale() {
-    this.setState({ _gender: this.state._gender });
+  handleNotification(e) {
+    this.setState({ _notify: !this.state._notify });
+}
 
-  }
-  onChange = () => {
-    this.setState({
-      _gender: this.state._gender
-    });
-    console.log("GENDEEER")
-    console.log(this.state._gender)
-  };
+handleTaggable(e) {
+    this.setState({ _taggable: !this.state._taggable });
+}
+
+handlePrivate(e) {
+    this.setState({ _private: !this.state._private });
+}
+
+onChange = e =>{
+  this.setState({_gender: parseInt(e.target.value)})
+}
+
+onChangeDate = (date) =>{
+  this.setState({_dateOfBirth: date})
+}
+
   
-  handleSubmit(e){
+handleSubmit(e){
     e.preventDefault();
     const { _password, _repeatPassword } = this.state;
         
@@ -99,9 +113,14 @@ class Update extends React.Component {
           _repeatPassword: user2.password,
           _web: user2.web,
           _bio: user2.bio,
-          _gender: user2.gender
+          _gender: user2.gender,
+          _role: user2.role,
+          _notify: user2.notifications,
+          _private: user2.private,
+          _taggable: user2.taggable,
+          _dateOfBirth: Date.parse(user2.date)
         });
-        //console.log(this.user)
+        console.log(this.user.notify)
       })
       .catch((error) => {
         console.error(error);
@@ -161,8 +180,9 @@ class Update extends React.Component {
         if (!response.ok) {
           return Promise.reject(response);
         }
-        this.props.history.push("/update");
         alert("Succesfully updated.")
+        this.props.history.push("/update");
+       
       })
       .catch((response) => {
         if (response.status === 400) {
@@ -172,22 +192,10 @@ class Update extends React.Component {
   }
 
   render() {
-    const { _name, _surname, _username, _email, _phone, _password,_web,_repeatPassword,_bio,_gender} =
+    const { _name, _surname, _username, _email, _phone, _password,_web,_repeatPassword,_bio,_gender,_taggable,_private,_notify,_dateOfBirth} =
       this.state;
 
     return (
-      //   <Container>
-      //     <div>
-      //         <h1>EDIT PROFILE</h1>
-      //     </div>
-      //     <form onSubmit={this.handleSubmit}>
-      //         <label>Name:</label>
-      //         <input type="text" value={_name} id="_name" onChange={this.handleChange} />
-      //         {/* <textField></textField> */}
-      //         <input type="submit" value="Submit" />
-      //     </form>
-      // </Container>
-
       <Container
         style={{
           position: "relative",
@@ -294,25 +302,56 @@ class Update extends React.Component {
               onChange={this.handleChange}
             />
           </Form.Group>
-
+          <div> <DatePicker
+            selected={_dateOfBirth}
+            onChange={this.onChangeDate}
+            isClearable
+            placeholderText="I have been cleared!"
+          /></div>
           <div>
-              <div>
-                <input
-                  type="radio"
-                  value={_gender}
-                  checked={this.state._gender === 1}
-                  onChange={this.onChange}
-                />{" "}
-                Male
-                <input
-                  type="radio"
-                  checked={_gender}
-                  value={this.state._gender === 2}
-                  onChange={this.onChange}
-                />{" "}
-                Female
-              </div>
+              <label>Current gender: {_gender}</label>
+              <label>Female <input type="radio" value={2} onChange={this.onChange} checked={_gender === 2}/></label>
+              <label>Male <input type="radio" value={1} onChange={this.onChange} checked={_gender === 1}/></label>
             </div>
+            <Form>
+             <div>
+                <input
+                  type="checkbox"
+                  id="_notify"
+                  name="topping"
+                  value="_notify"
+                  checked={_notify}
+                  onChange={this.handleNotification}
+                />
+                <label>Receive notifications from users</label>
+              </div>
+              </Form>
+              <Form>
+             <div>
+                <input
+                  type="checkbox"
+                  id="_private"
+                  name="topping"
+                  value="_private"
+                  checked={_private}
+                  onChange={this.handlePrivate}
+                />
+                <label>Make profile private</label>
+              </div>
+              </Form>
+              <Form>
+             <div>
+                <input
+                  type="checkbox"
+                  id="_taggable"
+                  name="topping"
+                  value="_taggable"
+                  checked={_taggable}
+                  onChange={this.handleTaggable}
+                />
+                <label>Allow others to tag you on posts</label>
+              </div>
+              </Form>
           <div className="buttonLogin">
             <Button variant="primary" type="submit">
               Update account

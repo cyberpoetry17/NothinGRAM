@@ -15,21 +15,21 @@ type PostRepo struct {
 	Database *gorm.DB
 }
 
-func (repo *PostRepo) CreatePost(post *data.Post) error {
+func (repo *PostRepo) CreatePost(post *data.Post) (error,uuid.UUID) {
 	var location data.Location
 	if post.UserID.String() =="00000000-0000-0000-0000-000000000000"{
-		return errors.New("User id required")
+		return errors.New("User id required"),post.ID
 	}
 	if post.LocationID == uuid.Nil {
 		repo.Database.Find(&location).Where("country = dumb")
 		post.LocationID = location.IDLoc
 	}
-		result := repo.Database.Create(post)
-		if result.Error == nil {
-			return result.Error
-		}
-		fmt.Println(result.RowsAffected)
-		return nil //sta s ovim nilom
+	result := repo.Database.Create(post)
+	if result.Error != nil {
+		return result.Error,post.ID
+	}
+	fmt.Println(result.RowsAffected)
+	return nil,post.ID //sta s ovim nilom
 }
 
 func (repo *PostRepo) PostExists(desc string) bool {
@@ -53,6 +53,21 @@ func (repo *PostRepo) GetAll() []data.Post{
 	return posts
 }
 
+func (repo *PostRepo) GetTagsForPost(postid string) ([]string,error){
+	var posts []data.Post
+	var frontList []string
+	result := repo.Database.Preload("Tags").Find(&posts)
+	for _,element := range posts{
+		if element.ID.String() == postid && element.Tags != nil{
+			for _,el := range element.Tags{
+				frontList = append(frontList,el.TagName)
+			}
+
+		}
+	}
+	return frontList,result.Error
+}
+
 func (repo *PostRepo) GetNonPrivatePosts() []data.Post{
 	var posts []data.Post
 	var frontList []data.Post
@@ -65,16 +80,16 @@ func (repo *PostRepo) GetNonPrivatePosts() []data.Post{
 	return frontList
 }
 
-func (repo *PostRepo) GetNonPrivatePostsForUser(id string) []data.Post{
+func (repo *PostRepo) GetNonPrivatePostsForUser(id string) ([]data.Post,error){
 	var posts []data.Post
 	var frontList []data.Post
-	posts = repo.GetPostsByUserID(id)
+	result := repo.Database.Find(&posts)
 	for _,element := range posts{
-		if element.Private == false{
+		if element.ID.String()==id && element.Private == false{
 			frontList = append(frontList,element)
 		}
 	}
-	return frontList
+	return frontList,result.Error
 }
 
 func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
@@ -89,6 +104,23 @@ func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
 	for _,element := range posts{
 		if element.UserID.String() == id{
 			frontList = append(frontList, element)
+		}
+	}
+	return frontList
+}
+
+func (repo *PostRepo) GetPostByPostID(id string) data.Post{
+	var posts []data.Post
+	var frontList data.Post
+	repo.Database.
+		Preload("Tags").
+		Preload("Comments").
+		Preload("Likes").
+		Preload("Dislikes").
+		Find(&posts)
+	for _,element := range posts{
+		if element.ID.String() == id{
+			frontList = element
 		}
 	}
 	return frontList

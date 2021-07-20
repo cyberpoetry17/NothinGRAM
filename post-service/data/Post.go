@@ -9,7 +9,7 @@ import (
 type Post struct{
 	ID                   uuid.UUID `gorm:"primary_key,column:id"      json:"ID"` //mozda ovo ne treba?
 	Description			 string `gorm:"column:description"   json:"description"`
-	PicturePath			 string `gorm:"column:picpath"   json:"picpath"`
+	//PicturePath			 string `gorm:"column:picpath"   json:"picpath"`
 	Likes				 []Like	`gorm:"foreignKey:PostId"   json:"likes"`
 	Dislikes			 []Dislike	`gorm:"foreignKey:PostId"   json:"dislikes"`
 	UserID				 uuid.UUID `gorm:"column:userid;"   json:"userid"`

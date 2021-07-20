@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/google/uuid"
@@ -49,17 +50,31 @@ func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
 // 	return &backUser,nil
 // }
 
-func (repo *UserRepo) GetUserByUsernameForProfile(id uuid.UUID) *data.User2 {
+func (repo *UserRepo) GetUserByUsernameForProfile(id string) *data.User2 {
 	var users []data.User2
 	var backUser data.User2
 	users = repo.GetAll()
 	for _, element := range users {
-		if element.ID == id {
+		if element.Username == id {
 			backUser = element
 			return &backUser
 		}
 	}
 	return &backUser
+}
+
+func (repo *UserRepo) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
+	var users []data.User2
+	var backUser DTO.UserUsernameAndPrivateDTO
+	users = repo.GetAll()
+	for _, element := range users {
+		if element.Username == id {
+			backUser.UserId = element.ID
+			backUser.Private = element.Private
+			return backUser
+		}
+	}
+	return backUser
 }
 
 func (repo *UserRepo) GetUsernameById(id uuid.UUID) string {

@@ -7,17 +7,17 @@ import (
 )
 
 type PostDTO struct{
-	ID                   uuid.UUID `json:"ID"`
+	ID                   uuid.UUID ` json:"ID"` //mozda ovo ne treba?
 	Description			 string `json:"description"`
-	PicturePath			 string `json:"picpath"`
+	Likes				 []data.Like	`json:"likes"`
+	Dislikes			 []data.Dislike	`json:"dislikes"`
 	UserID				 uuid.UUID `json:"userid"`
 	Timestamp			 time.Time `json:"timestamp"`
+	Tags 				 []data.Tag `json:"Tags"`
 	Comments			 []data.Comment `json:"Comments"`
 	LocationID			 uuid.UUID `json:"LocationID"`
 	Media				[]data.Media `json:"Media"`
 	Private				 bool	`json:"private"`
-	City				string `json:"city"`
-	Country 				string `json:"country"`
-	Address 			string `json:"address"`
-	Tags			[]string `json:"tags"`
+	ImgPaths			[]string `json:"ImgPaths"`
+	VideoPath			string	`json:"VideoPath"`
 }

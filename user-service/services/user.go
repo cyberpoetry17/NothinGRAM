@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
 	"github.com/dgrijalva/jwt-go"
@@ -81,8 +82,12 @@ func (service *UserService) GetUserById(ID uuid.UUID) (*data.User2, error) {
 	return user, nil
 }
 
-func (service *UserService) GetUserByUsernameForProfile(id uuid.UUID) *data.User2 {
+func (service *UserService) GetUserByUsernameForProfile(id string) *data.User2 {
 	return service.Repo.GetUserByUsernameForProfile(id)
+}
+
+func (service *UserService) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
+	return service.Repo.GetUserIdByUsernameForProfile(id)
 }
 
 func (service *UserService) GetUsernameById(id uuid.UUID) string {
@@ -267,4 +272,9 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 		return errorUpdatingUser
 	}
 	return nil
+}
+
+func (service *UserService) GetUserProfilePrivacy(ID uuid.UUID) (bool, error) {
+	user, err := service.Repo.GetById(ID)
+	return user.Private, err
 }

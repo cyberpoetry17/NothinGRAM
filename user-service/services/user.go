@@ -14,7 +14,8 @@ import (
 )
 
 type UserService struct {
-	Repo *repository.UserRepo
+	Repo         *repository.UserRepo
+	RepoFollower *repository.FollowerRepo
 }
 
 type UpdateUserRequest struct {
@@ -156,28 +157,6 @@ func (service *UserService) ChangePassword(r *LoginRequest) error {
 
 }
 
-// func TimeFormating(date string) time.Time {
-// 	fmt.Printf("Input : %s\n", date)
-
-// 	//convert string to time.Time type  2019-04-09T22:00:00.000Z
-// 	fmt.Println(date)
-// 	layOut := "2006-07-25"
-// 	dateStamp, err := time.Parse(layOut, date)
-
-// 	if err != nil {
-// 		fmt.Println(err)
-
-// 	}
-
-// 	fmt.Printf("Output(local date) : %s\n", dateStamp)
-// 	fmt.Printf("Output(UTC) : %s\n", dateStamp)
-
-// 	convertedDateString := dateStamp.Format(layOut)
-
-// 	fmt.Printf("Final output : %s\n", convertedDateString)
-// 	return dateStamp
-// }
-
 func (service *UserService) ParseString(info string) time.Time {
 	s := strings.Split(info, ":")
 	println(s)
@@ -197,19 +176,6 @@ func (service *UserService) ParseString(info string) time.Time {
 	return t
 }
 
-// func (service *UserService) ParseLayout(value string) (time.Time, error) {
-// 	layout := time.RFC3339[:len(value)]
-// 	return time.Parse(layout, value)
-// }
-// func (service *UserService) ParseString(info string) time.Time {
-
-// 	// println(dateString)
-// 	t, err := time.Parse("2006-01-21T", info)
-// 	if err != nil {
-// 		println("Time parsing not supported!")
-// 	}
-// 	return t
-// }
 func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) error {
 	user, error := service.Repo.GetById(ID)
 	if error != nil {
@@ -241,26 +207,13 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 		user.Email = r.Email
 	}
 	if checkIfStringIsValid(r.Username) && (r.Username != user.Username) {
-		fmt.Println("uslo u username")
-		//
 		service.Repo.UserExistsByUsername(r.Username)
-		// error2 := fmt.Errorf("username already taken")
-		// if usernameTaken {
-		// 	return error2
-		// }
 		user.Username = r.Username
 	}
 	if checkIfStringIsValid(r.Password) && r.Password != user.Password {
-
 		user.SetPassword(r.Password)
 	}
-
-	//	timeDate, err := time.Parse(layout , str)
-	//newDate := TimeFormating(r.DateOfBirth)
-
 	user.Gender = r.Gender
-	fmt.Println(user.Gender)
-
 	user.Private = r.Private
 	user.ReceiveNotifications = r.ReceiveNotifications
 	println(r.ReceiveNotifications)
@@ -277,4 +230,24 @@ func (service *UserService) UpdateEditUser(r *UpdateUserRequest, ID uuid.UUID) e
 func (service *UserService) GetUserProfilePrivacy(ID uuid.UUID) (bool, error) {
 	user, err := service.Repo.GetById(ID)
 	return user.Private, err
+}
+
+func (service *UserService) GetAllById(id uuid.UUID) []string {
+	user, err := service.Repo.GetById(id)
+	followers := user.Followers
+	allUsers := service.Repo.GetAll()
+
+	if err != nil {
+		return nil
+	}
+
+	var userFollowers []string
+	for _, elementFollower := range followers {
+		for _, elementUser := range allUsers {
+			if elementUser.ID == elementFollower.IDFollower {
+				userFollowers = append(userFollowers, elementUser.Username)
+			}
+		}
+	}
+	return userFollowers
 }

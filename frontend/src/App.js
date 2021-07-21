@@ -25,6 +25,7 @@ import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
+import AddCloseFollower from './components/AddCloseFollower';
 
 
 export default function App() {
@@ -82,6 +83,7 @@ export default function App() {
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
           <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
+          <Route path="/closefollowerr" component={AddCloseFollower}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">

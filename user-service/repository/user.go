@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
@@ -22,6 +23,10 @@ func (repo *UserRepo) CreateUser(user *data.User2) error {
 func (repo *UserRepo) GetAll() []data.User2 {
 	var users []data.User2
 	repo.Database.
+		Preload("Followers").
+		Preload("Following").
+		Preload("MutedUsers").
+		Preload("BlockedUsers").
 		Find(&users)
 	return users
 }
@@ -29,7 +34,12 @@ func (repo *UserRepo) GetAll() []data.User2 {
 func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
 	user := &data.User2{}
 
-	err := repo.Database.Where("id = ?", id).First(user).Error
+	err := repo.Database.
+		Preload("Followers").
+		Preload("Following").
+		Preload("MutedUsers").
+		Preload("BlockedUsers").
+		Where("id = ?", id).First(user).Error
 
 	if err != nil {
 		return nil, err

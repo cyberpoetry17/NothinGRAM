@@ -72,3 +72,7 @@ func (user *User2) BeforeCreate(scope *gorm.DB) error {
 	user.ID = uuid.New()
 	return nil
 }
+
+func (user *User2) AfterDelete(scope *gorm.DB) error {
+	return scope.Model(&Follower{}).Where("iduser = ?", user.ID).Unscoped().Delete(&Follower{}).Error
+}

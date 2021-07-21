@@ -45,6 +45,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods(http.MethodGet)
 	router.HandleFunc("/getuseridandprivatebyusername/{username}", handler.GetUserIdByUsernameForProfile).Methods(http.MethodGet)
 	router.HandleFunc("/GetUserProfilePrivacy", handler.GetUserProfilePrivacy).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/getuserwhofollow", handler.GetAllUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
 
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 

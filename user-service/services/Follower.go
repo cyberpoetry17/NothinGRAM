@@ -24,3 +24,13 @@ func (service *FollowerService) FollowStatusForProfile(follower *data.Follower) 
 func (service *FollowerService) FollowedByUser(userid string) []string {
 	return service.Repo.FollowedByUser(userid)
 }
+
+// func (service *FollowerService) GetAllFollowersForUser(userId string) ([]data.Follower, error) {
+// 	id, err := uuid.Parse(userId)
+// 	if err != nil {
+// 		print(err)
+// 		return nil, err
+// 	}
+// 	followers := service.Repo.GetAllForOneUser(id)
+// 	return followers, nil
+// }

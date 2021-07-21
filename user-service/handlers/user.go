@@ -405,15 +405,15 @@ func (handler *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler *UserHandler) GetUserProfilePrivacy(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w,r)
+	setupResponse(&w, r)
 	idString := r.URL.Query().Get("PostId")
-	userId,err := uuid.Parse(idString)
-	if err != nil{
+	userId, err := uuid.Parse(idString)
+	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
 	private, err := handler.Service.GetUserProfilePrivacy(userId)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
@@ -421,4 +421,43 @@ func (handler *UserHandler) GetUserProfilePrivacy(w http.ResponseWriter, r *http
 	w.Header().Set("Content-Type", "application/json")
 	//w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	json.NewEncoder(w).Encode(private)
+}
+
+func (handler *UserHandler) GetAllUserFollowersById(w http.ResponseWriter, r *http.Request) {
+
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
+	token := r.Header.Get("Authorization")
+	splitToken := strings.Split(token, "Bearer ")
+	token = splitToken[1]
+	fmt.Println(token)
+
+	tknStr := token
+	tokenObj := &data.Token{}
+	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusAlreadyReported)
+		return
+	}
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	userList := handler.Service.GetAllById(tokenObj.UserID)
+	if userList == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(userList)
+	//w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 }

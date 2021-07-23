@@ -45,8 +45,9 @@ func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler,
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), hand))
 }
 
-func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) *mux.Route {
-	return router.HandleFunc("/addStory", storyHandler.CreateStory).Methods("POST")
+func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) {
+	router.HandleFunc("/addStory", storyHandler.CreateStory).Methods("POST")
+	router.HandleFunc("/getAllStories", storyHandler.GetAllStories).Methods("GET")
 }
 
 func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) {
@@ -54,6 +55,7 @@ func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) 
 	router.HandleFunc("/EditMedia/", mediaHandler.EditMedia).Methods("POST")
 	router.HandleFunc("RemoveMedia/", mediaHandler.RemoveMedia).Methods("DELETE")
 	router.HandleFunc("/GetMediaForPost",mediaHandler.GetMediaForPost).Methods("GET")
+	router.HandleFunc("/GetMediaForStory",mediaHandler.GetMediaForStory).Methods("GET")
 }
 
 func locationHandleFuncs(router *mux.Router, locationHandler *handlerss.LocationHandler) {

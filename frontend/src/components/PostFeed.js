@@ -2,6 +2,7 @@ import Post from "./Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
+import Stories from "./Stories";
 
 export class PostFeed extends React.Component{
 
@@ -29,6 +30,7 @@ export class PostFeed extends React.Component{
         const data = this.state.posts;
         return(
             <>
+        <Stories/>
         {data.map((post,i) => (
         <div className="feed" key={i}>
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID} />

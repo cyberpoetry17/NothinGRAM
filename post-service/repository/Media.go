@@ -34,3 +34,10 @@ func (repo *MediaRepo) GetMediaForPost(postID uuid.UUID) (error,[]data.Media) {
 	err := repo.Database.Where("\"PostId\" = ?",postID.String()).Find(&mediaToReturn).Error
 	return err,mediaToReturn
 }
+
+func (repo *MediaRepo) GetMediaForStory(storyID uuid.UUID) (error,[]data.Media) {
+	var mediaToReturn []data.Media
+	fmt.Println(storyID.String())
+	err := repo.Database.Where("\"StoryId\" = ?", storyID.String()).Find(&mediaToReturn).Error
+	return err,mediaToReturn
+}

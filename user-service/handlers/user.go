@@ -461,3 +461,52 @@ func (handler *UserHandler) GetAllUserFollowersById(w http.ResponseWriter, r *ht
 	//w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
+
+// func (handler *UserHandler) SetCloseFollowersForUser(w http.ResponseWriter, r *http.Request) {
+
+// 	setupResponse(&w, r)
+// 	if (*r).Method == "OPTIONS" {
+// 		return
+// 	}
+// 	var usernames DTO.UsernameDTO
+// 	err := json.NewDecoder(r.Body).Decode(&usernames)
+// 	if err != nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	token := r.Header.Get("Authorization")
+// 	splitToken := strings.Split(token, "Bearer ")
+// 	token = splitToken[1]
+// 	fmt.Println(token)
+
+// 	tknStr := token
+// 	tokenObj := &data.Token{}
+// 	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
+// 		return []byte("secret"), nil
+// 	})
+// 	if err != nil {
+// 		if err == jwt.ErrSignatureInvalid {
+// 			w.WriteHeader(http.StatusUnauthorized)
+// 			return
+// 		}
+// 		w.WriteHeader(http.StatusAlreadyReported)
+// 		return
+// 	}
+// 	if !tkn.Valid {
+// 		w.WriteHeader(http.StatusUnauthorized)
+// 		return
+// 	}
+// 	addedUsers := handler.Service.SetCloseFollowersToUser(usernames.Usernames, tokenObj.UserID)
+// 	if addedUsers == nil {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		return
+// 	}
+// 	errorAdded := handler.ServiceClose.AddMultipleFollowers(addedUsers, tokenObj.UserID)
+// 	if errorAdded != nil {
+// 		fmt.Println(err)
+// 		w.WriteHeader(http.StatusExpectationFailed)
+// 	}
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.WriteHeader(http.StatusOK)
+// }

@@ -11,7 +11,7 @@ type CloseFollower struct {
 	IDUser          uuid.UUID `gorm:"column:iduser"              json:"iduser"`
 }
 
-func (follower *CloseFollower) BeforeCreate(scope *gorm.DB) error {
-	follower.ID = uuid.New()
+func (closeFollower *CloseFollower) BeforeCreate(scope *gorm.DB) error {
+	closeFollower.ID = uuid.New()
 	return nil
 }

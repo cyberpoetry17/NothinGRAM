@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
@@ -14,8 +13,9 @@ import (
 )
 
 type UserService struct {
-	Repo         *repository.UserRepo
-	RepoFollower *repository.FollowerRepo
+	Repo              *repository.UserRepo
+	RepoFollower      *repository.FollowerRepo
+	RepoCloseFollower *repository.CloseFollowerRepository
 }
 
 type UpdateUserRequest struct {
@@ -158,17 +158,6 @@ func (service *UserService) ChangePassword(r *LoginRequest) error {
 }
 
 func (service *UserService) ParseString(info string) time.Time {
-	s := strings.Split(info, ":")
-	println(s)
-	firstPart := s[0]
-	println(firstPart)
-	dateString := ""
-	//runes := []rune(firstPart)
-	for i := 0; i < len(firstPart)-3; i++ {
-		dateString += string(firstPart[i])
-
-	}
-	println(dateString)
 	t, err := time.Parse("2006-01-02T15:04:05.000Z", info)
 	if err != nil {
 		println("Time parsing not supported!")
@@ -250,4 +239,29 @@ func (service *UserService) GetAllById(id uuid.UUID) []string {
 		}
 	}
 	return userFollowers
+}
+
+func (service *UserService) SetCloseFollowersToUser(list []string, id uuid.UUID) []DTO.UserDTO {
+	var followers []DTO.UserDTO
+	if list == nil {
+		fmt.Println("GRESKA LISTA NIJE PRAZNA LOL")
+		return nil
+
+	}
+	// user := &data.User2{}
+
+	for _, username := range list { //GetUserIdByUsernameForProfile
+		var user DTO.UserDTO
+		usernameDto, err := service.Repo.GetUserIdByUsername(username)
+		fmt.Println(usernameDto.Private)
+		user.UserId = usernameDto.ID
+		if err != nil {
+			return nil
+		}
+		followers = append(followers, user)
+
+	}
+
+	//user.CloseFollowers = closeFollowerList
+	return followers
 }

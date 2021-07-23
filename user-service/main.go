@@ -25,7 +25,7 @@ func initializeServices(repo *repository.UserRepo, repoBlocked *repository.Block
 }
 
 func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService, serviceFollowerRequest *services.FollowerRequestService, serviceCloseFollower *services.CloseFollowerService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler, *handlers.FollowerRequestHandler, *handlers.CloseFollowerHandler) {
-	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}, &handlers.FollowerRequestHandler{Service: serviceFollowerRequest}, &handlers.CloseFollowerHandler{Service: serviceCloseFollower}
+	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}, &handlers.FollowerRequestHandler{Service: serviceFollowerRequest}, &handlers.CloseFollowerHandler{Service: serviceCloseFollower, UserServ: service}
 }
 func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler, handlerFollowerRequest *handlers.FollowerRequestHandler, handlerCloseFollower *handlers.CloseFollowerHandler) {
 	router := mux.NewRouter().StrictSlash(true)
@@ -68,6 +68,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 
 	router.HandleFunc("/addclosefollower", handlerCloseFollower.AddCloseFollower).Methods(http.MethodPost)
 	router.HandleFunc("/removeclosefollower", handlerCloseFollower.RemoveCloseFollower).Methods(http.MethodPost)
+	router.HandleFunc("/setclosefollowers", handlerCloseFollower.ModifyCloseFollowers).Methods(http.MethodPost, http.MethodOptions)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }

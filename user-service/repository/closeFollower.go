@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"gorm.io/gorm"
 )
@@ -19,7 +20,7 @@ func (repo *CloseFollowerRepository) AddCloseFollower(follower *data.CloseFollow
 }
 
 func (repo *CloseFollowerRepository) RemoveCloseFollower(follower *data.CloseFollower) error {
-	result := repo.Database.Where("idfollower=? and iduser=?", follower.IDCloseFollower, follower.IDUser).Delete(follower)
+	result := repo.Database.Where("idclosefollower=? and iduser=?", follower.IDCloseFollower, follower.IDUser).Delete(follower)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -43,4 +44,13 @@ func (repo *CloseFollowerRepository) GetAllCloseFollowerUser(userid string) []st
 		}
 	}
 	return frontList
+}
+
+func (repo *CloseFollowerRepository) RemoveManyByID(element DTO.UserDTO) error {
+	result := repo.Database.Where("idfollower=?", element.UserId).Delete(&data.CloseFollower{})
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }

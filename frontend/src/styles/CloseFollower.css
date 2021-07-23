@@ -3,8 +3,7 @@
     max-height: fit-content; 
     
 }
-
-.list2element{
-    border: 10px;
-   
+.buttonLogin{
+    width: 100%; 
+    height: 50%;
 }

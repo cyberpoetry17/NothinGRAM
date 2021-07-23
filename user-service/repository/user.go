@@ -27,6 +27,7 @@ func (repo *UserRepo) GetAll() []data.User2 {
 		Preload("Following").
 		Preload("MutedUsers").
 		Preload("BlockedUsers").
+		Preload("CloseFollowers").
 		Find(&users)
 	return users
 }
@@ -39,6 +40,7 @@ func (repo *UserRepo) GetById(id uuid.UUID) (*data.User2, error) {
 		Preload("Following").
 		Preload("MutedUsers").
 		Preload("BlockedUsers").
+		Preload("CloseFollowers").
 		Where("id = ?", id).First(user).Error
 
 	if err != nil {
@@ -85,6 +87,19 @@ func (repo *UserRepo) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameA
 		}
 	}
 	return backUser
+}
+
+func (repo *UserRepo) GetUserIdByUsername(username string) (*data.User2, error) {
+
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	user := &data.User2{}
+
+	err := repo.Database.Where("username = ?", username).First(user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+
 }
 
 func (repo *UserRepo) GetUsernameById(id uuid.UUID) string {

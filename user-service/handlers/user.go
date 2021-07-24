@@ -38,39 +38,6 @@ func (handler *UserHandler) Hello(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
-// 	c, err := r.Cookie("token")
-// 	if err != nil {
-// 		if err == http.ErrNoCookie {
-// 			// If the cookie is not set, return an unauthorized status
-// 			w.WriteHeader(http.StatusUnauthorized)
-// 			return
-// 		}
-// 		// For any other type of error, return a bad request status
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	tknStr := c.Value
-// 	token := &data.Token{}
-// 	tkn, err := jwt.ParseWithClaims(tknStr, token, func(token *jwt.Token) (interface{}, error) {
-// 		return []byte("secret"), nil
-// 	})
-// 	if err != nil {
-// 		if err == jwt.ErrSignatureInvalid {
-// 			w.WriteHeader(http.StatusUnauthorized)
-// 			return
-// 		}
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	if !tkn.Valid {
-// 		w.WriteHeader(http.StatusUnauthorized)
-// 		return
-// 	}
-
-// 	w.Write([]byte(fmt.Sprintf("Welcome %s!", token.Username)))
-// }
-
 func (handler *UserHandler) AuthorizationToken(w http.ResponseWriter, r *http.Request) {
 
 	setupResponse(&w, r)
@@ -462,51 +429,41 @@ func (handler *UserHandler) GetAllUserFollowersById(w http.ResponseWriter, r *ht
 	w.WriteHeader(http.StatusOK)
 }
 
-// func (handler *UserHandler) SetCloseFollowersForUser(w http.ResponseWriter, r *http.Request) {
+func (handler *UserHandler) GetAllCloseUserFollowersById(w http.ResponseWriter, r *http.Request) {
 
-// 	setupResponse(&w, r)
-// 	if (*r).Method == "OPTIONS" {
-// 		return
-// 	}
-// 	var usernames DTO.UsernameDTO
-// 	err := json.NewDecoder(r.Body).Decode(&usernames)
-// 	if err != nil {
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
 
-// 	token := r.Header.Get("Authorization")
-// 	splitToken := strings.Split(token, "Bearer ")
-// 	token = splitToken[1]
-// 	fmt.Println(token)
+	token := r.Header.Get("Authorization")
+	splitToken := strings.Split(token, "Bearer ")
+	token = splitToken[1]
+	fmt.Println(token)
 
-// 	tknStr := token
-// 	tokenObj := &data.Token{}
-// 	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
-// 		return []byte("secret"), nil
-// 	})
-// 	if err != nil {
-// 		if err == jwt.ErrSignatureInvalid {
-// 			w.WriteHeader(http.StatusUnauthorized)
-// 			return
-// 		}
-// 		w.WriteHeader(http.StatusAlreadyReported)
-// 		return
-// 	}
-// 	if !tkn.Valid {
-// 		w.WriteHeader(http.StatusUnauthorized)
-// 		return
-// 	}
-// 	addedUsers := handler.Service.SetCloseFollowersToUser(usernames.Usernames, tokenObj.UserID)
-// 	if addedUsers == nil {
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	errorAdded := handler.ServiceClose.AddMultipleFollowers(addedUsers, tokenObj.UserID)
-// 	if errorAdded != nil {
-// 		fmt.Println(err)
-// 		w.WriteHeader(http.StatusExpectationFailed)
-// 	}
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-// }
+	tknStr := token
+	tokenObj := &data.Token{}
+	tkn, err := jwt.ParseWithClaims(tknStr, tokenObj, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusAlreadyReported)
+		return
+	}
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	userList := handler.Service.GetAllCloseFollowersById(tokenObj.UserID)
+	if userList == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(w).Encode(userList)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}

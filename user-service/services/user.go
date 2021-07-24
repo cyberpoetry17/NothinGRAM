@@ -244,12 +244,9 @@ func (service *UserService) GetAllById(id uuid.UUID) []string {
 func (service *UserService) SetCloseFollowersToUser(list []string, id uuid.UUID) []DTO.UserDTO {
 	var followers []DTO.UserDTO
 	if list == nil {
-		fmt.Println("GRESKA LISTA NIJE PRAZNA LOL")
 		return nil
 
 	}
-	// user := &data.User2{}
-
 	for _, username := range list { //GetUserIdByUsernameForProfile
 		var user DTO.UserDTO
 		usernameDto, err := service.Repo.GetUserIdByUsername(username)
@@ -259,9 +256,26 @@ func (service *UserService) SetCloseFollowersToUser(list []string, id uuid.UUID)
 			return nil
 		}
 		followers = append(followers, user)
+	}
+	return followers
+}
 
+func (service *UserService) GetAllCloseFollowersById(id uuid.UUID) []string {
+	user, err := service.Repo.GetById(id)
+	followers := user.CloseFollowers
+	allUsers := service.Repo.GetAll()
+
+	if err != nil {
+		return nil
 	}
 
-	//user.CloseFollowers = closeFollowerList
-	return followers
+	var userFollowers []string
+	for _, elementFollower := range followers {
+		for _, elementUser := range allUsers {
+			if elementUser.ID == elementFollower.IDCloseFollower {
+				userFollowers = append(userFollowers, elementUser.Username)
+			}
+		}
+	}
+	return userFollowers
 }

@@ -40,8 +40,31 @@ class AddCloseFollower extends React.Component {
     e.preventDefault();
     this.setFollowers();
   }
+  renderCloseFollowers() {
+    var token = localStorage.getItem("token");
+    const requestOpt = {
+      method: "GET",
+      headers: {
+        "Content-Type": "aplication/json",
+        Authorization: `Bearer ${token}`,
+      },
 
-  renderMyData() {
+      credentials: "same-origin",
+    };
+    fetch(`${serviceConfig.baseURL}/getclosefollowers`, requestOpt)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var followers = responseJson;
+        this.setState({
+          closeFriends: followers,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  renderFollowers() {
     var token = localStorage.getItem("token");
     const requestOpt = {
       method: "GET",
@@ -65,7 +88,8 @@ class AddCloseFollower extends React.Component {
       });
   }
   componentDidMount() {
-    this.renderMyData();
+    this.renderFollowers();
+    this.renderCloseFollowers();
   }
 
   setFollowers() {
@@ -111,8 +135,6 @@ class AddCloseFollower extends React.Component {
               >
                 {listitem}
               </li>
-
-              // <button  key={listitem} type="button" class="list-group-item list-group-item-action" onClick={this.handleClick}>{listitem}</button>
             ))}
           </ul>
         </React.Fragment>

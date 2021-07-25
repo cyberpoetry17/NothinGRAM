@@ -47,7 +47,7 @@ export default function Story({postId,type,IdStory,UserId}) {
         <div>
             <Link to={"/profile/"+UserName}>{UserName}</Link>
             {isLoaded === true? 
-            <img onClick={click} className="d-block" width="150" height="150" src={media.Link} alt="my pic"/>
+            <img onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/>
             :
             <p>no pic</p>
             }

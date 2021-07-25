@@ -47,7 +47,7 @@ func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler,
 
 func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) {
 	router.HandleFunc("/addStory", storyHandler.CreateStory).Methods("POST")
-	router.HandleFunc("/getAllStories", storyHandler.GetAllStories).Methods("GET")
+	router.HandleFunc("/getAllStories", storyHandler.GetAllActiveStories).Methods("GET")
 }
 
 func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) {

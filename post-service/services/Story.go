@@ -52,6 +52,6 @@ func setIfItIsVideo(media data.Media) {
 	}
 }
 
-func (service *StoryService) GetAllStories() []data.Story {
+func (service *StoryService) GetAllActiveStories() []data.Story {
 	return service.StoryRepo.GetAllActive()
 }

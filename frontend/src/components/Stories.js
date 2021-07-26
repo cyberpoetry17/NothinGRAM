@@ -44,7 +44,7 @@ export default function Stories() {
     
     return (
         <div>
-            <div className="container">
+            <div className="containerStory">
                 {/* { loaded ?
                 stories.map(s=>(
                     <div className="box">
@@ -58,8 +58,7 @@ export default function Stories() {
                  Object.keys(storiesMap).map(function (key) {
                 console.log('key: ', key);  // Returns key: 1 and key: 2
                 return (
-                    <div>
-                        <p>{key}</p>
+                    <div>    
                         <StoryGroup storyList={storiesMap[key]}/>
                     </div>
                     );

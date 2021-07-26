@@ -123,6 +123,9 @@ export class Profile extends React.Component{
                                     <Nav.Item >
                                         <Nav.Link href={"/requests/"+jwt_decode(localStorage.getItem('token')).Username}>Requests</Nav.Link>
                                     </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link href={"/closefollowerr"}>Close friends</Nav.Link>
+                                    </Nav.Item>
                                 </Nav>
                                 </BrowserRouter>
                                 </div>

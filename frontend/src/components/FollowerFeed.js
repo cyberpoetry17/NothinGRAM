@@ -35,13 +35,13 @@ export class UserInteractedContent extends React.Component{
 
       render(){
         return(
-            <>
-        <Stories/>
-        {this.state.followerposts?.map((post,i) => (
-        <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>
-        </div>
-        ))}
+        <>
+            <Stories/>
+            {this.state.followerposts?.map((post,i) => (
+            <div className="feed" key={i}>
+                <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>
+            </div>
+            ))}
         </>
         )
     }

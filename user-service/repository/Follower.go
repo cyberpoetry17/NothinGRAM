@@ -27,17 +27,26 @@ func (repo *FollowerRepo) UnfollowUser(follower *data.Follower) error {
 	return nil
 }
 
-func (repo *FollowerRepo) GetAll() []data.Follower{
+func (repo *FollowerRepo) GetAll() []data.Follower {
 	var followers []data.Follower
 	repo.Database.
 		Find(&followers)
 	return followers
 }
 
+//nadjem sve followere jednog korisnika ->koristim da bih vratila usere
+// func (repo *FollowerRepo) GetAllForOneUser(id uuid.UUID) []data.Follower {
+
+// 	var followers []data.Follower
+// 	repo.Database.
+// 		Find(&followers).Where("iduser = ? ", id)
+// 	return followers
+// }
+
 func (repo *FollowerRepo) FollowStatusForProfile(follower *data.Follower) bool {
 	var result = repo.GetAll()
-	for _,element := range result{
-		if element.IDFollower == follower.IDFollower && element.IDUser == follower.IDUser{
+	for _, element := range result {
+		if element.IDFollower == follower.IDFollower && element.IDUser == follower.IDUser {
 			return true
 		}
 	}
@@ -47,9 +56,9 @@ func (repo *FollowerRepo) FollowStatusForProfile(follower *data.Follower) bool {
 func (repo *FollowerRepo) FollowedByUser(userid string) []string {
 	var result = repo.GetAll()
 	var frontList []string
-	for _,element := range result{
-		if element.IDFollower.String() == userid{
-			frontList = append(frontList,element.IDUser.String())
+	for _, element := range result {
+		if element.IDFollower.String() == userid {
+			frontList = append(frontList, element.IDUser.String())
 		}
 	}
 	return frontList

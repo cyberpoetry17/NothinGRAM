@@ -3,8 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
@@ -15,7 +16,7 @@ type FollowerHandler struct {
 }
 
 func (handler *FollowerHandler) FollowUser(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w,r)
+	setupResponse(&w, r)
 	var follower data.Follower
 	err := json.NewDecoder(r.Body).Decode(&follower)
 	if err != nil {
@@ -32,7 +33,7 @@ func (handler *FollowerHandler) FollowUser(w http.ResponseWriter, r *http.Reques
 }
 
 func (handler *FollowerHandler) UnfollowUser(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w,r)
+	setupResponse(&w, r)
 	var follower data.Follower
 	err := json.NewDecoder(r.Body).Decode(&follower)
 	if err != nil {
@@ -48,7 +49,7 @@ func (handler *FollowerHandler) UnfollowUser(w http.ResponseWriter, r *http.Requ
 }
 
 func (handler *FollowerHandler) FollowStatusForProfile(w http.ResponseWriter, r *http.Request) {
-	setupResponse(&w,r)
+	setupResponse(&w, r)
 	var follower data.Follower
 	err := json.NewDecoder(r.Body).Decode(&follower)
 	if err != nil {
@@ -59,19 +60,19 @@ func (handler *FollowerHandler) FollowStatusForProfile(w http.ResponseWriter, r 
 	if err != nil {
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
-	if ret == true{
+	if ret == true {
 		_ = json.NewEncoder(w).Encode(true)
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
-	}else{
+	} else {
 		_ = json.NewEncoder(w).Encode(false)
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 	}
 }
 
-func (handler *FollowerHandler) FollowedByUser (w http.ResponseWriter,r *http.Request){
-	setupResponse(&w,r)
+func (handler *FollowerHandler) FollowedByUser(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
 	vars := mux.Vars(r)
 	id := vars["userid"]
 	if id == "" {
@@ -79,7 +80,6 @@ func (handler *FollowerHandler) FollowedByUser (w http.ResponseWriter,r *http.Re
 		return
 	}
 	followed := handler.Service.FollowedByUser(id)
-
 
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(followed)

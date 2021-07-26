@@ -3,6 +3,7 @@ import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 
+
 export class PostFeed extends React.Component{
 
     constructor(props) {
@@ -29,12 +30,12 @@ export class PostFeed extends React.Component{
         const data = this.state.posts;
         return(
             <>
-        {data.map((post,i) => (
-        <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID} />
-        </div>
-        ))}
-        </>
+                {data.map((post,i) => (
+                <div className="feed" key={i}>
+                    <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID} />
+                </div>
+                ))}
+            </>
         )
     }
 }

@@ -83,3 +83,23 @@ func (handler *MediaHandler) GetMediaForPost(w http.ResponseWriter, r *http.Requ
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(list)
 }
+
+func (handler *MediaHandler) GetMediaForStory(w http.ResponseWriter, r *http.Request) {
+	postIdString := r.URL.Query().Get("StoryId")
+	storyId,err := uuid.Parse(postIdString)
+	if err != nil{
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	err,list := handler.Service.GetMediaForStory(storyId)
+	if err != nil{
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	if(len(list)>0){
+		json.NewEncoder(w).Encode(list[0])
+	}
+
+}

@@ -86,6 +86,7 @@ func (service *PostService) GetNonPrivatePostsForUser(id string) ([]data.Post,er
 	if err != nil{
 		return nil,err
 	}
+
 	return posts,err
 }
 

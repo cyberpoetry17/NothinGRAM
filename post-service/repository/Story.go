@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"gorm.io/gorm"
+	"time"
 )
 
 type StoryRepo struct {
@@ -27,5 +28,25 @@ func (repo *StoryRepo) GetAll() []data.Story{
 		Preload("Post").
 		Preload("Media").
 		Find(&storyList)
+	for _, el:= range(storyList){
+		var endTimeForStory time.Time
+		endTimeForStory = el.Time
+		endTimeForStory = endTimeForStory.Add(24 * time.Hour)
+		if(endTimeForStory.Before(time.Now())){
+			el.IsActive = false
+			repo.EditStory(&el)
+		}
+	}
 	return storyList
+}
+
+func (repo *StoryRepo) GetAllActive() []data.Story{
+	var retList []data.Story
+	for _,el := range repo.GetAll(){
+		if(el.IsActive){
+			retList = append(retList, el)
+		}
+
+	}
+	return retList
 }

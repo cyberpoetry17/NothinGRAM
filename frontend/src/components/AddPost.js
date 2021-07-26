@@ -11,10 +11,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { useHistory } from "react-router-dom";
-import PlacesAutocomplete, {
-    geocodeByAddress,
-    getLatLng
-  } from "react-places-autocomplete";
 
 const filter = createFilterOptions();
 

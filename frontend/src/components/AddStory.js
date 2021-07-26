@@ -4,6 +4,7 @@ import {useState,useEffect} from 'react'
 import { app } from './base';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 export default function AddStory() {
 
@@ -21,7 +22,11 @@ export default function AddStory() {
     }
 
     const addStory = (e)=>{
-        const body = {MediaPath:MediaPath}
+        var token = jwt_decode(localStorage.getItem('token'));
+        const body = {
+            MediaPath:MediaPath,
+            UserId:token.UserID
+        };
         axios({
             method : 'post',
             url :'http://localhost:8005/addStory',

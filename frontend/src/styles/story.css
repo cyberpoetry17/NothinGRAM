@@ -1,0 +1,32 @@
+.storyDiv{
+  background-color: black;
+  height: 15;
+  width: 15;
+  border: 10px solid hsl(239, 94%, 51%);
+  float: left;
+  margin:20px;
+  border-radius: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.containerStory {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.box {
+  flex: 0 0 0;
+  display: block;
+  width: 150;
+  height: 150;
+  background-color: white;
+  margin: 1rem;
+}

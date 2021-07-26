@@ -25,3 +25,7 @@ func (services *MediaService) EditMedia(media *data.Media) error {
 func (services *MediaService) GetMediaForPost(postID uuid.UUID) (error,[]data.Media) {
 	return services.Repo.GetMediaForPost(postID)
 }
+
+func (services *MediaService) GetMediaForStory(storyID uuid.UUID) (error,[]data.Media) {
+	return services.Repo.GetMediaForStory(storyID)
+}

@@ -18,6 +18,7 @@ func (service *StoryService) CreateStory(storyDTO *DTO.StoryMediaDTO) error {
 	var story data.Story
 	story.Type = data.MediaT
 	story.Time = time.Now()
+	story.UserId = storyDTO.UserId
 	err:= service.StoryRepo.CreateStory(&story)
 
 	if(err!= nil){
@@ -49,4 +50,8 @@ func setIfItIsVideo(media data.Media) {
 			break
 		}
 	}
+}
+
+func (service *StoryService) GetAllActiveStories() []data.Story {
+	return service.StoryRepo.GetAllActive()
 }

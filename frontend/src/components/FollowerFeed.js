@@ -3,6 +3,7 @@ import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import Stories from "./Stories";
 
 export class UserInteractedContent extends React.Component{
 
@@ -34,12 +35,13 @@ export class UserInteractedContent extends React.Component{
 
       render(){
         return(
-            <>
-        {this.state.followerposts?.map((post,i) => (
-        <div className="feed" key={i}>
-            <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>
-        </div>
-        ))}
+        <>
+            <Stories/>
+            {this.state.followerposts?.map((post,i) => (
+            <div className="feed" key={i}>
+                <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>
+            </div>
+            ))}
         </>
         )
     }

@@ -3,8 +3,8 @@ import './App.css'
 import Login from './components/Login'
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-import UserHomepage from './components/UserHomepage';
-import Post from './components/Post'
+// import UserHomepage from './components/UserHomepage';
+// import Post from './components/Post'
 import Like from './components/Like';
 import PostFeed from './components/PostFeed';
 //import Test from "./components/Test"
@@ -15,6 +15,8 @@ import Update from './components/Update';
 import Profile from './components/Profile';
 import FollowerFeed from './components/FollowerFeed'
 import Verification from './components/Verification'
+// import { version } from 'react-dom';
+// import jwt_decode from 'jwt-decode';
 import ProfileRequests from './components/ProfileRequests'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -23,6 +25,8 @@ import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
+import AddCloseFollower from './components/AddCloseFollower';
+
 
 export default function App() {
 
@@ -62,6 +66,10 @@ export default function App() {
               :
               <>
               <Nav.Item>
+                <Nav.Link href="/update">EDIT USER</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+
               <Nav.Link href="/login">SIGN IN</Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -75,6 +83,7 @@ export default function App() {
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
           <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
+          <Route path="/closefollowerr" component={AddCloseFollower}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">

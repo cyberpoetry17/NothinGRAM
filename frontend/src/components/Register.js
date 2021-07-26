@@ -40,12 +40,12 @@ class RegisterUser extends React.Component {
     this.child = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.onChangeDate = this.onChangeDate.bind(this);
     this.handleGenderMale = this.handleGenderMale.bind(this);
     this.handleGenderFemale = this.handleGenderFemale.bind(this);
     this.handleNotification = this.handleNotification.bind(this);
-    this.handleCheckNotif = this.handleCheckNotif.bind(this);
-    this.handleChangeDate = this.handleChangeDate.bind(this);
+    // this.handleCheckNotif = this.handleCheckNotif.bind(this);
+    // this.handleChangeDate = this.handleChangeDate.bind(this);
   }
 
   handleChange(e) {
@@ -79,6 +79,10 @@ class RegisterUser extends React.Component {
     this.setState({ _notify: !this.state._notify });
   }
 
+  onChangeDate = (date) =>{
+    this.setState({_dateOfBirth: date})
+  } 
+  
   handleSubmit(e) {
     e.preventDefault();
     const { _password, _repeatPassword } = this.state;
@@ -267,13 +271,12 @@ class RegisterUser extends React.Component {
                        
                        placeholder="insert date"
                        ></DatePick>   */}
-            <DatePicker
-              value={_dateOfBirth}
-              id="_dateOfBirth"
-              onChange={this.handleChangeDate}
-              isClearable
-              placeholderText="I have been cleared!"
-            />
+           <div> <DatePicker
+            selected={_dateOfBirth}
+            onChange={this.onChangeDate}
+            isClearable
+            placeholderText="I have been cleared!"
+          /></div>
 
             <div>
               <div>

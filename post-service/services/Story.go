@@ -4,6 +4,7 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
+	"github.com/google/uuid"
 	"strings"
 	"time"
 )
@@ -54,4 +55,8 @@ func setIfItIsVideo(media data.Media) {
 
 func (service *StoryService) GetAllActiveStories() []data.Story {
 	return service.StoryRepo.GetAllActive()
+}
+
+func (service *StoryService) GetAllUserStories(userId uuid.UUID) ([]data.Story,error){
+	return service.StoryRepo.GetAllUserStories(userId)
 }

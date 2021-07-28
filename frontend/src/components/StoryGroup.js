@@ -62,7 +62,7 @@ export default function StoryGroup(storyList) {
                         stories.map(s=>(
                             
                                 <Carousel.Item margin="auto">
-                                    <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type}/> 
+                                    <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type} size="1"/> 
                                 </Carousel.Item>
                             
                         )):

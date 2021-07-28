@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"time"
 )
@@ -49,4 +50,10 @@ func (repo *StoryRepo) GetAllActive() []data.Story{
 
 	}
 	return retList
+}
+
+func (repo *StoryRepo) GetAllUserStories(userId uuid.UUID) ([]data.Story,error){
+	var list []data.Story
+	err := repo.Database.Where("\"UserId\" = ?",userId).Find(&list).Error
+	return list,err
 }

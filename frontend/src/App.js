@@ -26,6 +26,7 @@ import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
 import AddCloseFollower from './components/AddCloseFollower';
+import StoryForUser from './components/StoryForUser';
 
 
 export default function App() {
@@ -65,9 +66,9 @@ export default function App() {
               </Nav.Item>
               :
               <>
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link href="/update">EDIT USER</Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
               <Nav.Item>
 
               <Nav.Link href="/login">SIGN IN</Nav.Link>
@@ -109,6 +110,9 @@ export default function App() {
           </Route>
           <Route  path="/addStory">
             <AddStory/>
+          </Route>
+          <Route  path="/stories">
+            <StoryForUser/>
           </Route>
 
           <Route path="/register">

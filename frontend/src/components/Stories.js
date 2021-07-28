@@ -55,8 +55,8 @@ export default function Stories() {
                 } */}
                 {/* <button onClick={click}>Click me</button> */}
                 { loaded ?
-                 Object.keys(storiesMap).map(function (key) {
-                console.log('key: ', key);  // Returns key: 1 and key: 2
+                 Object?.keys(storiesMap).map(function (key) {
+                // console.log('key: ', key);  // Returns key: 1 and key: 2
                 return (
                     <div>    
                         <StoryGroup storyList={storiesMap[key]}/>

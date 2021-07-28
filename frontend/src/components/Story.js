@@ -3,7 +3,7 @@ import {useState,useEffect} from 'react'
 import axios from 'axios';
 import {Link} from 'react-router-dom'
 
-export default function Story({postId,type,IdStory,UserId}) {
+export default function Story({postId,type,IdStory,UserId,size}) {
     //retriew media and render it
     //add userID to story
     const [media, setMedia] = useState(null);
@@ -42,12 +42,26 @@ export default function Story({postId,type,IdStory,UserId}) {
     const click = (event) => {
         console.log("ovo cudo radii");
     };
-
+    const renderImg = () => {
+        if(size==1){
+            return <img onClick={click} className="d-block w-100 h-100" src={media.Link} alt="my pic"/>
+        }
+        if(size== 2){
+            return <img onClick={click} className="d-block w-100" height="200"  src={media.Link} alt="my pic"/>
+        }
+        return <img onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/>
+    }
     return (
         <div>
             <Link to={"/profile/"+UserName}>{UserName}</Link>
             {isLoaded === true? 
-            <img onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/>
+            [
+                // (size == 1?
+                //     <img onClick={click} className="d-block w-100 h-100" width="150" height="100" src={media.Link} alt="my pic"/>:
+                //     <img onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/>
+                // )
+                renderImg()
+            ]
             :
             <p>no pic</p>
             }

@@ -30,6 +30,10 @@ export default function StoryGroup(storyList) {
 
     const handleClose = () => {
         toggleOpen(false);
+        // var el = document.getElementById(IdStory+"-div");
+        // if(el!=null){
+        //     el.style.borderColor= "white";
+        // }
       };
 
     return (

@@ -2,6 +2,7 @@ import React from 'react'
 import {useState,useEffect} from 'react'
 import axios from 'axios';
 import {Link} from 'react-router-dom'
+import "../styles/story.css";
 
 export default function Story({postId,type,IdStory,UserId,size}) {
     //retriew media and render it
@@ -26,8 +27,11 @@ export default function Story({postId,type,IdStory,UserId,size}) {
         }).then(res =>{
             setUserName(res.data.substring(1,(res.data.length)-2));
         });
+        if(size==1){
+            document.getElementById(IdStory+"-div").style.borderColor = "white";
+        }
 
-        
+        //document.getElementById("pic").style.borderRadius = "25%";
     },[])
 
     useEffect(()=>{
@@ -39,21 +43,31 @@ export default function Story({postId,type,IdStory,UserId,size}) {
         setIsLoaded(true);
     },[media])
 
+    useEffect(()=>{
+        var el = document.getElementById(IdStory);
+        if(el!=null){
+            el.style.borderRadius = "25%";
+        }
+
+        console.log(isLoaded);
+    },[isLoaded])
+
     const click = (event) => {
         console.log("ovo cudo radii");
     };
     const renderImg = () => {
         if(size==1){
-            return <img onClick={click} className="d-block w-100 h-100" src={media.Link} alt="my pic"/>
+            return <div id={IdStory+"-div"} > <img id={IdStory} onClick={click} className="d-block w-100 h-100" src={media.Link} alt="my pic"/></div>
         }
         if(size== 2){
-            return <img onClick={click} className="d-block w-100" height="200"  src={media.Link} alt="my pic"/>
+            return <div id={IdStory+"-div"} ><img id={IdStory} onClick={click} className="d-block w-100" height="200"  src={media.Link} alt="my pic"/></div>
         }
-        return <img onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/>
+        return <div id={IdStory+"-div"} className="asdfsdfasasdas"><img id={IdStory} onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/></div>
     }
     return (
         <div>
             <Link to={"/profile/"+UserName}>{UserName}</Link>
+            {/* <div id={IdStory+"-div"} className="asdfsdfasasdas"> */}
             {isLoaded === true? 
             [
                 // (size == 1?
@@ -63,8 +77,9 @@ export default function Story({postId,type,IdStory,UserId,size}) {
                 renderImg()
             ]
             :
-            <p>no pic</p>
+            <p>no pic </p>
             }
+            {/* </div> */}
         </div>
     )
 }

@@ -109,6 +109,32 @@ func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
 	return frontList
 }
 
+func (repo *PostRepo) GetPostsByLocationId(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetAll()
+	for _,element := range posts{
+		if element.LocationID.String() == id && element.Private == false{
+			frontList = append(frontList,element)
+		}
+	}
+	return frontList
+}
+
+func (repo *PostRepo) GetPostsByTagId(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetAll()
+	for _,element := range posts{
+		for _,el := range element.Tags{
+			if el.ID.String() == id{
+				frontList = append(frontList,element)
+			}
+		}
+	}
+	return frontList
+}
+
 func (repo *PostRepo) GetPostByPostID(id string) data.Post{
 	var posts []data.Post
 	var frontList data.Post

@@ -26,7 +26,9 @@ import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
 import AddCloseFollower from './components/AddCloseFollower';
-
+import SearchBar from './components/SearchBar';
+import LocationSearch from './components/LocationSearch';
+import TagSearch from './components/TagSearch';
 
 export default function App() {
 
@@ -37,40 +39,36 @@ export default function App() {
       <BrowserRouter>
           <Nav className="navbar" activeKey="/" >
               {window.localStorage.getItem('token') ? 
-              <Nav.Item>
-              <Nav.Link href={"/profile/"+jwt_decode(localStorage.getItem('token')).Username}>My profile</Nav.Link>
-              </Nav.Item>
-              :
-              <Nav.Item>
-              <Nav.Link href="/">HOME</Nav.Link>
-              </Nav.Item>
-              }
-              {window.localStorage.getItem('token') ? 
               <>
               <Nav.Item>
-              <Nav.Link href="/userfeed">MY FEED</Nav.Link>
+                <Nav.Link href={"/profile/"+jwt_decode(localStorage.getItem('token')).Username}>My profile</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/userfeed">MY FEED</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/posts">POSTS FEED</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <SearchBar/>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/" onClick={()=>{window.localStorage.removeItem('token');this.props.history.push('/');}}>SIGN OUT</Nav.Link>
               </Nav.Item>
               </>
               :
+              <>
+              <Nav.Item>
+                <Nav.Link href="/">HOME</Nav.Link>
+              </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/posts">POSTS FEED</Nav.Link>
               </Nav.Item>
-              }
-              {window.localStorage.getItem('token') ? 
               <Nav.Item>
-              <Nav.Link href="/" onClick={()=>{window.localStorage.removeItem('token');this.props.history.push('/');}}>SIGN OUT</Nav.Link>
-              </Nav.Item>
-              :
-              <>
-              <Nav.Item>
-                <Nav.Link href="/update">EDIT USER</Nav.Link>
+                <SearchBar/>
               </Nav.Item>
               <Nav.Item>
-
-              <Nav.Link href="/login">SIGN IN</Nav.Link>
+                <Nav.Link href="/login">SIGN IN</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/register">SIGN UP!</Nav.Link>
@@ -80,12 +78,15 @@ export default function App() {
           </Nav>
 
         <Switch >
+
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
           <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/closefollowerr" component={AddCloseFollower}/>
           <Route path="/verification/" component={Verification}/>
           <Route path="/profile/:username" component={Profile}/>
+          <Route path="/search/locations/:location" render={(props) => (<LocationSearch location={props.match.params.location}/>)}/>
+          <Route path="/search/tags/:tag" render={(props) => (<TagSearch location={props.match.params.tag}/>)}/>
           <Route className="main" path="/posts">
             <PostFeed/>
           </Route>

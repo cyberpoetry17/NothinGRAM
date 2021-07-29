@@ -15,6 +15,7 @@ type PostService struct {
 	LikeRepo *repository.LikeRepo
 	DislikeRepo *repository.DislikeRepo
 	MediaRepo	*repository.MediaRepo
+	LocationRepo *repository.LocationRepo
 }
 var extensions =[]string {"mp4","mov","avi","wmv","m4a"}
 const Pi = 3
@@ -92,6 +93,30 @@ func (service *PostService) GetNonPrivatePostsForUser(id string) ([]data.Post,er
 
 func (service *PostService) GetPostsByUserID(id string) []data.Post{
 	return service.PostRepo.GetPostsByUserID(id)
+}
+
+func (service *PostService) GetPostsByLocation(id string) []data.Post{
+	var frontList []data.Post
+	var locations []data.Location
+	service.LocationRepo.Database.Find(&locations)
+	for _,element := range locations{
+		if strings.ToLower(element.Country) == strings.ToLower(id) || strings.ToLower(element.City) == strings.ToLower(id) || strings.ToLower(element.Address) == strings.ToLower(id) {
+			frontList = append(frontList,service.PostRepo.GetPostsByLocationId(element.IDLoc.String())...)
+		}
+	}
+	return frontList
+}
+
+func (service *PostService) GetPostsByTags(id string) []data.Post{
+	var frontList []data.Post
+	var tag []data.Tag
+	service.TagRepo.Database.Find(&tag)
+	for _,element := range tag{
+		if strings.ToLower(element.TagName) == strings.ToLower(id) {
+			frontList = append(frontList,service.PostRepo.GetPostsByTagId(element.ID.String())...)
+		}
+	}
+	return frontList
 }
 
 func (service *PostService) GetUsernameByPostUserID(userid string) string{

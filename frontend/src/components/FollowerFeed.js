@@ -26,7 +26,7 @@ export class UserInteractedContent extends React.Component{
                 axios.get('http://localhost:8005/allpostsbyuserid/'+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 if(data != null)
-                this.setState({followerposts:this.state.followerposts.concat(data)});
+                this.setState({followerposts:this.state.followerposts = data});
             })
             .catch(()=>{alert('didnt retrieve ')})
             ))

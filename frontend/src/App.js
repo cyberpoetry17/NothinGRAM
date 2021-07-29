@@ -26,6 +26,7 @@ import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
 import AddCloseFollower from './components/AddCloseFollower';
+import StoryForUser from './components/StoryForUser';
 import SearchBar from './components/SearchBar';
 import LocationSearch from './components/LocationSearch';
 import TagSearch from './components/TagSearch';
@@ -110,6 +111,9 @@ export default function App() {
           </Route>
           <Route  path="/addStory">
             <AddStory/>
+          </Route>
+          <Route  path="/stories">
+            <StoryForUser/>
           </Route>
 
           <Route path="/register">

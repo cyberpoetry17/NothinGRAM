@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -32,8 +34,25 @@ func (handler *StoryHandler) CreateStory(w http.ResponseWriter, r *http.Request)
 
 func (handler *StoryHandler) GetAllActiveStories(w http.ResponseWriter, r *http.Request) {
 	stories := handler.Service.GetAllActiveStories()
-	for _,el := range(stories){
-		fmt.Println(el)
+	json.NewEncoder(w).Encode(stories)
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *StoryHandler) GetAllUserStories(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["userId"]
+	userId,err := uuid.Parse(id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	stories,err := handler.Service.GetAllUserStories(userId)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	json.NewEncoder(w).Encode(stories)
 	w.WriteHeader(http.StatusCreated)

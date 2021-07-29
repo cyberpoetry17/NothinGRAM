@@ -30,6 +30,10 @@ export default function StoryGroup(storyList) {
 
     const handleClose = () => {
         toggleOpen(false);
+        // var el = document.getElementById(IdStory+"-div");
+        // if(el!=null){
+        //     el.style.borderColor= "white";
+        // }
       };
 
     return (
@@ -62,7 +66,7 @@ export default function StoryGroup(storyList) {
                         stories.map(s=>(
                             
                                 <Carousel.Item margin="auto">
-                                    <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type}/> 
+                                    <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type} size="1"/> 
                                 </Carousel.Item>
                             
                         )):

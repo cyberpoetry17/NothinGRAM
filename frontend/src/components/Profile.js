@@ -126,6 +126,9 @@ export class Profile extends React.Component{
                                     <Nav.Item >
                                         <Nav.Link href={"/closefollowerr"}>Close friends</Nav.Link>
                                     </Nav.Item>
+                                    <Nav.Item >
+                                        <Nav.Link href={"/stories"}>Stories</Nav.Link>
+                                    </Nav.Item>
                                 </Nav>
                                 </BrowserRouter>
                                 </div>

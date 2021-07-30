@@ -144,6 +144,14 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (handler *UserHandler) GetPublicUserIds(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	resp := handler.Service.GetPublicUserIds()
+	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
 func (handler *UserHandler) GetUserByUsernameForProfile(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 	fmt.Println("getById")

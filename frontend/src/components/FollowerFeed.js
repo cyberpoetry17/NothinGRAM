@@ -22,11 +22,12 @@ export class UserInteractedContent extends React.Component{
     GetAllFollowerIds(){
         axios.get('http://localhost:8004/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
-            response.data?.map((follow) =>(      //kao da nece da settuje state od dobavljenih podataka pa moram jednu u drugoj da pozivam
+            response.data?.map((follow) =>(     
                 axios.get('http://localhost:8005/allpostsbyuserid/'+follow).then((responsenew)=>{
                 const data = responsenew.data;
+                console.log(data)
                 if(data != null)
-                this.setState({followerposts:this.state.followerposts = data});
+                this.setState({followerposts:this.state.followerposts.concat(data)});
             })
             .catch(()=>{alert('didnt retrieve ')})
             ))

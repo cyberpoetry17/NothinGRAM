@@ -87,6 +87,10 @@ func (service *UserService) GetUserByUsernameForProfile(id string) *data.User2 {
 	return service.Repo.GetUserByUsernameForProfile(id)
 }
 
+func (service *UserService) GetPublicUserIds() []string {
+	return service.Repo.GetPublicUserIds()
+}
+
 func (service *UserService) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
 	return service.Repo.GetUserIdByUsernameForProfile(id)
 }

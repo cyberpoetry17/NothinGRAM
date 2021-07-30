@@ -74,6 +74,18 @@ func (repo *UserRepo) GetUserByUsernameForProfile(id string) *data.User2 {
 	return &backUser
 }
 
+func (repo *UserRepo) GetPublicUserIds() []string {
+	var users []data.User2
+	var backUserId []string
+	users = repo.GetAll()
+	for _, element := range users {
+		if element.Private == false {
+			backUserId = append(backUserId,element.ID.String())
+		}
+	}
+	return backUserId
+}
+
 func (repo *UserRepo) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
 	var users []data.User2
 	var backUser DTO.UserUsernameAndPrivateDTO

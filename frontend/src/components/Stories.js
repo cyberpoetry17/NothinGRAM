@@ -4,21 +4,47 @@ import axios from 'axios';
 import Story from './Story';
 import "../styles/story.css";
 import StoryGroup from './StoryGroup';
+import jwt_decode from 'jwt-decode';
 
 export default function Stories() {
     const [stories, setStories] = useState(null);
+    const [closeStories, setCloseStories] = useState(null);
     const [loaded, setLoaded] = useState(false);
-    const [storiesMap, setStoriesMap] = useState(null);
+    const [loaded2, setLoaded2] = useState(false);
+    const [storiesMap, setStoriesMap] = useState({});
     const [firstTime, setFirstTime]= useState(true);
     useEffect(()=>{
+        loadStories();
+        loadCloseFriendsStory();
+    },[])
+
+    useEffect(()=>{
+        console.log("stories:",stories);
+    },[stories])
+
+    const loadStories = () => {
         axios({
             method : 'get',
             url :'http://localhost:8005/getAllStories',
         }).then(res =>{
-            console.log(res.data,"res.data")
-            setStories(res.data)
+            console.log(res.data,"res.data");
+            setStories(res.data);
         });
-    },[])
+    }
+    const loadCloseFriendsStory = () => {
+        axios.get('http://localhost:8004/getAllCloseFollowersForUser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+            
+            response.data?.map((follow) =>(
+                axios.get('http://localhost:8005/GetCloseFrinedStoriesForUser/'+follow).then((responsenew)=>{
+                const data = responsenew.data;
+                if(data != null){
+                    setCloseStories(data);
+                }
+            })
+            .catch(()=>{alert('didnt retrieve ')})
+            ))
+        }).catch(()=>{alert('You have not followed any other users.')})
+    }
 
     useEffect(()=>{
         if(firstTime){
@@ -28,40 +54,55 @@ export default function Stories() {
         setLoaded(true);
     },[storiesMap])
 
-    useEffect(()=>{
-        console.log("stories:",stories)
+    useEffect(async()=>{
+        var map = storiesMap;
         if(stories != null){
-            var map=stories.reduce((acc, curr) => {
+            map=stories.reduce((acc, curr) => {
                 const isArray = acc[curr.UserId];
                 if (isArray) acc[curr.UserId].push(curr);
                 else acc[curr.UserId] = [curr];
                 return acc;
-            }, {})
-            setStoriesMap(map)
+            }, map)
             console.log("mapa:",map)
+            await setStoriesMap(map);
+            await setLoaded(true);
         }
-    },stories)
-    
+    },[stories])
+
+    useEffect(async()=>{
+        var map = storiesMap;
+        if(closeStories != null){
+            map=closeStories.reduce((acc, curr) => {
+                const isArray = acc[curr.UserId+"close"];
+                if (isArray) acc[curr.UserId+"close"].push(curr);
+                else acc[curr.UserId+"close"] = [curr];
+                return acc;
+            },map)
+            // console.log("mapa:",map)
+            // var obj = Object.assign({},map,...storiesMap);
+            // console.log(obj);   
+            await setStoriesMap(map);
+            await setLoaded2(true);
+        }
+    },[closeStories])
+
+    const renderStoryGrop = (key) => {
+        if(key.endsWith("close")){
+            return <div className="box"> <StoryGroup storyList={storiesMap[key]} ForCloseFriends={true} /></div> 
+        }
+        return <div className="box"> <StoryGroup storyList={storiesMap[key]} ForCloseFriends={false}/></div>    
+    }
     return (
         <div>
             <div className="containerStory">
-                {/* { loaded ?
-                stories.map(s=>(
-                    <div className="box">
-                        <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type}/> 
-                    </div>
-                )):
-                <p>loading..</p>
-                } */}
-                {/* <button onClick={click}>Click me</button> */}
-                { loaded ?
+                {loaded || loaded2?
                  Object?.keys(storiesMap).map(function (key) {
                 // console.log('key: ', key);  // Returns key: 1 and key: 2
-                return (
-                    <div className="box">    
-                        <StoryGroup storyList={storiesMap[key]}/>
-                    </div>
-                    );
+                return renderStoryGrop(key)
+                    // <div className="box">    
+                    //     <StoryGroup storyList={storiesMap[key]}/>
+                    // </div>
+                    
                 }, this)
                 :
                 <p>loading..</p>

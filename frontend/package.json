@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "bootstrap-switch-button-react": "^1.2.0",
     "firebase": "^8.6.8",
     "formik": "^2.2.9",
     "json-web-token": "^3.2.0",

@@ -44,10 +44,9 @@ func (repo *StoryRepo) GetAll() []data.Story{
 func (repo *StoryRepo) GetAllActive() []data.Story{
 	var retList []data.Story
 	for _,el := range repo.GetAll(){
-		if(el.IsActive){
+		if(el.IsActive && el.IsOnlyForCloseFriends==false){
 			retList = append(retList, el)
 		}
-
 	}
 	return retList
 }
@@ -56,4 +55,15 @@ func (repo *StoryRepo) GetAllUserStories(userId uuid.UUID) ([]data.Story,error){
 	var list []data.Story
 	err := repo.Database.Where("\"UserId\" = ?",userId).Find(&list).Error
 	return list,err
+}
+
+func (repo *StoryRepo) GetCloseFrinedStoriesForUser(userId uuid.UUID) ([]data.Story){
+	var retList []data.Story
+	lis,_ :=repo.GetAllUserStories(userId);
+	for _,el:= range lis{
+		if(el.IsOnlyForCloseFriends){
+			retList = append(retList, el)
+		}
+	}
+	return retList
 }

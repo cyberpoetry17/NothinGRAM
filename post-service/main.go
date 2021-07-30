@@ -49,6 +49,7 @@ func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) 
 	router.HandleFunc("/addStory", storyHandler.CreateStory).Methods("POST")
 	router.HandleFunc("/getAllStories", storyHandler.GetAllActiveStories).Methods("GET")
 	router.HandleFunc("/getUserStories/{userId}",storyHandler.GetAllUserStories).Methods("GET")
+	router.HandleFunc("/GetCloseFrinedStoriesForUser/{userId}",storyHandler.GetCloseFrinedStoriesForUser).Methods("GET")
 }
 
 func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) {

@@ -15,6 +15,8 @@ export default function CommentInput({postid,getcoms}){
     const PostComment = () => {
         if (window.localStorage.getItem('token') != null){
             axios({method:'post',url:'http://localhost:8005/addComment/',data:JSON.stringify({Comment:comment,UserId:jwt_decode(localStorage.getItem('token')).UserID,PostId:postid})}).then(()=>{
+                setComment('');
+            }).then(()=>{
                 getcoms();
             });
         }else{

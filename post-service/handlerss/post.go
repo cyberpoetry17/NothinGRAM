@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
+	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strings"
 )
 
 type PostHandler struct {
@@ -61,6 +63,43 @@ func (handler *PostHandler) GetPostsByUserID(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	json.NewEncoder(w).Encode(handler.Service.GetPostsByUserID(id))
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+}
+
+func (handler *PostHandler) GetPostsByLocation(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts by location..")
+	vars := mux.Vars(r)
+	id := vars["location"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	idsplit := strings.Split(id,"@")
+	var frontList []data.Post
+	for _,element := range idsplit{
+		frontList = append(frontList,handler.Service.GetPostsByLocation(strings.TrimSpace(element))...)
+	}
+	json.NewEncoder(w).Encode(frontList)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *PostHandler) GetPostsByTags(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all posts by tags..")
+	vars := mux.Vars(r)
+	id := vars["tag"]
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	idsplit := strings.Split(id," ")
+	var frontList []data.Post
+	for _,element := range idsplit{
+		frontList = append(frontList,handler.Service.GetPostsByTags(strings.TrimSpace(element))...)
+	}
+	json.NewEncoder(w).Encode(frontList)
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 

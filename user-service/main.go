@@ -70,6 +70,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/removeclosefollower", handlerCloseFollower.RemoveCloseFollower).Methods(http.MethodPost)
 	router.HandleFunc("/setclosefollowers", handlerCloseFollower.ModifyCloseFollowers).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/getclosefollowers", handler.GetAllCloseUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/getAllCloseFollowersForUser/{userid}",handlerCloseFollower.GetAllCloseFollowerUser).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }

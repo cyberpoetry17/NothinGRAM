@@ -20,6 +20,8 @@ func (service *StoryService) CreateStory(storyDTO *DTO.StoryMediaDTO) error {
 	story.Type = data.MediaT
 	story.Time = time.Now()
 	story.UserId = storyDTO.UserId
+	story.IsActive = true
+	story.IsOnlyForCloseFriends = storyDTO.IsOnlyForCloseFriends
 	err:= service.StoryRepo.CreateStory(&story)
 
 	if(err!= nil){
@@ -59,4 +61,8 @@ func (service *StoryService) GetAllActiveStories() []data.Story {
 
 func (service *StoryService) GetAllUserStories(userId uuid.UUID) ([]data.Story,error){
 	return service.StoryRepo.GetAllUserStories(userId)
+}
+
+func (service *StoryService) GetCloseFrinedStoriesForUser(userId uuid.UUID) ([]data.Story){
+	return  service.StoryRepo.GetCloseFrinedStoriesForUser(userId)
 }

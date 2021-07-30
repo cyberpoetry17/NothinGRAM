@@ -4,7 +4,8 @@ import axios from 'axios';
 import {Link} from 'react-router-dom'
 import "../styles/story.css";
 
-export default function Story({postId,type,IdStory,UserId,size}) {
+
+export default function Story({postId,type,IdStory,UserId,size,ForCloseF}) {
     //retriew media and render it
     //add userID to story
     const [media, setMedia] = useState(null);
@@ -13,6 +14,14 @@ export default function Story({postId,type,IdStory,UserId,size}) {
     const [UserName,setUserName] = useState(null)
 
     useEffect(()=>{
+        onLoad();
+        if(size==1 && document.getElementById(IdStory+"-div") != null){
+            document.getElementById(IdStory+"-div").style.borderColor = "white";
+        }
+        
+    },[])
+    
+    const onLoad = () => {
         axios({
             method : 'get',
             url :'http://localhost:8005/GetMediaForStory?StoryId='+IdStory,
@@ -27,13 +36,8 @@ export default function Story({postId,type,IdStory,UserId,size}) {
         }).then(res =>{
             setUserName(res.data.substring(1,(res.data.length)-2));
         });
-        if(size==1){
-            document.getElementById(IdStory+"-div").style.borderColor = "white";
-        }
 
-        //document.getElementById("pic").style.borderRadius = "25%";
-    },[])
-
+    }
     useEffect(()=>{
         if(firstTime){
             setFirstTime(false)
@@ -56,6 +60,9 @@ export default function Story({postId,type,IdStory,UserId,size}) {
         console.log("ovo cudo radii");
     };
     const renderImg = () => {
+        if(ForCloseF == true){
+            return <div id={IdStory+"-div"} className="greenBorder"><img id={IdStory} onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/></div>
+        }
         if(size==1){
             return <div id={IdStory+"-div"} > <img id={IdStory} onClick={click} className="d-block w-100 h-100" src={media.Link} alt="my pic"/></div>
         }
@@ -67,19 +74,11 @@ export default function Story({postId,type,IdStory,UserId,size}) {
     return (
         <div>
             <Link to={"/profile/"+UserName}>{UserName}</Link>
-            {/* <div id={IdStory+"-div"} className="asdfsdfasasdas"> */}
             {isLoaded === true? 
-            [
-                // (size == 1?
-                //     <img onClick={click} className="d-block w-100 h-100" width="150" height="100" src={media.Link} alt="my pic"/>:
-                //     <img onClick={click} className="d-block" width="150" height="100" src={media.Link} alt="my pic"/>
-                // )
                 renderImg()
-            ]
             :
             <p>no pic </p>
             }
-            {/* </div> */}
         </div>
     )
 }

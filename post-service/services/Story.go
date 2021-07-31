@@ -66,3 +66,29 @@ func (service *StoryService) GetAllUserStories(userId uuid.UUID) ([]data.Story,e
 func (service *StoryService) GetCloseFrinedStoriesForUser(userId uuid.UUID) ([]data.Story){
 	return  service.StoryRepo.GetCloseFrinedStoriesForUser(userId)
 }
+
+func (service *StoryService) GetAllStoryHighlights(userId uuid.UUID) []data.Story{
+	return service.GetAllStoryHighlights(userId)
+}
+
+func (service *StoryService) AddToStoryHighlights(storyId uuid.UUID) error{
+	for _,el:= range service.StoryRepo.GetAll(){
+		if(el.IdStory == storyId){
+			el.ShowOnStoryHighlights=true;
+			err:= service.StoryRepo.EditStory(&el);
+			return err
+		}
+	}
+	return nil
+}
+
+func (service *StoryService) RemoveFromStoryHighlights(storyId uuid.UUID) error{
+	for _,el:= range service.StoryRepo.GetAll(){
+		if(el.IdStory == storyId){
+			el.ShowOnStoryHighlights=false;
+			err:= service.StoryRepo.EditStory(&el);
+			return err
+		}
+	}
+	return nil
+}

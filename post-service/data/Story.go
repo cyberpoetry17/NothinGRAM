@@ -21,6 +21,7 @@ type Story struct{
 	IsActive bool `gorm:"column:IsActive"  json:"IsActive"`
 	UserId uuid.UUID `gorm:"column:UserId"  json:"UserId"`
 	IsOnlyForCloseFriends bool `gorm:"column:IsOnlyForCloseFriends"  json:"IsOnlyForCloseFriends"`
+	ShowOnStoryHighlights bool `gorm:"column:ShowOnStoryHighlights"  json:"ShowOnStoryHighlights"`
 }
 
 func (story *Story) BeforeCreate(scope *gorm.DB) error {

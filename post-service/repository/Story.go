@@ -67,3 +67,18 @@ func (repo *StoryRepo) GetCloseFrinedStoriesForUser(userId uuid.UUID) ([]data.St
 	}
 	return retList
 }
+
+func (repo *StoryRepo) GetUserStoryHighlights(userId uuid.UUID) ([]data.Story){
+	var retList []data.Story
+	lis,err :=repo.GetAllUserStories(userId)
+	if(err!= nil){
+		return nil
+	}
+	for _,el:= range lis{
+		if(el.ShowOnStoryHighlights){
+			retList = append(retList, el)
+		}
+	}
+	return retList
+}
+

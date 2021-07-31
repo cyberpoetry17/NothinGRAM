@@ -4,6 +4,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 import Story from './Story';
+
 export default function StoryForUser() {
     const [stories, setStories] = useState(null);
 
@@ -18,9 +19,21 @@ export default function StoryForUser() {
         });
     },[])
     useEffect(()=>{
-        console.log(stories);
+        console.log("asd",stories);
     },[stories])
 
+
+    const closeChanged = (e)=>{
+        if(e == true){
+            axios({
+                method : 'post',
+                url :'http://localhost:8005/AddToStoryHighlights/'+""
+            });
+        }else{
+
+        }
+        
+    }
     return (
         <div>
             <Container>
@@ -29,7 +42,7 @@ export default function StoryForUser() {
             
             {stories?.map((s)=>(
               <div className="boxStory">
-                <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type} size="2"/> 
+                <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type} size="2" ShowOnStoryHighlights={s.ShowOnStoryHighlights}/> 
               </div>  
             ))}
             </div>

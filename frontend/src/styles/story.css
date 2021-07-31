@@ -44,3 +44,10 @@
   border-width: 5px;
   border-radius: 28%;
 }
+
+
+.outerDiv {
+  width:100%;
+  display: flex;
+  justify-content: center;
+}

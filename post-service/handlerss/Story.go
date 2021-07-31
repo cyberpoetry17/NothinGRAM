@@ -73,3 +73,56 @@ func (handler *StoryHandler) GetCloseFrinedStoriesForUser(w http.ResponseWriter,
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }
+
+func (handler *StoryHandler) AddToStoryHighlights(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["storyId"]
+	storyId,err := uuid.Parse(id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.AddToStoryHighlights(storyId)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *StoryHandler) RemoveFromStoryHighlights(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["storyId"]
+	storyId,err := uuid.Parse(id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = handler.Service.RemoveFromStoryHighlights(storyId)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (handler *StoryHandler) GetAllStoryHighlights(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["userId"]
+	userId,err := uuid.Parse(id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	stories := handler.Service.GetAllStoryHighlights(userId)
+	json.NewEncoder(w).Encode(stories)
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}

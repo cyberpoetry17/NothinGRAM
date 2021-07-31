@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Profile from "./Profile";
-import Post from "./Post";
+import Profile from "./user/Profile";
+import Post from "./Post/Post";
 import { useEffect } from "react";
 
 export default function LocationSearch(){

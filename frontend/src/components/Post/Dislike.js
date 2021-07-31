@@ -1,5 +1,5 @@
 import React from 'react';
-import { app } from './base';
+import { app } from '../base';
 import {Link, Route} from 'react-router-dom';
 import axios from 'axios';
 

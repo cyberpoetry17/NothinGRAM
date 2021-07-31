@@ -1,9 +1,9 @@
-import Post from "./Post";
+import Post from "../Post/Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import Stories from "./Stories";
+import Stories from "../story/Stories";
 
 export class UserInteractedContent extends React.Component{
 

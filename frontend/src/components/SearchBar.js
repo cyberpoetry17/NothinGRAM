@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Profile from "./Profile";
+import Profile from "./user/Profile";
 
 export default function SearchBar(){
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { serviceConfig } from "../applicationSettings";
+import { serviceConfig } from "../../applicationSettings";
 import { Button } from "react-bootstrap";
 
 class AddCloseFollower extends React.Component {

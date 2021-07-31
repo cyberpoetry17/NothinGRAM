@@ -2,9 +2,9 @@ import React from "react";
 import { Form, Container, Col, Button, Image } from "react-bootstrap";
 
 // import DatePick from '../components/DateOfBirth.js'
-import { serviceConfig } from "../applicationSettings.js";
+import { serviceConfig } from "../../applicationSettings.js";
 import "react-datepicker/dist/react-datepicker.css";
-import logo from "../resources/nothingramBeli.png";
+import logo from "../../resources/nothingramBeli.png";
 import DatePicker from "react-datepicker";
 // import {DatePickerComponent} from "@syncfusion/ej2-react-calendars";
 // import DatePick from '../components/DateOfBirth.js'

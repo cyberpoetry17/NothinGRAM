@@ -1,32 +1,32 @@
 import React from 'react'
 import './App.css'
-import Login from './components/Login'
+import Login from './components/user/Login';
 import AddImg from './components/AddImg'
 import Home from './components/Home';
 // import UserHomepage from './components/UserHomepage';
 // import Post from './components/Post'
-import Like from './components/Like';
-import PostFeed from './components/PostFeed';
+import Like from './components/Post/Like';
+import PostFeed from './components/feed/PostFeed';
 //import Test from "./components/Test"
-import AddPost  from './components/AddPost';
-import Dislike from './components/Dislike';
-import RegisterUser from './components/Register'
-import Update from './components/Update';
-import Profile from './components/Profile';
-import FollowerFeed from './components/FollowerFeed'
-import Verification from './components/Verification'
+import AddPost from './components/Post/AddPost';
+import Dislike from './components/Post/Dislike';
+import RegisterUser from './components/user/Register'
+import Update from './components/user/Update';
+import Profile from './components/user/Profile';
+import FollowerFeed from './components/feed/FollowerFeed'
+import Verification from './components/user/Verification'
 // import { version } from 'react-dom';
 // import jwt_decode from 'jwt-decode';
-import ProfileRequests from './components/ProfileRequests'
+import ProfileRequests from './components/user/ProfileRequests'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Nav} from 'react-bootstrap';
 import { version } from 'react-dom';
 import jwt_decode from 'jwt-decode';
-import UserInteractedContent from './components/UserInteractedContent';
-import AddStory from './components/AddStory';
-import AddCloseFollower from './components/AddCloseFollower';
-import StoryForUser from './components/StoryForUser';
+import UserInteractedContent from './components/user/UserInteractedContent';
+import AddStory from './components/story/AddStory';
+import AddCloseFollower from './components/user/AddCloseFollower';
+import StoryForUser from './components/story/StoryForUser';
 import SearchBar from './components/SearchBar';
 import LocationSearch from './components/LocationSearch';
 import TagSearch from './components/TagSearch';

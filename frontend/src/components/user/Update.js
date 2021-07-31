@@ -1,8 +1,8 @@
 import React from "react";
-import { serviceConfig } from "../applicationSettings";
+import { serviceConfig } from "../../applicationSettings";
 import { Container, Button } from "react-bootstrap";
 import { Form } from "react-bootstrap";
-import "../styles/Login.css";
+import "../../styles/Login.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 

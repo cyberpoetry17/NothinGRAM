@@ -1,4 +1,4 @@
-import { app } from './base';
+import { app } from '../base';
 import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import {Carousel} from 'react-bootstrap';
 import axios from 'axios';
@@ -6,9 +6,9 @@ import React,{useState,useEffect} from 'react'
 import { Like } from './Like';
 import {Dislike} from './Dislike';
 import jwt_decode from 'jwt-decode';
-import "../styles/post-style.css";
-import Comment from './Comment';
-import CommentInput from './CommentInput';
+import "../../styles/post-style.css";
+import Comment from '../Post/Comment';
+import CommentInput from '../Post/CommentInput';
 import { Ellipsis } from 'react-bootstrap/esm/PageItem';
 
 export default function Post({userid,postid,picpath,privatepost,tokenInfo,description,location}){

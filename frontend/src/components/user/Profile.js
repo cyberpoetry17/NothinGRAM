@@ -1,13 +1,13 @@
 import React from 'react';
 // import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
-import Post from './Post';
+import Post from '../Post/Post';
 import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {useState,useEffect} from 'react'
 import queryString from 'query-string';
 import {Nav} from 'react-bootstrap';
-import StoryHighlights from './StoryHighlights';
+import StoryHighlights from '../story/StoryHighlights';
 
 export class Profile extends React.Component{
 

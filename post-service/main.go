@@ -53,6 +53,7 @@ func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) 
 	router.HandleFunc("/AddToStoryHighlights/{storyId}",storyHandler.AddToStoryHighlights).Methods("POST")
 	router.HandleFunc("/RemoveFromStoryHighlights/{storyId}",storyHandler.RemoveFromStoryHighlights).Methods("POST")
 	router.HandleFunc("/GetAllStoryHighlights/{userId}",storyHandler.GetAllStoryHighlights).Methods("GET")
+	router.HandleFunc("/GetActiveStoriesByUserId/{userId}",storyHandler.GetActiveStoriesByUserId).Methods("GET")
 }
 
 func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) {

@@ -92,3 +92,7 @@ func (service *StoryService) RemoveFromStoryHighlights(storyId uuid.UUID) error{
 	}
 	return nil
 }
+
+func (service *StoryService) GetActiveStoriesByUserId(userId uuid.UUID) ([]data.Story){
+	return service.StoryRepo.GetActiveStoriesByUserId(userId)
+}

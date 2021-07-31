@@ -14,7 +14,8 @@ export default function Stories() {
     const [storiesMap, setStoriesMap] = useState({});
     const [firstTime, setFirstTime]= useState(true);
     useEffect(()=>{
-        loadStories();
+        // loadStories();
+        loadActiveStoriesFromFallowedUsers()
         loadCloseFriendsStory();
     },[])
 
@@ -39,6 +40,28 @@ export default function Stories() {
                 const data = responsenew.data;
                 if(data != null){
                     setCloseStories(data);
+                }
+            })
+            .catch(()=>{alert('didnt retrieve ')})
+            ))
+        }).catch(()=>{alert('You have not followed any other users.')})
+    }
+    
+    const loadActiveStoriesFromFallowedUsers=()=>{
+        axios.get('http://localhost:8004/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+            
+            response.data?.map((follow) =>(     
+                axios.get('http://localhost:8005/GetActiveStoriesByUserId/'+follow).then((responsenew)=>{
+                const data = responsenew.data;
+                console.log(data)
+                if(data != null){
+                    if(stories ==null){
+                        setStories(data)
+                    }else{
+                        var list = stories;
+                        list.push(data);
+                        setStories(list);
+                    }
                 }
             })
             .catch(()=>{alert('didnt retrieve ')})

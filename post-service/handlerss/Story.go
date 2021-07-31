@@ -126,3 +126,18 @@ func (handler *StoryHandler) GetAllStoryHighlights(w http.ResponseWriter, r *htt
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 }
+
+func (handler *StoryHandler) GetActiveStoriesByUserId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["userId"]
+	userId,err := uuid.Parse(id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	stories := handler.Service.GetActiveStoriesByUserId(userId)
+	json.NewEncoder(w).Encode(stories)
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+}

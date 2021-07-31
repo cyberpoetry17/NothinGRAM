@@ -82,3 +82,13 @@ func (repo *StoryRepo) GetUserStoryHighlights(userId uuid.UUID) ([]data.Story){
 	return retList
 }
 
+func (repo *StoryRepo) GetActiveStoriesByUserId(userId uuid.UUID) ([]data.Story){
+	var retList []data.Story
+	lis :=repo.GetAllActive()
+	for _,el:= range lis{
+		if(el.UserId == userId){
+			retList = append(retList, el)
+		}
+	}
+	return retList
+}

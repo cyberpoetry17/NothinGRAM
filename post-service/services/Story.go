@@ -68,7 +68,7 @@ func (service *StoryService) GetCloseFrinedStoriesForUser(userId uuid.UUID) ([]d
 }
 
 func (service *StoryService) GetAllStoryHighlights(userId uuid.UUID) []data.Story{
-	return service.GetAllStoryHighlights(userId)
+	return service.StoryRepo.GetUserStoryHighlights(userId)
 }
 
 func (service *StoryService) AddToStoryHighlights(storyId uuid.UUID) error{

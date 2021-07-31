@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode';
 import {useState,useEffect} from 'react'
 import queryString from 'query-string';
 import {Nav} from 'react-bootstrap';
+import StoryHighlights from './StoryHighlights';
 
 export class Profile extends React.Component{
 
@@ -139,6 +140,11 @@ export class Profile extends React.Component{
                         </div>
                     </div>
                 </div>
+            {this.state.userid != "" ?
+            <StoryHighlights userId={this.state.userid}/>:
+            null
+            }
+        
         {data?.map((post,i) => (
         <div className="feed" key={i}>
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID}/>

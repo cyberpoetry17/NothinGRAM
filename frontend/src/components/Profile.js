@@ -17,7 +17,8 @@ export class Profile extends React.Component{
           userid:"",
           posts: [],
           user:[],
-          followed:false
+          followed:false,
+          isMyProfile:false
         };
       }
     async componentDidMount(){
@@ -49,6 +50,9 @@ export class Profile extends React.Component{
     GetAllPostsForUserDependingOnFollowage(){
         axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             this.setState({userid:response.data.UserId})
+            if(response.data.UserId == jwt_decode(localStorage.getItem('token')).UserID){
+                this.setState({isMyProfile:true});
+            }
             console.log(this.state.followed)
             if(this.state.followed == false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username){
                 axios.get('http://localhost:8005/getnonprivateposts/'+this.state.userid).then((response)=>{
@@ -140,7 +144,7 @@ export class Profile extends React.Component{
                         </div>
                     </div>
                 </div>
-            {this.state.userid != "" ?
+            {(this.state.userid != "" && this.state.followed) || this.state.isMyProfile?
             <StoryHighlights userId={this.state.userid}/>:
             null
             }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
-import { app } from './base';
+import { app } from '../base';
 import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import jwt_decode from 'jwt-decode';

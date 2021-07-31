@@ -1,8 +1,7 @@
-import Post from "./Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
-
+import Post from '../Post/Post'
 
 export class PostFeed extends React.Component{
 

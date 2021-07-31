@@ -2,7 +2,7 @@ import React from 'react'
 import {useState,useEffect} from 'react'
 import axios from 'axios';
 import {Link} from 'react-router-dom'
-import "../styles/story.css";
+import "../../styles/story.css";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 

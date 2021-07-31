@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 import {useState,useEffect} from 'react'
-import { app } from './base';
+import { app } from '../base';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';

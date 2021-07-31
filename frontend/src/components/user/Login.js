@@ -2,9 +2,9 @@ import React from 'react';
 import {Form, Button, Container,Image} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {serviceConfig} from '../applicationSettings.js'
-import logo from "../resources/nothingramBeli.png";
-import '../styles/Login.css';
+import {serviceConfig} from '../../applicationSettings.js'
+import logo from "../../resources/nothingramBeli.png";
+import '../../styles/Login.css';
 
 
 class Login extends React.Component{

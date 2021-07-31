@@ -1,11 +1,11 @@
-import { app } from './base';
+import { app } from '../base';
 import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import { Like } from './Like';
 import {Dislike} from './Dislike';
 import jwt_decode from 'jwt-decode';
-import "../styles/post-style.css";
+import "../../styles/post-style.css";
 import { getAlgorithms } from 'json-web-token';
 
 export default function CommentInput({postid,getcoms}){

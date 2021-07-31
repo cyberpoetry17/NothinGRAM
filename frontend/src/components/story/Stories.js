@@ -2,7 +2,7 @@ import React from 'react'
 import {useState,useEffect} from 'react'
 import axios from 'axios';
 import Story from './Story';
-import "../styles/story.css";
+import "../../styles/story.css";
 import StoryGroup from './StoryGroup';
 import jwt_decode from 'jwt-decode';
 

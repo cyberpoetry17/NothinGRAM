@@ -29,14 +29,15 @@ export class Profile extends React.Component{
     }
 
     async IsProfileFollowedByLoggedUser(){
-        var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-        await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
-            const data = response.data
-            axios.post('http://localhost:8004/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
-            this.setState({followed:response.data})
-            console.log(this.state.followed)
-        })
-    })
+        if (window.localStorage.getItem('token') != null){
+            var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
+            await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+                const data = response.data
+                axios.post('http://localhost:8004/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
+                this.setState({followed:response.data})
+                })
+            })
+        }  
     }
 
     GetUserByUserId(){
@@ -50,25 +51,30 @@ export class Profile extends React.Component{
     GetAllPostsForUserDependingOnFollowage(){
         axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             this.setState({userid:response.data.UserId})
-            if(response.data.UserId == jwt_decode(localStorage.getItem('token')).UserID){
-                this.setState({isMyProfile:true});
-            }
-            console.log(this.state.followed)
-            if(this.state.followed == false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username){
-                axios.get('http://localhost:8005/getnonprivateposts/'+this.state.userid).then((response)=>{
+            if (window.localStorage.getItem('token') != null){
+                if(response.data.UserId == jwt_decode(localStorage.getItem('token')).UserID){
+                    this.setState({isMyProfile:true});
+                }
+                if((this.state.followed == true || this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username) ||
+                (response.data.Private == false && this.state.followed==false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username)){
+                    axios.get('http://localhost:8005/allpostsbyuserid/'+this.state.userid).then((response)=>{
                     const data = response.data;
-                    this.setState({posts:data});
-                }).catch(()=>{alert('didnt retrieve non private posts')});
-            }else if(this.state.followed == true || this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username){
-                axios.get('http://localhost:8005/allpostsbyuserid/'+this.state.userid).then((response)=>{
-                const data = response.data;
-                this.setState({posts:data})
-                }).catch(()=>alert('didnt retrieve all posts for user'))
+                    this.setState({posts:data})
+                    }).catch(()=>alert('didnt retrieve all posts for user'))
+                }
             }
+            else if (response.data.Private == false && this.state.followed==false){
+
+                axios.get('http://localhost:8005/allpostsbyuserid/'+this.state.userid).then((response)=>{
+                    const data = response.data;
+                    this.setState({posts:data})
+                    }).catch(()=>alert('didnt retrieve all posts for user not logged'))
+                }
         }).catch(()=>{alert('didnt retrieve user by username')});
     }
 
     FollowUser(event){
+        if (window.localStorage.getItem('token') != null){
         var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
         axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data
@@ -93,6 +99,10 @@ export class Profile extends React.Component{
                 }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
             }
         }).catch(()=>{alert('didnt retrieve user by username')});
+    }else{
+        alert('You are not logged in.You will be redirected to the login page.');
+        this.props.history.push('/login');
+    }
     }
 
     render(){
@@ -106,7 +116,7 @@ export class Profile extends React.Component{
                         <img src="" alt="" className="post__profilePic"/>slika
                         <div className="profile__header">
                             <h1 style={{marginLeft:"8px"}}>{user.name}</h1>
-                            {this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username ? 
+                            {(window.localStorage.getItem('token') != null && this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username ) ?
                                 <div style={{marginLeft:"8px",fontWeight:'normal'}}>
                                 <BrowserRouter>
                                 <Nav className="navbarprofile" activeKey="/" >

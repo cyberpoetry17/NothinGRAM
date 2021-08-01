@@ -98,11 +98,11 @@ func (handler *CloseFollowerHandler) ModifyCloseFollowers(w http.ResponseWriter,
 	}
 	removedUsers := handler.UserServ.SetCloseFollowersToUser(followerModificationLists.RemovedUsernames, tokenObj.UserID)
 
-	errorDeleted := handler.Service.RemoveManyByID(removedUsers)
+	errorDeleted := handler.Service.RemoveManyByID(removedUsers, tokenObj.UserID)
 	errorAdded := handler.Service.AddMultipleFollowers(addedUsers, tokenObj.UserID)
 	if errorAdded != nil || errorDeleted != nil {
 		fmt.Println(err)
-		w.WriteHeader(http.StatusExpectationFailed)
+		w.WriteHeader(http.StatusBadRequest)
 	}
 	w.WriteHeader(http.StatusOK)
 

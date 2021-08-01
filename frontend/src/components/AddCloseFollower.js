@@ -109,16 +109,19 @@ class AddCloseFollower extends React.Component {
       credentials: "same-origin", // ,'access-control-allow-origin' : '*'
     };
 
-    fetch(`${serviceConfig.baseURL}/setclosefollowers`, requestOpt).then(
-      (response) => {
+    fetch(`${serviceConfig.baseURL}/setclosefollowers`, requestOpt)
+      .then((response) => {
         if (!response.ok) {
           console.log("neuspelo");
           return Promise.reject(response);
         }
-        console.log("USPELO");
         return response.json();
-      }
-    );
+      })
+      .catch((response) => {
+        if (response.status === 400) {
+          alert("Sorry something went wrong!");
+        }
+      });
   }
 
   render() {

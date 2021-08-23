@@ -19,7 +19,7 @@ export default function SearchBar(){
             history.push('/search/tags/'+search.substring(1,search.length))
         }
         else {
-            const res = await axios({method:'get',url:'http://localhost:8004/getuserbyusername/'+search});
+            const res = await axios({method:'get',url:'http://localhost:8080/api/user/getuserbyusername/'+search});
             if (res.data.username != null) {
                 history.push('/profile/'+search);
                 window.location.reload();

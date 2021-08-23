@@ -3,20 +3,13 @@ import './App.css'
 import Login from './components/user/Login';
 import AddImg from './components/AddImg'
 import Home from './components/Home';
-// import UserHomepage from './components/UserHomepage';
-// import Post from './components/Post'
-import Like from './components/Post/Like';
 import PostFeed from './components/feed/PostFeed';
-//import Test from "./components/Test"
 import AddPost from './components/Post/AddPost';
-import Dislike from './components/Post/Dislike';
 import RegisterUser from './components/user/Register'
 import Update from './components/user/Update';
 import Profile from './components/user/Profile';
 import FollowerFeed from './components/feed/FollowerFeed'
 import Verification from './components/user/Verification'
-// import { version } from 'react-dom';
-// import jwt_decode from 'jwt-decode';
 import ProfileRequests from './components/user/ProfileRequests'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -97,15 +90,6 @@ export default function App() {
           <Route path="/update">
             <Update />
           </Route>
-          <Route path="/dislike">
-            <Dislike/>
-          </Route>
-          <Route path="/like">
-            <Like/>
-          </Route>
-          {/* <Route path="/pic">
-            <AddImg/>
-          </Route> */}
           <Route  path="/addPost">
             <AddPost/>
           </Route>

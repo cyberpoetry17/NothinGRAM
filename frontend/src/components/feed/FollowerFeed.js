@@ -20,10 +20,10 @@ export class UserInteractedContent extends React.Component{
     }
 
     GetAllFollowerIds(){
-        axios.get('http://localhost:8004/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get('http://localhost:8080/api/user/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
             response.data?.map((follow) =>(     
-                axios.get('http://localhost:8005/allpostsbyuserid/'+follow).then((responsenew)=>{
+                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 console.log(data)
                 if(data != null)

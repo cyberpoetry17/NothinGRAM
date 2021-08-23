@@ -13,7 +13,7 @@ export default function StoryForUser() {
         var userId = jwt_decode(localStorage.getItem('token')).UserID;
         axios({
             method : 'get',
-            url :'http://localhost:8005/getUserStories/'+userId,
+            url :'http://localhost:8080/api/post/getUserStories/'+userId,
         }).then(res =>{
             console.log(res.data," media for story");
             setStories(res.data);
@@ -28,7 +28,7 @@ export default function StoryForUser() {
         if(e == true){
             axios({
                 method : 'post',
-                url :'http://localhost:8005/AddToStoryHighlights/'+id
+                url :'http://localhost:8080/api/post/AddToStoryHighlights/'+id
             });
         }else{
 

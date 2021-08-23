@@ -15,7 +15,7 @@ export default function TagSearch(){
     },[tag])
 
     const GetAllPosts = () =>{
-        axios.get('http://localhost:8005/postsbytags/'+tag).then((response) => {
+        axios.get('http://localhost:8080/api/post/postsbytags/'+tag).then((response) => {
             console.log(tag)
             setTags(response.data);
             console.log(response.data)

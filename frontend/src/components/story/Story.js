@@ -25,7 +25,7 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
     const onLoad = () => {
         axios({
             method : 'get',
-            url :'http://localhost:8005/GetMediaForStory?StoryId='+IdStory,
+            url :'http://localhost:8080/api/post/GetMediaForStory?StoryId='+IdStory,
         }).then(res =>{
             console.log(res.data," media for story")
             setMedia(res.data)
@@ -33,7 +33,7 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
         console.log(UserId , "user id")
         axios({
             method : 'get',
-            url :'http://localhost:8005/getusernamebyid/'+UserId,
+            url :'http://localhost:8080/api/post/getusernamebyid/'+UserId,
         }).then(res =>{
             setUserName(res.data.substring(1,(res.data.length)-2));
         });
@@ -64,12 +64,12 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
         if(e == true){
             axios({
                 method : 'post',
-                url :'http://localhost:8005/AddToStoryHighlights/'+IdStory
+                url :'http://localhost:8080/api/post/AddToStoryHighlights/'+IdStory
             });
         }else{
             axios({
                 method : 'post',
-                url :'http://localhost:8005/RemoveFromStoryHighlights/'+IdStory
+                url :'http://localhost:8080/api/post/RemoveFromStoryHighlights/'+IdStory
             });
         }
         

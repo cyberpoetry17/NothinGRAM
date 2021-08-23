@@ -15,7 +15,7 @@ export default function LocationSearch(){
     },[location])
 
     const GetAllPosts = () =>{
-        axios.get('http://localhost:8005/postsbylocation/'+location).then((response) => {
+        axios.get('http://localhost:8080/api/post/postsbylocation/'+location).then((response) => {
             setLocationPosts(response.data);
             console.log(response.data)
         });

@@ -36,7 +36,7 @@ export default function AddStory() {
         };
         axios({
             method : 'post',
-            url :'http://localhost:8005/addStory',
+            url :'http://localhost:8080/api/post/addStory',
             data:JSON.stringify(body)
         })
         history.push("/")

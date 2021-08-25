@@ -33,7 +33,7 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
         console.log(UserId , "user id")
         axios({
             method : 'get',
-            url :'http://localhost:8080/api/post/getusernamebyid/'+UserId,
+            url :'http://localhost:8080/api/user/username/'+UserId,
         }).then(res =>{
             setUserName(res.data.substring(1,(res.data.length)-2));
         });

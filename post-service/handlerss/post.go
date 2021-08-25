@@ -34,6 +34,28 @@ func (handler *PostHandler) GetNonPrivatePosts(w http.ResponseWriter, r *http.Re
 
 }
 
+func (handler *PostHandler) GetAllReported(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting non reported posts..")
+	json.NewEncoder(w).Encode(handler.Service.GetAllReported())
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+}
+
+func (handler *PostHandler) DeletePost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("deleting post")
+	vars := mux.Vars(r)
+	id := vars["postid"]
+	fmt.Println(id)
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = handler.Service.RemovePost(id)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func (handler *PostHandler) GetNonPrivatePostsForUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Getting non private posts for user..")
 	vars := mux.Vars(r)

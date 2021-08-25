@@ -121,6 +121,7 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 		UserID:   user.ID,
 		Username: user.Username,
 		Email:    user.Email,
+		Role:     int64(user.Role),
 		StandardClaims: &jwt.StandardClaims{
 			ExpiresAt: expiresAt.Unix(),
 		},

@@ -16,6 +16,8 @@ type PostService struct {
 	DislikeRepo *repository.DislikeRepo
 	MediaRepo	*repository.MediaRepo
 	LocationRepo *repository.LocationRepo
+	ReportRepo   *repository.ReportedPostRepo
+	CommentRepo  *repository.CommentRepo
 }
 var extensions =[]string {"mp4","mov","avi","wmv","m4a"}
 const Pi = 3
@@ -78,8 +80,27 @@ func (service *PostService) GetAllPosts() []data.Post{
 	return service.PostRepo.GetAll()
 }
 
+func (service *PostService) RemovePost(id string) bool{
+	service.LikeRepo.RemoveAllLikesForPost(id)
+	service.DislikeRepo.RemoveAllDislikesForPost(id)
+	service.CommentRepo.RemoveAllCommentsForPost(id)
+	service.PostRepo.RemovePost(id)
+	service.ReportRepo.RemoveReportedPost(id)
+	return true
+}
+
 func (service *PostService) GetNonPrivatePosts() []data.Post{
 	return service.PostRepo.GetNonPrivatePosts()
+}
+
+func (service *PostService) GetAllReported() []data.Post{
+	var frontList []data.Post
+	var reports []data.ReportedPost
+	service.ReportRepo.Database.Find(&reports)
+	for _,element := range reports{
+		frontList = append(frontList,service.PostRepo.GetPostByPostID(element.PostId.String()))
+	}
+	return frontList
 }
 
 func (service *PostService) GetNonPrivatePostsForUser(id string) ([]data.Post,error){

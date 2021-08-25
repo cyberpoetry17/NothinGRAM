@@ -23,6 +23,7 @@ import StoryForUser from './components/story/StoryForUser';
 import SearchBar from './components/SearchBar';
 import LocationSearch from './components/LocationSearch';
 import TagSearch from './components/TagSearch';
+import ReportedFeed from './components/feed/ReportedFeed';
 
 export default function App() {
 
@@ -46,6 +47,13 @@ export default function App() {
               <Nav.Item>
                 <SearchBar/>
               </Nav.Item>
+              {jwt_decode(localStorage.getItem('token')).Role === 1 ?
+              <>
+              <Nav.Item>
+                <Nav.Link href="/reportfeed">Reported Content</Nav.Link>
+              </Nav.Item>
+              </> : null
+              }
               <Nav.Item>
                 <Nav.Link href="/" onClick={()=>{window.localStorage.removeItem('token');this.props.history.push('/');}}>SIGN OUT</Nav.Link>
               </Nav.Item>
@@ -72,7 +80,7 @@ export default function App() {
           </Nav>
 
         <Switch >
-
+          <Route path="/reportfeed" component={ReportedFeed}/>
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
           <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>

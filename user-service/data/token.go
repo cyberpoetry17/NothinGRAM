@@ -10,5 +10,6 @@ type Token struct {
 	UserID   uuid.UUID
 	Username string
 	Email    string
+	Role     int64
 	*jwt.StandardClaims
 }

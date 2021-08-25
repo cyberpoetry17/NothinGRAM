@@ -186,10 +186,10 @@ func (handler *UserHandler) GetUserIdByUsernameForProfile(w http.ResponseWriter,
 
 func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
-	fmt.Println("getting username By Id")
+	fmt.Println("getting username By Id novo")
 	vars := mux.Vars(r)
 	id := vars["usernamebyid"]
-
+	fmt.Println(id)
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return

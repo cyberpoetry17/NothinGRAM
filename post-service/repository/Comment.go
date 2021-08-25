@@ -51,3 +51,11 @@ func (repo *CommentRepo) GetAllByPostId(postid string) ([]data.Comment,error){
 	}
 	return frontList,result.Error
 }
+
+func (repo *CommentRepo) RemoveAllCommentsForPost (id string) bool{
+	comments, _ := repo.GetAllByPostId(id)
+	for _,element := range comments{
+		repo.Database.Delete(&element)
+	}
+	return true
+}

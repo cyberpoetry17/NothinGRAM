@@ -70,8 +70,8 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     }
 
     const GetUsernameByUserId = () =>{
-        return axios.get('http://localhost:8080/api/post/getusernamebyid/'+userid).then((response) =>{
-            setUsername(response.data.substring(1,(response.data.length)-2));
+        return axios.get('http://localhost:8080/api/user/username/'+userid).then((response) =>{
+            setUsername(response.data.substring(0,(response.data.length)));
         });
     }
 

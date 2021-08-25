@@ -16,6 +16,8 @@ type UserService struct {
 	Repo              *repository.UserRepo
 	RepoFollower      *repository.FollowerRepo
 	RepoCloseFollower *repository.CloseFollowerRepository
+	MutedRepo         *repository.MutedRepo
+	BlockedRepo       *repository.BlockedRepo
 }
 
 type UpdateUserRequest struct {
@@ -89,6 +91,15 @@ func (service *UserService) GetUserByUsernameForProfile(id string) *data.User2 {
 
 func (service *UserService) GetPublicUserIds() []string {
 	return service.Repo.GetPublicUserIds()
+}
+
+func (service *UserService) DeleteProfile(id string) bool{
+	service.BlockedRepo.DeleteBlocksForUser(id)
+	service.MutedRepo.DeleteMutesForUser(id)
+	service.RepoFollower.DeleteFollowersForUser(id)
+	service.RepoCloseFollower.DeleteCloseFollowersForUser(id)
+	service.Repo.DeleteUserById(id)
+	return true
 }
 
 func (service *UserService) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {

@@ -206,6 +206,21 @@ func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusOK)
 }
 
+func (handler *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	fmt.Println("deleting profile")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	fmt.Println(id)
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = handler.Service.DeleteProfile(id)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
 //login user
 func (handler *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 

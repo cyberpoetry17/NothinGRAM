@@ -19,6 +19,23 @@ func (repo *CloseFollowerRepository) AddCloseFollower(follower *data.CloseFollow
 	return nil
 }
 
+func (repo *CloseFollowerRepository) GetAll() []data.CloseFollower {
+	var followers []data.CloseFollower
+	repo.Database.
+		Find(&followers)
+	return followers
+}
+
+func (repo *CloseFollowerRepository) DeleteCloseFollowersForUser(userid string) bool {
+	follows := repo.GetAll()
+	for _,element := range follows{
+		if element.IDCloseFollower.String() == userid || element.IDUser.String() == userid{
+			repo.Database.Delete(&element)
+		}
+	}
+	return true
+}
+
 func (repo *CloseFollowerRepository) RemoveCloseFollower(follower *data.CloseFollower) error {
 	result := repo.Database.Where("idclosefollower=? and iduser=?", follower.IDCloseFollower, follower.IDUser).Delete(follower)
 	if result.Error != nil {

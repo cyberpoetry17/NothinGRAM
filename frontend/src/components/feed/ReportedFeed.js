@@ -24,6 +24,10 @@ export default function ReportedFeed() {
         axios.post('http://localhost:8080/api/post/deletepost/'+postid).then(()=>window.location.reload());
     }
 
+    const DeleteProfile = (userid) =>{
+        axios.post('http://localhost:8080/api/user/deleteprofile/'+userid).then(()=>window.location.reload());
+    }
+
     return(
     <>
         {reports?.map((post,i) => (
@@ -31,7 +35,7 @@ export default function ReportedFeed() {
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID} />
             <div className="post__header">
             <button className="like_but" onClick={() => DeletePost(post.ID)}>Delet</button>
-            <button className="like_but">Delet profile</button>
+            <button className="like_but" onClick={() => DeleteProfile(post.userid)}>Delet profile</button>
             </div>
         </div>
         ))}

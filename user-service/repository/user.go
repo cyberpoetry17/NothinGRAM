@@ -86,6 +86,16 @@ func (repo *UserRepo) GetPublicUserIds() []string {
 	return backUserId
 }
 
+func (repo *UserRepo) DeleteUserById(userid string) bool {
+	users := repo.GetAll()
+	for _,element := range users{
+		if element.ID.String() == userid {
+			repo.Database.Delete(&element)
+		}
+	}
+	return true
+}
+
 func (repo *UserRepo) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
 	var users []data.User2
 	var backUser DTO.UserUsernameAndPrivateDTO

@@ -34,14 +34,15 @@ func (repo *FollowerRepo) GetAll() []data.Follower {
 	return followers
 }
 
-//nadjem sve followere jednog korisnika ->koristim da bih vratila usere
-// func (repo *FollowerRepo) GetAllForOneUser(id uuid.UUID) []data.Follower {
-
-// 	var followers []data.Follower
-// 	repo.Database.
-// 		Find(&followers).Where("iduser = ? ", id)
-// 	return followers
-// }
+func (repo *FollowerRepo) DeleteFollowersForUser(userid string) bool {
+	follows := repo.GetAll()
+	for _,element := range follows{
+		if element.IDFollower.String() == userid || element.IDUser.String() == userid{
+			repo.Database.Delete(&element)
+		}
+	}
+	return true
+}
 
 func (repo *FollowerRepo) FollowStatusForProfile(follower *data.Follower) bool {
 	var result = repo.GetAll()

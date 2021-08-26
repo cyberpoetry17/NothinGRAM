@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
+import {serviceConfig} from '../../applicationSettings.js'
 
 export default function AddStory() {
 
@@ -36,7 +37,7 @@ export default function AddStory() {
         };
         axios({
             method : 'post',
-            url :'http://localhost:8080/api/post/addStory',
+            url :`${serviceConfig.postURL}/addStory`,
             data:JSON.stringify(body)
         })
         history.push("/")

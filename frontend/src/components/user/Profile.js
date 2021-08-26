@@ -8,6 +8,7 @@ import {useState,useEffect} from 'react'
 import queryString from 'query-string';
 import {Nav} from 'react-bootstrap';
 import StoryHighlights from '../story/StoryHighlights';
+import {serviceConfig} from '../../applicationSettings.js'
 
 export class Profile extends React.Component{
 
@@ -31,9 +32,9 @@ export class Profile extends React.Component{
     async IsProfileFollowedByLoggedUser(){
         if (window.localStorage.getItem('token') != null){
             var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-            await axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+            await axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username).then((response)=>{
                 const data = response.data
-                axios.post('http://localhost:8080/api/user/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
+                axios.post(`${serviceConfig.userURL}/getfollowstatus`,JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
                 this.setState({followed:response.data})
                 })
             })
@@ -41,7 +42,7 @@ export class Profile extends React.Component{
     }
 
     GetUserByUserId(){
-        axios.get('http://localhost:8080/api/user/getuserbyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getuserbyusername/`+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({user:data});
         })
@@ -49,7 +50,7 @@ export class Profile extends React.Component{
     }
 
     GetAllPostsForUserDependingOnFollowage(){
-        axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username).then((response)=>{
             this.setState({userid:response.data.UserId})
             if (window.localStorage.getItem('token') != null){
                 if(response.data.UserId == jwt_decode(localStorage.getItem('token')).UserID){
@@ -57,7 +58,7 @@ export class Profile extends React.Component{
                 }
                 if((this.state.followed == true || this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username) ||
                 (response.data.Private == false && this.state.followed==false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username)){
-                    axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+this.state.userid).then((response)=>{
+                    axios.get(`${serviceConfig.postURL}/allpostsbyuserid/`+this.state.userid).then((response)=>{
                     const data = response.data;
                     this.setState({posts:data})
                     }).catch(()=>alert('didnt retrieve all posts for user'))
@@ -65,7 +66,7 @@ export class Profile extends React.Component{
             }
             else if (response.data.Private == false && this.state.followed==false){
 
-                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+this.state.userid).then((response)=>{
+                axios.get(`${serviceConfig.postURL}/allpostsbyuserid/`+this.state.userid).then((response)=>{
                     const data = response.data;
                     this.setState({posts:data})
                     }).catch(()=>alert('didnt retrieve all posts for user not logged'))
@@ -76,23 +77,23 @@ export class Profile extends React.Component{
     FollowUser(event){
         if (window.localStorage.getItem('token') != null){
         var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-        axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username).then((response)=>{
             const data = response.data
             if(this.state.followed == false){
                 if(data.Private == false){
-                axios.post('http://localhost:8080/api/user/follow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
+                axios.post(`${serviceConfig.userURL}/follow`,JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
                 ()=>{
                     alert('You have followed user with userid' + this.state.userid);
                     this.setState({followed:true});
                 }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
                 }else{
-                    axios.post('http://localhost:8080/api/user/createfollowrequest',JSON.stringify({idfollower:userfollowing,idfollowed:data.UserId})).then(
+                    axios.post(`${serviceConfig.userURL}/createfollowrequest`,JSON.stringify({idfollower:userfollowing,idfollowed:data.UserId})).then(
                 ()=>{
                     alert('Follow request sent');
                 })
                 }
             }else if (this.state.followed == true){
-                axios.post('http://localhost:8080/api/user/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
+                axios.post(`${serviceConfig.userURL}/unfollow`,JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
                 ()=>{
                     alert('You have unfollowed user with userid' + this.state.userid);
                     this.setState({followed:false});

@@ -2,18 +2,18 @@ import React from "react";
 import { Form, Container, Col, Button, Image } from "react-bootstrap";
 
 // import DatePick from '../components/DateOfBirth.js'
-import { serviceConfig } from "../../applicationSettings.js";
+import { serviceConfigPost } from "../applicationSettings.js";
 import "react-datepicker/dist/react-datepicker.css";
-import logo from "../../resources/nothingramBeli.png";
+import logo from "../resources/nothingramBeli.png";
 import DatePicker from "react-datepicker";
 // import {DatePickerComponent} from "@syncfusion/ej2-react-calendars";
 // import DatePick from '../components/DateOfBirth.js'
 import { withRouter } from "react-router";
-
+import {serviceConfig} from '../applicationSettings'
 // import required css from library
 import "react-datepicker/dist/react-datepicker.css";
 
-class RegisterUser extends React.Component {
+class AddAgent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -36,6 +36,7 @@ class RegisterUser extends React.Component {
       _taggable: true,
       _gender: 0,
       message: "",
+      link:"",
     };
     this.child = React.createRef();
     this.handleChange = this.handleChange.bind(this);
@@ -114,6 +115,7 @@ class RegisterUser extends React.Component {
       _private,
       _taggable,
       _gender,
+      _link,
     } = this.state;
 
     const registerRequest = {
@@ -132,6 +134,7 @@ class RegisterUser extends React.Component {
       gender: _gender,
       web: _web,
       date: _dateOfBirth,
+      link: _link,
     };
 
     const requestOptions = {
@@ -140,7 +143,7 @@ class RegisterUser extends React.Component {
       body: JSON.stringify(registerRequest),
     };
 
-    fetch(`${serviceConfig.userURL}/register`, requestOptions)
+    fetch(`${serviceConfig.postURL}/addAgent`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -166,11 +169,13 @@ class RegisterUser extends React.Component {
       _gender,
       _dateOfBirth,
       _notify,
+      _link,
     } = this.state;
     //const dateValue =  new Date(new Date().getDay,new Date().getMonth,new Date().getMonth)
 
     return (
       <Container style={{ position: "relative" }}>
+          <h1 className="centerText">ADD AGENT </h1>
         <div
           className="register-div"
           style={{
@@ -263,6 +268,16 @@ class RegisterUser extends React.Component {
                   onChange={this.handleChange}
                 />
               </Form.Group>
+              <Form.Group as={Col} md="5">
+                <Form.Control
+                  required
+                  id="_link"
+                  value={_link}
+                  type="text"
+                  placeholder="Link to site"
+                  onChange={this.handleChange}
+                />
+              </Form.Group>
             </Form.Row>
             {/* <DatePickerComponent placeholder="Insert date" value={_dateOfBirth} onChange={this.handleChange}></DatePickerComponent> */}
             {/* <DatePick 
@@ -328,5 +343,5 @@ class RegisterUser extends React.Component {
     );
   }
 }
-export default withRouter(RegisterUser);
+export default withRouter(AddAgent);
 // export default RegisterUser;

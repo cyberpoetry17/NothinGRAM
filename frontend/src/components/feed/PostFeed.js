@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 import Post from '../Post/Post'
+import {serviceConfig} from '../../applicationSettings.js'
 
 export class PostFeed extends React.Component{
 
@@ -17,9 +18,9 @@ export class PostFeed extends React.Component{
     }
 
     GetAllPosts(){
-        axios.get('http://localhost:8080/api/user/getpublicuserids').then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getpublicuserids`).then((response)=>{
             response.data?.map((userid) =>(
-                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+userid).then((responsenew)=>{
+                axios.get(`${serviceConfig.postURL}/allpostsbyuserid/`+userid).then((responsenew)=>{
                 const data = responsenew.data;
                 if(data != null)
                     this.setState({posts:this.state.posts.concat(data)});

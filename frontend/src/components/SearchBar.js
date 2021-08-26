@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Profile from "./user/Profile";
+import {serviceConfig} from '../applicationSettings'
 
 export default function SearchBar(){
 
@@ -19,7 +20,7 @@ export default function SearchBar(){
             history.push('/search/tags/'+search.substring(1,search.length))
         }
         else {
-            const res = await axios({method:'get',url:'http://localhost:8080/api/user/getuserbyusername/'+search});
+            const res = await axios({method:'get',url:`${serviceConfig.userURL}/getuserbyusername/`+search});
             if (res.data.username != null) {
                 history.push('/profile/'+search);
                 window.location.reload();

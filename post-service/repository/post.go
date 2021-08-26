@@ -109,6 +109,32 @@ func (repo *PostRepo) GetPostsByUserID(id string) []data.Post{
 	return frontList
 }
 
+func (repo *PostRepo) GetPostsByLocationId(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetAll()
+	for _,element := range posts{
+		if element.LocationID.String() == id && element.Private == false{
+			frontList = append(frontList,element)
+		}
+	}
+	return frontList
+}
+
+func (repo *PostRepo) GetPostsByTagId(id string) []data.Post{
+	var posts []data.Post
+	var frontList []data.Post
+	posts = repo.GetAll()
+	for _,element := range posts{
+		for _,el := range element.Tags{
+			if el.ID.String() == id{
+				frontList = append(frontList,element)
+			}
+		}
+	}
+	return frontList
+}
+
 func (repo *PostRepo) GetPostByPostID(id string) data.Post{
 	var posts []data.Post
 	var frontList data.Post
@@ -128,16 +154,28 @@ func (repo *PostRepo) GetPostByPostID(id string) data.Post{
 
 
 func(repo *PostRepo) GetUsernameByPostUserID(userid string) string {
-	var backString string
+		var backString string
+		var posts = repo.GetAll()
+		for _,element := range posts{
+			if element.UserID.String() == userid{
+				response, _ := http.NewRequest(http.MethodGet,"http://localhost:8080/api/user/username/{"+userid+"}",nil)
+				backString,_:=ioutil.ReadAll(response.Body)
+				response.Body.Close()
+				return string(backString)
+			}
+		}
+		return backString
+}
+
+func (repo PostRepo) RemovePost(id string) bool{
 	var posts = repo.GetAll()
 	for _,element := range posts{
-		if element.UserID.String() == userid{
-			response, _ := http.Get("http://localhost:8004/username/{"+userid+"}")
-			backString,_:=ioutil.ReadAll(response.Body)
-			return string(backString)
+		if element.ID.String() == id {
+			fmt.Println("usao")
+			repo.Database.Delete(&element)
 		}
 	}
-	return backString
+	return true
 }
 
 func (repo *PostRepo) AddTagToPost(tag *data.Tag,postId uuid.UUID) error{

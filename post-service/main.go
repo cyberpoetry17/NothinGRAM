@@ -21,7 +21,7 @@ func initializeRepository(database *gorm.DB) (*repository.PostRepo,*repository.T
 }
 
 func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRepo, repoComment *repository.CommentRepo, repoLike *repository.LikeRepo,repoDislike *repository.DislikeRepo, repoMedia *repository.MediaRepo,repoLocation *repository.LocationRepo,repoReport *repository.ReportedPostRepo,repoStory *repository.StoryRepo) (*services.PostService,*services.TagService,*services.CommentService,*services.LikeService,*services.DislikeService,*services.MediaService,*services.LocationService,*services.ReportedPostService,*services.StoryService) {
-	return &services.PostService{PostRepo: repoPost,TagRepo: repoTag,LikeRepo:repoLike,DislikeRepo: repoDislike,MediaRepo: repoMedia}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation},&services.ReportedPostService{Repo: repoReport}, &services.StoryService{StoryRepo: repoStory,PostRepo: repoPost, MediaRepo: repoMedia}
+	return &services.PostService{PostRepo: repoPost,TagRepo: repoTag,LikeRepo:repoLike,DislikeRepo: repoDislike,MediaRepo: repoMedia,LocationRepo: repoLocation,ReportRepo: repoReport,CommentRepo: repoComment}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation},&services.ReportedPostService{Repo: repoReport}, &services.StoryService{StoryRepo: repoStory,PostRepo: repoPost, MediaRepo: repoMedia}
 }
 
 func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService, serviceMedia *services.MediaService,serviceLocation *services.LocationService,serviceReport *services.ReportedPostService, serviceStory *services.StoryService) (*handlerss.PostHandler,*handlerss.TagHandler,*handlerss.CommentHandler,*handlerss.LikeHandler,*handlerss.DislikeHandler,*handlerss.MediaHandler,*handlerss.LocationHandler,*handlerss.ReportedPostHandler,*handlerss.StoryHandler) {
@@ -48,6 +48,12 @@ func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler,
 func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) {
 	router.HandleFunc("/addStory", storyHandler.CreateStory).Methods("POST")
 	router.HandleFunc("/getAllStories", storyHandler.GetAllActiveStories).Methods("GET")
+	router.HandleFunc("/getUserStories/{userId}",storyHandler.GetAllUserStories).Methods("GET")
+	router.HandleFunc("/GetCloseFrinedStoriesForUser/{userId}",storyHandler.GetCloseFrinedStoriesForUser).Methods("GET")
+	router.HandleFunc("/AddToStoryHighlights/{storyId}",storyHandler.AddToStoryHighlights).Methods("POST")
+	router.HandleFunc("/RemoveFromStoryHighlights/{storyId}",storyHandler.RemoveFromStoryHighlights).Methods("POST")
+	router.HandleFunc("/GetAllStoryHighlights/{userId}",storyHandler.GetAllStoryHighlights).Methods("GET")
+	router.HandleFunc("/GetActiveStoriesByUserId/{userId}",storyHandler.GetActiveStoriesByUserId).Methods("GET")
 }
 
 func mediaHandleFuncs(router *mux.Router, mediaHandler *handlerss.MediaHandler) {
@@ -106,6 +112,10 @@ func postHandleFuncs(handler *handlerss.PostHandler, router *mux.Router) {
 	router.HandleFunc("/getlikedbyuser/{userid}", handler.GetLikedByUser).Methods("GET")
 	router.HandleFunc("/getdislikedbyuser/{userid}", handler.GetDislikedByUser).Methods("GET")
 	router.HandleFunc("/tagsforpost/{postid}", handler.GetTagsForPost).Methods("GET")
+	router.HandleFunc("/postsbylocation/{location}", handler.GetPostsByLocation).Methods("GET")
+	router.HandleFunc("/postsbytags/{tag}", handler.GetPostsByTags).Methods("GET")
+	router.HandleFunc("/getallreported", handler.GetAllReported).Methods("GET")
+	router.HandleFunc("/deletepost/{postid}", handler.DeletePost).Methods("POST")
 }
 
 func reportHandleFuncs(handler *handlerss.ReportedPostHandler, router *mux.Router) {

@@ -144,6 +144,14 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (handler *UserHandler) GetPublicUserIds(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	resp := handler.Service.GetPublicUserIds()
+	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
 func (handler *UserHandler) GetUserByUsernameForProfile(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 	fmt.Println("getById")
@@ -178,10 +186,10 @@ func (handler *UserHandler) GetUserIdByUsernameForProfile(w http.ResponseWriter,
 
 func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
-	fmt.Println("getting username By Id")
+	fmt.Println("getting username By Id novo")
 	vars := mux.Vars(r)
 	id := vars["usernamebyid"]
-
+	fmt.Println(id)
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -194,6 +202,21 @@ func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Reque
 	resp := handler.Service.GetUsernameById(idUser)
 
 	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	fmt.Println("deleting profile")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	fmt.Println(id)
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = handler.Service.DeleteProfile(id)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }

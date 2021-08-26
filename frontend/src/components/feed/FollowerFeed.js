@@ -1,9 +1,9 @@
-import Post from "./Post";
+import Post from "../Post/Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import Stories from "./Stories";
+import Stories from "../story/Stories";
 
 export class UserInteractedContent extends React.Component{
 
@@ -20,11 +20,12 @@ export class UserInteractedContent extends React.Component{
     }
 
     GetAllFollowerIds(){
-        axios.get('http://localhost:8004/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get('http://localhost:8080/api/user/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
-            response.data?.map((follow) =>(      //kao da nece da settuje state od dobavljenih podataka pa moram jednu u drugoj da pozivam
-                axios.get('http://localhost:8005/allpostsbyuserid/'+follow).then((responsenew)=>{
+            response.data?.map((follow) =>(     
+                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+follow).then((responsenew)=>{
                 const data = responsenew.data;
+                console.log(data)
                 if(data != null)
                 this.setState({followerposts:this.state.followerposts.concat(data)});
             })

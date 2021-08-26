@@ -34,6 +34,14 @@ services:
   #     KITCHEN_SERVICE_DOMAIN: ${KITCHEN_SERVICE_DOMAIN}
   #     KITCHEN_SERVICE_PORT: ${KITCHEN_SERVICE_PORT}
   #     PORT: ${ORDER_SERVICE_PORT}
+  api-gateway:
+    restart: always
+    image: nginx:1.19.8-alpine
+    ports:
+      - 8080:8080
+    volumes:
+      - ./api-gateway/nginx.conf:/etc/nginx/nginx.conf
+      - ./api-gateway/api_gateway.conf:/etc/nginx/api_gateway.conf
   userDb:
     image: postgres
     restart: always
@@ -50,26 +58,24 @@ services:
       POSTGRES_DB: ${NAMEP}
 
   user-service:
+    restart: always
     image: user-service:compose_build
     build:
       context: ./user-service
       dockerfile: Dockerfile
-    environment: 
+    environment:
       PORT: ${USER_SERVICE_PORT}
       DB_PORT: ${DATABASE_PORT}
       DB_HOST: ${HOST}
       DB_USER: ${USER}
       DB_PASSWORD: ${PASSWORD}
       DB_NAME: ${NAME}
-    expose:
-      - ${USER_SERVICE_PORT}
-    ports:
-      - ${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
-    depends_on: 
+    depends_on:
       - userDb
 
 
   post-service:
+    restart: always
     image: post-service:compose_build
     build:
       context: ./post-service
@@ -81,10 +87,6 @@ services:
       DB_USER: ${USERP}
       DB_PASSWORD: ${PASSWORDP}
       DB_NAME: ${NAMEP}
-    expose:
-      - ${POST_SERVICE_PORT}
-    ports:
-      - ${POST_SERVICE_PORT}:${POST_SERVICE_PORT}
     depends_on:
       - postDb
 

@@ -44,3 +44,7 @@ func (service *CloseFollowerService) RemoveManyByID(ids []DTO.UserDTO, id uuid.U
 	}
 	return nil
 }
+
+func (service *CloseFollowerService) GetAllCloseFollowerUser(userid string) []string {
+	return service.Repo.GetAllCloseFollowerUser(userid)
+}

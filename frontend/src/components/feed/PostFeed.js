@@ -1,8 +1,7 @@
-import Post from "./Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
-
+import Post from '../Post/Post'
 
 export class PostFeed extends React.Component{
 
@@ -18,12 +17,16 @@ export class PostFeed extends React.Component{
     }
 
     GetAllPosts(){
-        axios.get('http://localhost:8005/getnonprivateposts').then((response)=>{
-            const data = response.data;
-            this.setState({posts:data});
-            console.log(this.state.posts)
-        })
-        .catch(()=>{alert('didnt retrieve ')});
+        axios.get('http://localhost:8080/api/user/getpublicuserids').then((response)=>{
+            response.data?.map((userid) =>(
+                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+userid).then((responsenew)=>{
+                const data = responsenew.data;
+                if(data != null)
+                    this.setState({posts:this.state.posts.concat(data)});
+                })
+                .catch(()=>{alert('didnt retrieve ')})
+            ))
+        }).catch(()=>{alert('You have not followed any other users.')})
     }
     
     render(){

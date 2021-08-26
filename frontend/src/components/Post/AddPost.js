@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
-import { app } from './base';
+import { app } from '../base';
 import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import jwt_decode from 'jwt-decode';
@@ -38,7 +38,7 @@ function AddPost() {
         event.preventDefault();
         axios({
             method : 'post',
-            url :'http://localhost:8005/addTag/',
+            url :'http://localhost:8080/api/post/addTag/',
             data:JSON.stringify({
                 id:"00000000-0000-0000-0000-000000000000",
                 TagName: dialogValue.TagName,
@@ -88,7 +88,7 @@ function AddPost() {
     const getAllTags = ()=>{
         axios({
             method : 'get',
-            url :'http://localhost:8005/getAllTags'
+            url :'http://localhost:8080/api/post/getAllTags'
         }).then(res =>{
             setTagNames(res.data)
         });
@@ -116,12 +116,12 @@ function AddPost() {
     const  add = async ()=>{
         const res_1 = await axios({
             method : 'post',
-            url :'http://localhost:8005/createlocation',
+            url :'http://localhost:8080/api/post/createlocation',
             data:JSON.stringify(location),
         });
 
 
-        const URL = 'http://localhost:8004/GetUserProfilePrivacy?PostId='+post.UserID
+        const URL = 'http://localhost:8080/api/user/GetUserProfilePrivacy?PostId='+post.UserID
         const res_2 = await axios({
             method : 'get',
             url :URL,
@@ -130,7 +130,7 @@ function AddPost() {
         const newPost = {...post , private:false, LocationID: res_1.data};
         await axios({
             method : 'post',
-            url :'http://localhost:8005/createpost',
+            url :'http://localhost:8080/api/post/createpost',
             data:JSON.stringify(newPost),
         })
 

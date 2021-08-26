@@ -16,6 +16,8 @@ type UserService struct {
 	Repo              *repository.UserRepo
 	RepoFollower      *repository.FollowerRepo
 	RepoCloseFollower *repository.CloseFollowerRepository
+	MutedRepo         *repository.MutedRepo
+	BlockedRepo       *repository.BlockedRepo
 }
 
 type UpdateUserRequest struct {
@@ -87,6 +89,19 @@ func (service *UserService) GetUserByUsernameForProfile(id string) *data.User2 {
 	return service.Repo.GetUserByUsernameForProfile(id)
 }
 
+func (service *UserService) GetPublicUserIds() []string {
+	return service.Repo.GetPublicUserIds()
+}
+
+func (service *UserService) DeleteProfile(id string) bool{
+	service.BlockedRepo.DeleteBlocksForUser(id)
+	service.MutedRepo.DeleteMutesForUser(id)
+	service.RepoFollower.DeleteFollowersForUser(id)
+	service.RepoCloseFollower.DeleteCloseFollowersForUser(id)
+	service.Repo.DeleteUserById(id)
+	return true
+}
+
 func (service *UserService) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {
 	return service.Repo.GetUserIdByUsernameForProfile(id)
 }
@@ -117,6 +132,7 @@ func (service *UserService) LoginUser(r *LoginRequest) map[string]interface{} {
 		UserID:   user.ID,
 		Username: user.Username,
 		Email:    user.Email,
+		Role:     int64(user.Role),
 		StandardClaims: &jwt.StandardClaims{
 			ExpiresAt: expiresAt.Unix(),
 		},

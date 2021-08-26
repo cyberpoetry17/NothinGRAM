@@ -1,14 +1,12 @@
-import { app } from './base';
+import { app } from '../base';
 import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import {Carousel} from 'react-bootstrap';
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
-import { Like } from './Like';
-import {Dislike} from './Dislike';
 import jwt_decode from 'jwt-decode';
-import "../styles/post-style.css";
-import Comment from './Comment';
-import CommentInput from './CommentInput';
+import "../../styles/post-style.css";
+import Comment from '../Post/Comment';
+import CommentInput from '../Post/CommentInput';
 import { Ellipsis } from 'react-bootstrap/esm/PageItem';
 
 export default function Post({userid,postid,picpath,privatepost,tokenInfo,description,location}){
@@ -47,7 +45,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     React.useEffect(()=>GetUsernameByUserId(),[]);
 
     const GetMediaForPost = ()=>{
-        var Url ='http://localhost:8005/GetMediaForPost?PostId='+postid
+        var Url ='http://localhost:8080/api/post/GetMediaForPost?PostId='+postid
         axios({
             method : 'get',
             url :Url,
@@ -58,47 +56,47 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     }
 
     const GetLocationForPostByLocationId = () =>{
-        axios.get('http://localhost:8005/locationforpost/'+location).then((response) =>{
+        axios.get('http://localhost:8080/api/post/locationforpost/'+location).then((response) =>{
             if(response.data.country != "dumb")
                 setLocationdesc("@"+response.data.city+","+response.data.country);
         });
     }
 
     const GetTagsForPostByLocationId = () =>{
-        axios.get('http://localhost:8005/tagsforpost/'+postid).then((response) =>{
+        axios.get('http://localhost:8080/api/post/tagsforpost/'+postid).then((response) =>{
             if(response.data != null)
                 setTags(response.data.map((tag)=>("#"+tag)));
         });
     }
 
     const GetUsernameByUserId = () =>{
-        return axios.get('http://localhost:8005/getusernamebyid/'+userid).then((response) =>{
-            setUsername(response.data.substring(1,(response.data.length)-2));
+        return axios.get('http://localhost:8080/api/user/username/'+userid).then((response) =>{
+            setUsername(response.data.substring(0,(response.data.length)));
         });
     }
 
     const GetCommentsForPost = () =>{
-        axios.get('http://localhost:8005/getcommentsforpost/'+postid).then((response)=>{
+        axios.get('http://localhost:8080/api/post/getcommentsforpost/'+postid).then((response)=>{
             setComments(response.data)
         });
     }
     
     const GetLikesForPost = () =>{                                                         
-        return axios.get('http://localhost:8005/alllikesforpost/'+postid).then((response)=>{
+        return axios.get('http://localhost:8080/api/post/alllikesforpost/'+postid).then((response)=>{
             setLikes(response.data)
         });
     }
 
     const GetDislikesForPost = () =>{                                                        
-        return axios.get('http://localhost:8005/alldislikesforpost/'+postid).then((response)=>{
+        return axios.get('http://localhost:8080/api/post/alldislikesforpost/'+postid).then((response)=>{
             setDislikes(response.data)
         });
     }
 
     const CheckIfUserLikedPost = () =>{
-        axios({method:'post',url:'http://localhost:8005/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+        axios({method:'post',url:'http://localhost:8080/api/post/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
             if(response.data == false){             //moralo je ovde umesto u likethispost()
-                axios({method:'post',url:'http://localhost:8005/createlike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetLikesForPost());
+                axios({method:'post',url:'http://localhost:8080/api/post/createlike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetLikesForPost());
             }else if(response.data == true){
                 alert("You already liked this post");
             }
@@ -107,9 +105,9 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     }
 
     const CheckIfUserDislikedPost = () => {
-        axios({method:'post',url:'http://localhost:8005/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+        axios({method:'post',url:'http://localhost:8080/api/post/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
             if(response.data == false){
-                axios({method:'post',url:'http://localhost:8005/createdislike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetDislikesForPost());
+                axios({method:'post',url:'http://localhost:8080/api/post/createdislike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetDislikesForPost());
             }else if (response.data == true){
                 alert("You already disliked this post");
             }
@@ -117,17 +115,17 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     }
 
     const DoINeedToRemoveDislike = () => {
-        axios({method:'post',url:'http://localhost:8005/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+        axios({method:'post',url:'http://localhost:8080/api/post/checkifdislikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
             if(response.data == true){
-                axios({method:'post',url:'http://localhost:8005/deletedislike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetDislikesForPost());
+                axios({method:'post',url:'http://localhost:8080/api/post/deletedislike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetDislikesForPost());
             }
         });
     }
 
     const DoINeedToRemoveLike = () => {
-        axios({method:'post',url:'http://localhost:8005/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+        axios({method:'post',url:'http://localhost:8080/api/post/checkiflikedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
             if(response.data == true){
-                axios({method:'post',url:'http://localhost:8005/deletelike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetLikesForPost());
+                axios({method:'post',url:'http://localhost:8080/api/post/deletelike',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>GetLikesForPost());
             }
         });
     }
@@ -165,9 +163,9 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     }
 
     const CheckIfUserReportedPost = () =>{
-        axios({method:'post',url:'http://localhost:8005/checkifreportedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+        axios({method:'post',url:'http://localhost:8080/api/post/checkifreportedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
             if(response.data == false){
-                axios({method:'post',url:'http://localhost:8005/reportpost',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>{alert("Post has been reported.")});
+                axios({method:'post',url:'http://localhost:8080/api/post/reportpost',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>{alert("Post has been reported.")});
             }else if(response.data == true){
                 alert("You already reported this post");
             }
@@ -203,8 +201,7 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
             <div className="post">
                 <div className="post__header">
                     <div className="post__headerLeft">
-                        <Link to={"/profile/"+username}>{username}</Link>
-                        <h3 style={{marginLeft:"8px"}}>Private:{String(privatepost)}</h3>
+                        <Link to={"/profile/"+username}><h1>{username}</h1></Link>
                     </div>
                     <button className="report_but" onClick={ReportPost}>Report</button>
                 </div>

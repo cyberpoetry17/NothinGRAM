@@ -15,6 +15,9 @@ type PostService struct {
 	LikeRepo *repository.LikeRepo
 	DislikeRepo *repository.DislikeRepo
 	MediaRepo	*repository.MediaRepo
+	LocationRepo *repository.LocationRepo
+	ReportRepo   *repository.ReportedPostRepo
+	CommentRepo  *repository.CommentRepo
 }
 var extensions =[]string {"mp4","mov","avi","wmv","m4a"}
 const Pi = 3
@@ -77,8 +80,27 @@ func (service *PostService) GetAllPosts() []data.Post{
 	return service.PostRepo.GetAll()
 }
 
+func (service *PostService) RemovePost(id string) bool{
+	service.LikeRepo.RemoveAllLikesForPost(id)
+	service.DislikeRepo.RemoveAllDislikesForPost(id)
+	service.CommentRepo.RemoveAllCommentsForPost(id)
+	service.PostRepo.RemovePost(id)
+	service.ReportRepo.RemoveReportedPost(id)
+	return true
+}
+
 func (service *PostService) GetNonPrivatePosts() []data.Post{
 	return service.PostRepo.GetNonPrivatePosts()
+}
+
+func (service *PostService) GetAllReported() []data.Post{
+	var frontList []data.Post
+	var reports []data.ReportedPost
+	service.ReportRepo.Database.Find(&reports)
+	for _,element := range reports{
+		frontList = append(frontList,service.PostRepo.GetPostByPostID(element.PostId.String()))
+	}
+	return frontList
 }
 
 func (service *PostService) GetNonPrivatePostsForUser(id string) ([]data.Post,error){
@@ -92,6 +114,30 @@ func (service *PostService) GetNonPrivatePostsForUser(id string) ([]data.Post,er
 
 func (service *PostService) GetPostsByUserID(id string) []data.Post{
 	return service.PostRepo.GetPostsByUserID(id)
+}
+
+func (service *PostService) GetPostsByLocation(id string) []data.Post{
+	var frontList []data.Post
+	var locations []data.Location
+	service.LocationRepo.Database.Find(&locations)
+	for _,element := range locations{
+		if strings.ToLower(element.Country) == strings.ToLower(id) || strings.ToLower(element.City) == strings.ToLower(id) || strings.ToLower(element.Address) == strings.ToLower(id) {
+			frontList = append(frontList,service.PostRepo.GetPostsByLocationId(element.IDLoc.String())...)
+		}
+	}
+	return frontList
+}
+
+func (service *PostService) GetPostsByTags(id string) []data.Post{
+	var frontList []data.Post
+	var tag []data.Tag
+	service.TagRepo.Database.Find(&tag)
+	for _,element := range tag{
+		if strings.ToLower(element.TagName) == strings.ToLower(id) {
+			frontList = append(frontList,service.PostRepo.GetPostsByTagId(element.ID.String())...)
+		}
+	}
+	return frontList
 }
 
 func (service *PostService) GetUsernameByPostUserID(userid string) string{

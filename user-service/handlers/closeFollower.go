@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 
@@ -109,4 +110,16 @@ func (handler *CloseFollowerHandler) ModifyCloseFollowers(w http.ResponseWriter,
 	w.Header().Set("Content-Type", "application/json")
 	//w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
+}
+
+func (handler *CloseFollowerHandler) GetAllCloseFollowerUser(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	vars := mux.Vars(r)
+	id := vars["userid"]
+
+	listOfCloseFollowers:= handler.Service.GetAllCloseFollowerUser(id)
+
+	json.NewEncoder(w).Encode(listOfCloseFollowers)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { serviceConfig } from "../applicationSettings";
+import { serviceConfig } from "../../applicationSettings";
 import { Button } from "react-bootstrap";
 
 class AddCloseFollower extends React.Component {
@@ -129,7 +129,7 @@ class AddCloseFollower extends React.Component {
       <div className="close-follower-div">
         <React.Fragment>
           <ul className="list-group">
-            {this.state.listitems.map((listitem) => (
+            {this.state.listitems?.map((listitem) => (
               <li
                 key={listitem}
                 className="list-group-item list-group-item-warning list-group-action-variant-warning"
@@ -146,7 +146,7 @@ class AddCloseFollower extends React.Component {
         </div>
         <React.Fragment>
           <ul className="list-group">
-            {this.state.closeFriends.map((listitem) => (
+            {this.state.closeFriends?.map((listitem) => (
               <li
                 key={listitem}
                 className="list-group-item list-group-item-success "

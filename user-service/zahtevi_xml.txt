@@ -1,6 +1,5 @@
 //registracija usera	POST:localhost:8004/register
 {
-	"id":"1111111-1111-1111-111111111"
         "name": "Pera",
         "surname": "Peric",
         "email": "pera@gmail.com",

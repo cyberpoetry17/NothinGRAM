@@ -1,4 +1,4 @@
-import Post from "./Post";
+import Post from "../Post/Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
@@ -21,14 +21,14 @@ export class UserInteractedContent extends React.Component{
     }
 
     async GetUserIdByUsername(){
-        await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        await axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({userid:data.UserId});
         })
     }
 
     GetAllRequests(){
-        axios.get('http://localhost:8004/getallrequests/'+this.state.userid).then((response)=>{
+        axios.get('http://localhost:8080/api/user/getallrequests/'+this.state.userid).then((response)=>{
             const data = response.data;
             this.setState({requests:data});
         })

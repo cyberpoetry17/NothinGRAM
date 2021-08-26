@@ -11,7 +11,7 @@ export default function ReportedFeed() {
     },[])
 
     const GetAllPosts = () => {
-        axios.get('http://localhost:8080/api/post/getallreported').then((responsenew)=>{
+        axios.get('http://localhost:8082/getallreported').then((responsenew)=>{
         const data = responsenew.data;
         if(data != null)
             setReports(data);
@@ -21,11 +21,11 @@ export default function ReportedFeed() {
     }
 
     const DeletePost = (postid) =>{
-        axios.post('http://localhost:8080/api/post/deletepost/'+postid).then(()=>window.location.reload());
+        axios.post('http://localhost:8082/deletepost/'+postid).then(()=>window.location.reload());
     }
 
     const DeleteProfile = (userid) =>{
-        axios.post('http://localhost:8080/api/user/deleteprofile/'+userid).then(()=>window.location.reload());
+        axios.post('http://localhost:8081/deleteprofile/'+userid).then(()=>window.location.reload());
     }
 
     return(

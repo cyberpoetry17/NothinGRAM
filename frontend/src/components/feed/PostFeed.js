@@ -17,9 +17,9 @@ export class PostFeed extends React.Component{
     }
 
     GetAllPosts(){
-        axios.get('http://localhost:8080/api/user/getpublicuserids').then((response)=>{
+        axios.get('http://localhost:8081/getpublicuserids').then((response)=>{
             response.data?.map((userid) =>(
-                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+userid).then((responsenew)=>{
+                axios.get('http://localhost:8082/allpostsbyuserid/'+userid).then((responsenew)=>{
                 const data = responsenew.data;
                 if(data != null)
                     this.setState({posts:this.state.posts.concat(data)});

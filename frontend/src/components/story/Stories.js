@@ -26,17 +26,17 @@ export default function Stories() {
     const loadStories = () => {
         axios({
             method : 'get',
-            url :'http://localhost:8080/api/post/getAllStories',
+            url :'http://localhost:8082/getAllStories',
         }).then(res =>{
             console.log(res.data,"res.data");
             setStories(res.data);
         });
     }
     const loadCloseFriendsStory = () => {
-        axios.get('http://localhost:8080/api/user/getAllCloseFollowersForUser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get('http://localhost:8081/getAllCloseFollowersForUser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
             response.data?.map((follow) =>(
-                axios.get('http://localhost:8080/api/post/GetCloseFrinedStoriesForUser/'+follow).then((responsenew)=>{
+                axios.get('http://localhost:8082/GetCloseFrinedStoriesForUser/'+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 if(data != null){
                     setCloseStories(data);
@@ -48,10 +48,10 @@ export default function Stories() {
     }
     
     const loadActiveStoriesFromFallowedUsers=()=>{
-        axios.get('http://localhost:8080/api/user/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get('http://localhost:8081/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
             response.data?.map((follow) =>(     
-                axios.get('http://localhost:8080/api/post/GetActiveStoriesByUserId/'+follow).then((responsenew)=>{
+                axios.get('http://localhost:8082/GetActiveStoriesByUserId/'+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 console.log(data)
                 if(data != null){

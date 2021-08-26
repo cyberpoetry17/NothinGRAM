@@ -20,19 +20,19 @@ export class UserInteractedContent extends React.Component{
     }
 
     async GetUserIdByUsername(){
-        await axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        await axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({userid:data.UserId});
         })
     }
 
     GetAllPosts(){
-        axios.get('http://localhost:8080/api/post/getlikedbyuser/'+this.state.userid).then((response)=>{
+        axios.get('http://localhost:8082/getlikedbyuser/'+this.state.userid).then((response)=>{
             const data = response.data;
             this.setState({likedposts:data});
         })
         .catch(()=>{alert('didnt retrieve liked posts')});
-        axios.get('http://localhost:8080/api/post/getdislikedbyuser/'+this.state.userid).then((response)=>{
+        axios.get('http://localhost:8082/getdislikedbyuser/'+this.state.userid).then((response)=>{
             const data = response.data;
             this.setState({dislikedposts:data});
         })

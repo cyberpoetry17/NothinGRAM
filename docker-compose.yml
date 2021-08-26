@@ -49,6 +49,9 @@ services:
       POSTGRES_PASSWORD: ${PASSWORD}
       POSTGRES_USER: ${USER}
       POSTGRES_DB: ${NAME}
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    ports:
+    - 7000:5432
   postDb:
     image: postgres
     restart: always
@@ -56,6 +59,7 @@ services:
       POSTGRES_PASSWORD: ${PASSWORDP}
       POSTGRES_USER: ${USERP}
       POSTGRES_DB: ${NAMEP}
+      POSTGRES_HOST_AUTH_METHOD: "trust"
 
   user-service:
     restart: always

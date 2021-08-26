@@ -38,7 +38,7 @@ function AddPost() {
         event.preventDefault();
         axios({
             method : 'post',
-            url :'http://localhost:8080/api/post/addTag/',
+            url :'http://localhost:8082/addTag/',
             data:JSON.stringify({
                 id:"00000000-0000-0000-0000-000000000000",
                 TagName: dialogValue.TagName,
@@ -88,7 +88,7 @@ function AddPost() {
     const getAllTags = ()=>{
         axios({
             method : 'get',
-            url :'http://localhost:8080/api/post/getAllTags'
+            url :'http://localhost:8082/getAllTags'
         }).then(res =>{
             setTagNames(res.data)
         });
@@ -116,12 +116,12 @@ function AddPost() {
     const  add = async ()=>{
         const res_1 = await axios({
             method : 'post',
-            url :'http://localhost:8080/api/post/createlocation',
+            url :'http://localhost:8082/createlocation',
             data:JSON.stringify(location),
         });
 
 
-        const URL = 'http://localhost:8080/api/user/GetUserProfilePrivacy?PostId='+post.UserID
+        const URL = 'http://localhost:8081/GetUserProfilePrivacy?PostId='+post.UserID
         const res_2 = await axios({
             method : 'get',
             url :URL,
@@ -130,7 +130,7 @@ function AddPost() {
         const newPost = {...post , private:false, LocationID: res_1.data};
         await axios({
             method : 'post',
-            url :'http://localhost:8080/api/post/createpost',
+            url :'http://localhost:8082/createpost',
             data:JSON.stringify(newPost),
         })
 

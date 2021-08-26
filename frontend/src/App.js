@@ -113,7 +113,7 @@ export default function App() {
           </Route> 
           <Route path = "/">
             <Home/>
-          </Route>
+s          </Route>
 
         </Switch>
 

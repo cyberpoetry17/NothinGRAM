@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import Profile from "./user/Profile";
 import Post from './Post/Post';
 import { useEffect } from "react";
+import {serviceConfig} from '../applicationSettings'
 
 export default function TagSearch(){
 
@@ -15,7 +16,7 @@ export default function TagSearch(){
     },[tag])
 
     const GetAllPosts = () =>{
-        axios.get('http://localhost:8082/postsbytags/'+tag).then((response) => {
+        axios.get(`${serviceConfig.postURL}/postsbytags/`+tag).then((response) => {
             console.log(tag)
             setTags(response.data);
             console.log(response.data)

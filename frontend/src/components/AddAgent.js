@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 // import {DatePickerComponent} from "@syncfusion/ej2-react-calendars";
 // import DatePick from '../components/DateOfBirth.js'
 import { withRouter } from "react-router";
-
+import {serviceConfig} from '../applicationSettings'
 // import required css from library
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -143,7 +143,7 @@ class AddAgent extends React.Component {
       body: JSON.stringify(registerRequest),
     };
 
-    fetch(`${serviceConfigPost.baseURL}/addAgent`, requestOptions)
+    fetch(`${serviceConfig.postURL}/addAgent`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

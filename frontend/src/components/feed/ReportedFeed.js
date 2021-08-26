@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import Post from '../Post/Post'
+import {serviceConfig} from '../../applicationSettings.js'
 
 export default function ReportedFeed() {
     var [reports,setReports] = useState()
@@ -11,7 +12,7 @@ export default function ReportedFeed() {
     },[])
 
     const GetAllPosts = () => {
-        axios.get('http://localhost:8082/getallreported').then((responsenew)=>{
+        axios.get(`${serviceConfig.postURL}/getallreported`).then((responsenew)=>{
         const data = responsenew.data;
         if(data != null)
             setReports(data);
@@ -21,11 +22,11 @@ export default function ReportedFeed() {
     }
 
     const DeletePost = (postid) =>{
-        axios.post('http://localhost:8082/deletepost/'+postid).then(()=>window.location.reload());
+        axios.post(`${serviceConfig.postURL}/deletepost/`+postid).then(()=>window.location.reload());
     }
 
     const DeleteProfile = (userid) =>{
-        axios.post('http://localhost:8081/deleteprofile/'+userid).then(()=>window.location.reload());
+        axios.post(`${serviceConfig.userURL}/deleteprofile/`+userid).then(()=>window.location.reload());
     }
 
     return(

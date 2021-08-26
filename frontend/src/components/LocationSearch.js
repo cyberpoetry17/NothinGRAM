@@ -4,6 +4,8 @@ import { useHistory, useParams } from "react-router-dom";
 import Profile from "./user/Profile";
 import Post from "./Post/Post";
 import { useEffect } from "react";
+import { serviceConfigPost } from "../applicationSettings"
+import {serviceConfig} from '../applicationSettings'
 
 export default function LocationSearch(){
 
@@ -15,7 +17,7 @@ export default function LocationSearch(){
     },[location])
 
     const GetAllPosts = () =>{
-        axios.get('http://localhost:8082/postsbylocation/'+location).then((response) => {
+        axios.get(`${serviceConfig.postURL}/postsbylocation/`+location).then((response) => {
             setLocationPosts(response.data);
             console.log(response.data)
         });

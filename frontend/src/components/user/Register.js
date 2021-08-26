@@ -140,7 +140,7 @@ class RegisterUser extends React.Component {
       body: JSON.stringify(registerRequest),
     };
 
-    fetch(`${serviceConfig.baseURL}/register`, requestOptions)
+    fetch(`${serviceConfig.userURL}/register`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

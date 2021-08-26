@@ -5,6 +5,7 @@ import React,{useState,useEffect} from 'react'
 import jwt_decode from 'jwt-decode';
 import "../../styles/post-style.css";
 import { getAlgorithms } from 'json-web-token';
+import {serviceConfig} from '../../applicationSettings'
 
 export default function CommentInput({postid,getcoms}){
     var [comment,setComment] = React.useState("");
@@ -12,7 +13,7 @@ export default function CommentInput({postid,getcoms}){
 
     const PostComment = () => {
         if (window.localStorage.getItem('token') != null){
-            axios({method:'post',url:'http://localhost:8082/addComment/',data:JSON.stringify({Comment:comment,UserId:jwt_decode(localStorage.getItem('token')).UserID,PostId:postid})}).then(()=>{
+            axios({method:'post',url:`${serviceConfig.postURL}/addComment/`,data:JSON.stringify({Comment:comment,UserId:jwt_decode(localStorage.getItem('token')).UserID,PostId:postid})}).then(()=>{
                 setComment('');
             }).then(()=>{
                 getcoms();

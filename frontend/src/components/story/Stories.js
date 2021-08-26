@@ -5,6 +5,7 @@ import Story from './Story';
 import "../../styles/story.css";
 import StoryGroup from './StoryGroup';
 import jwt_decode from 'jwt-decode';
+import {serviceConfig} from '../../applicationSettings.js'
 
 export default function Stories() {
     const [stories, setStories] = useState(null);
@@ -26,17 +27,17 @@ export default function Stories() {
     const loadStories = () => {
         axios({
             method : 'get',
-            url :'http://localhost:8082/getAllStories',
+            url :`${serviceConfig.postURL}/getAllStories`,
         }).then(res =>{
             console.log(res.data,"res.data");
             setStories(res.data);
         });
     }
     const loadCloseFriendsStory = () => {
-        axios.get('http://localhost:8081/getAllCloseFollowersForUser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getAllCloseFollowersForUser/`+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
             response.data?.map((follow) =>(
-                axios.get('http://localhost:8082/GetCloseFrinedStoriesForUser/'+follow).then((responsenew)=>{
+                axios.get(`${serviceConfig.postURL}/GetCloseFrinedStoriesForUser/`+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 if(data != null){
                     setCloseStories(data);
@@ -48,10 +49,10 @@ export default function Stories() {
     }
     
     const loadActiveStoriesFromFallowedUsers=()=>{
-        axios.get('http://localhost:8081/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getallfollowedforloggeduser/`+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
             response.data?.map((follow) =>(     
-                axios.get('http://localhost:8082/GetActiveStoriesByUserId/'+follow).then((responsenew)=>{
+                axios.get(`${serviceConfig.postURL}/GetActiveStoriesByUserId/`+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 console.log(data)
                 if(data != null){

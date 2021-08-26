@@ -11,6 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { useHistory } from "react-router-dom";
+import {serviceConfig} from '../../applicationSettings'
 
 const filter = createFilterOptions();
 
@@ -38,7 +39,7 @@ function AddPost() {
         event.preventDefault();
         axios({
             method : 'post',
-            url :'http://localhost:8082/addTag/',
+            url :`${serviceConfig.postURL}/addTag/`,
             data:JSON.stringify({
                 id:"00000000-0000-0000-0000-000000000000",
                 TagName: dialogValue.TagName,
@@ -88,7 +89,7 @@ function AddPost() {
     const getAllTags = ()=>{
         axios({
             method : 'get',
-            url :'http://localhost:8082/getAllTags'
+            url :`${serviceConfig.postURL}/getAllTags`
         }).then(res =>{
             setTagNames(res.data)
         });
@@ -116,12 +117,12 @@ function AddPost() {
     const  add = async ()=>{
         const res_1 = await axios({
             method : 'post',
-            url :'http://localhost:8082/createlocation',
+            url :`${serviceConfig.postURL}/createlocation`,
             data:JSON.stringify(location),
         });
 
 
-        const URL = 'http://localhost:8081/GetUserProfilePrivacy?PostId='+post.UserID
+        const URL = `${serviceConfig.userURL}/GetUserProfilePrivacy?PostId=`+post.UserID
         const res_2 = await axios({
             method : 'get',
             url :URL,
@@ -130,7 +131,7 @@ function AddPost() {
         const newPost = {...post , private:false, LocationID: res_1.data};
         await axios({
             method : 'post',
-            url :'http://localhost:8082/createpost',
+            url :`${serviceConfig.postURL}/createpost`,
             data:JSON.stringify(newPost),
         })
 

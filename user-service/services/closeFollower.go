@@ -24,17 +24,20 @@ func (service *CloseFollowerService) AddMultipleFollowers(newFollowerId []DTO.Us
 		var closeFollower data.CloseFollower
 		closeFollower.IDCloseFollower = element.UserId
 		closeFollower.IDUser = id
-		err := service.Repo.AddCloseFollower(&closeFollower)
-		if err != nil {
-			return err
+		if service.Repo.CloseFollowerExists(element.UserId, id) != 1 {
+			err := service.Repo.AddCloseFollower(&closeFollower)
+			if err != nil {
+				return err
+			}
 		}
+
 	}
 	return nil
 }
 
-func (service *CloseFollowerService) RemoveManyByID(ids []DTO.UserDTO) error {
+func (service *CloseFollowerService) RemoveManyByID(ids []DTO.UserDTO, id uuid.UUID) error {
 	for _, element := range ids {
-		err := service.Repo.RemoveManyByID(element)
+		err := service.Repo.RemoveManyByID(element, id)
 		if err != nil {
 			return err
 		}

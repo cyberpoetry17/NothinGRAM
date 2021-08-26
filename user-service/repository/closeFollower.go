@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -37,7 +38,7 @@ func (repo *CloseFollowerRepository) DeleteCloseFollowersForUser(userid string) 
 }
 
 func (repo *CloseFollowerRepository) RemoveCloseFollower(follower *data.CloseFollower) error {
-	result := repo.Database.Where("idclosefollower=? and iduser=?", follower.IDCloseFollower, follower.IDUser).Delete(follower)
+	result := repo.Database.Where("idfollower=? and iduser=?", follower.IDCloseFollower, follower.IDUser).Delete(follower)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -63,11 +64,22 @@ func (repo *CloseFollowerRepository) GetAllCloseFollowerUser(userid string) []st
 	return frontList
 }
 
-func (repo *CloseFollowerRepository) RemoveManyByID(element DTO.UserDTO) error {
-	result := repo.Database.Where("idfollower=?", element.UserId).Delete(&data.CloseFollower{})
+func (repo *CloseFollowerRepository) RemoveManyByID(element DTO.UserDTO, id uuid.UUID) error {
+	result := repo.Database.Where("idfollower=? and iduser=?", element.UserId, id).Delete(&data.CloseFollower{})
 	if result.Error != nil {
 		return result.Error
 	}
 
 	return nil
+}
+
+func (repo *CloseFollowerRepository) CloseFollowerExists(idclosefollower uuid.UUID, iduser uuid.UUID) int {
+	user := data.CloseFollower{}
+	err := repo.Database.Where("idfollower=? and iduser=?", idclosefollower, iduser).First(&user).Error
+	if err != nil {
+		return 0
+
+	}
+
+	return 1
 }

@@ -171,7 +171,6 @@ func (repo PostRepo) RemovePost(id string) bool{
 	var posts = repo.GetAll()
 	for _,element := range posts{
 		if element.ID.String() == id {
-			fmt.Println("usao")
 			repo.Database.Delete(&element)
 		}
 	}

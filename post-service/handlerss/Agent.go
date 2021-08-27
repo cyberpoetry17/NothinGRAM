@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -32,18 +33,15 @@ func (handler *AgentHandler) CreateAgent(w http.ResponseWriter, r *http.Request)
 }
 
 func (handler *AgentHandler) DeleteAgent(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("deleting like")
-	var agent data.Agent
-	err := json.NewDecoder(r.Body).Decode(&agent)
-	if err != nil {
-		//TODO log
+	fmt.Println("Deleting agent")
+	vars := mux.Vars(r)
+	id := vars["agentemail"]
+	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(agent)
-	isItDeleted:= handler.Service.RemoveAgent(agent.ID.String())
+	isItDeleted:= handler.Service.RemoveAgent(id)
 	if isItDeleted == false{
-		fmt.Println(err)
 		w.WriteHeader(http.StatusExpectationFailed)
 	}
 	w.WriteHeader(http.StatusOK)

@@ -26,10 +26,10 @@ func (repo *AgentRepo) GetAll() []data.Agent{
 	return agents
 }
 
-func (repo AgentRepo) RemoveAgent(id string) bool{
-	var posts = repo.GetAll()
-	for _,element := range posts{
-		if element.ID.String() == id {
+func (repo *AgentRepo) RemoveAgent(id string) bool{
+	var agents = repo.GetAll()
+	for _,element := range agents{
+		if element.Email == id {
 			repo.Database.Delete(&element)
 			return true
 		}

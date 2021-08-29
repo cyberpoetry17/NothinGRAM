@@ -49,8 +49,9 @@ func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler,
 
 func agentHandleFuncs(router *mux.Router, agentHandler *handlerss.AgentHandler) {
 	router.HandleFunc("/addAgent", agentHandler.CreateAgent).Methods("POST")
-	router.HandleFunc("/getAllAgents", agentHandler.GetAll).Methods("GET")
-	router.HandleFunc("/removeAgent", agentHandler.DeleteAgent).Methods("DELETE")
+	router.HandleFunc("/getallagents", agentHandler.GetAll).Methods("GET")
+	router.HandleFunc("/removeAgent/{agentemail}", agentHandler.DeleteAgent).Methods("POST")
+
 }
 
 func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) {

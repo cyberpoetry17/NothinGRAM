@@ -114,7 +114,6 @@ export class Profile extends React.Component{
             <>
             <div className="profile">
                     <div className="post__headerLeft">
-                        <img src="" alt="" className="post__profilePic"/>slika
                         <div className="profile__header">
                             <h1 style={{marginLeft:"8px"}}>{user.name}</h1>
                             {(window.localStorage.getItem('token') != null && this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username ) ?
@@ -122,13 +121,13 @@ export class Profile extends React.Component{
                                 <BrowserRouter>
                                 <Nav className="navbarprofile" activeKey="/" >
                                     <Nav.Item>
-                                        <Nav.Link href="/addPost">ADD POST</Nav.Link>
+                                        <Nav.Link href="/addPost">Add post</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link href="/addStory">ADD STORY</Nav.Link>
+                                        <Nav.Link href="/addStory">Add story</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item >
-                                        <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Your liked/disliked content</Nav.Link>
+                                        <Nav.Link href={"/userinteracted/"+jwt_decode(localStorage.getItem('token')).Username}>Liked/disliked content</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item >
                                         <Nav.Link href="/verification">User Verification</Nav.Link>
@@ -145,6 +144,19 @@ export class Profile extends React.Component{
                                     <Nav.Item >
                                         <Nav.Link href={"/stories"}>Stories</Nav.Link>
                                     </Nav.Item>
+                                    {jwt_decode(localStorage.getItem('token')).Role === 1 ? 
+                                    <>
+                                     <Nav.Item >
+                                     <Nav.Link href={"/agentrequests"}>Agent Requests</Nav.Link>
+                                     </Nav.Item>
+                                     <Nav.Item>
+                                     <Nav.Link href="/addAgent">ADD AGENT</Nav.Link>
+                                     </Nav.Item>
+                                     </>
+                                        :
+                                     null 
+                                    }
+                                   
                                 </Nav>
                                 </BrowserRouter>
                                 </div>

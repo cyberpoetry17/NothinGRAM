@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Container, Row, Col, Button, FormControl} from 'react-bootstrap';
 import { serviceConfig } from "../applicationSettings.js";
+import { app } from './base';
 import { withRouter } from "react-router";
 
 export class Verification extends React.Component {
@@ -12,6 +13,7 @@ export class Verification extends React.Component {
             _surname: "",
             _username: "",
             _category: 0,
+            _mediapath: "",
         };
 
         //this.child = React.createRef();
@@ -23,6 +25,17 @@ export class Verification extends React.Component {
         this.handleChangeBusiness = this.handleChangeBusiness.bind(this);
         this.handleChangeBrand = this.handleChangeBrand.bind(this);
         this.handleChangeOrganization = this.handleChangeOrganization.bind(this);
+    }
+
+    fileChange = async (e)=>{
+        const file = e.target.files[0]
+        const storageRef = app.storage().ref()
+        const fileRef = storageRef.child(file.name)
+        await fileRef.put(file)
+        var a = await fileRef.getDownloadURL()
+        console.log("file paths:",a)          
+        this.setState({ _mediapath: a})
+        console.log(this.state._mediapath)
     }
 
     handleSubmit(e) {
@@ -66,7 +79,7 @@ export class Verification extends React.Component {
 
     loadUserData() {
         var token = localStorage.getItem("token");
-        var user = nil;
+        var user = null;
 
         const requestOpt = {
             method: "GET",
@@ -96,6 +109,7 @@ export class Verification extends React.Component {
             _name,
             _surname,
             _username,
+            _mediapath,
             _category,
           } = this.state;
 
@@ -103,8 +117,11 @@ export class Verification extends React.Component {
             name: _name,
             surname: _surname,
             username: _username,
+            mediapath: _mediapath,
             category: _category,
         };
+
+        console.log(JSON.stringify(verificationRequest))
 
         const verificationRequestOptions = {
             method: "POST",
@@ -180,6 +197,14 @@ export class Verification extends React.Component {
                                     placeholder="Username"
                                     onChange={this.handleChange}
                                 />
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group>
+                                <Form.File id="exampleFormControlFile1" label="Select picture" onChange={this.fileChange} accept=".mp4,.jpg,.jpeg,.png"/>
+                            </Form.Group>
+                            <Form.Group>
+                                <img width="100" height="100" src={this.state._mediapath}/>
                             </Form.Group>
                         </Form.Row>
                         <div>

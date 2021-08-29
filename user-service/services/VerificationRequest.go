@@ -15,6 +15,7 @@ type UserVerificationRequest struct {
 	Username      string             `json:"username"`
 	Category      data.Category      `json:"category"`
 	RequestStatus data.RequestStatus `json:"status"`
+	PicturePath   string             `json:"picture"`
 }
 
 func (service *VerificationRequestService) CreateVerificationRequest(verificationRequest *data.VerificationRequest) error {

@@ -27,6 +27,7 @@ func CreateVerificationRequestFromDTO(dto services.UserVerificationRequest) *dat
 	verificationRequest.Username = dto.Username
 	verificationRequest.Category = dto.Category
 	verificationRequest.RequestStatus = 3
+	verificationRequest.PicturePath = dto.PicturePath
 
 	return &verificationRequest
 }

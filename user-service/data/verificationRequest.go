@@ -12,6 +12,7 @@ type VerificationRequest struct {
 	Username      string        `gorm:"column:username"        json:"username"`
 	Category      Category      `gorm:"column:category"        json:"category"`
 	RequestStatus RequestStatus `gorm:"column:status"          json:"status"`
+	PicturePath   string        `gorm:"column:picture"         json:"picture"`
 }
 
 func (verificationRequest *VerificationRequest) BeforeCreate(scope *gorm.DB) error {

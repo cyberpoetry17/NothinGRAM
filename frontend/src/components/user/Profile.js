@@ -145,9 +145,14 @@ export class Profile extends React.Component{
                                         <Nav.Link href={"/stories"}>Stories</Nav.Link>
                                     </Nav.Item>
                                     {jwt_decode(localStorage.getItem('token')).Role === 1 ? 
+                                    <>
                                      <Nav.Item >
                                      <Nav.Link href={"/agentrequests"}>Agent Requests</Nav.Link>
                                      </Nav.Item>
+                                     <Nav.Item>
+                                     <Nav.Link href="/addAgent">ADD AGENT</Nav.Link>
+                                     </Nav.Item>
+                                     </>
                                         :
                                      null 
                                     }

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
 import "../../styles/post-style.css";
+import {serviceConfig} from '../../applicationSettings'
+
 
 export default function Comment({comments,posteduser}){
 
@@ -9,7 +11,7 @@ export default function Comment({comments,posteduser}){
     useEffect(()=>GetUserByUserId(),[])
     
     const GetUserByUserId = () =>{
-        axios.get('http://localhost:8080/username/'+posteduser).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/username/`+posteduser).then((response)=>{
             const data = response.data;
             setCommentUser(data)
         })

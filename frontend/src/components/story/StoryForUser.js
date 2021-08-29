@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 import Story from './Story';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
+import {serviceConfig} from '../../applicationSettings.js'
 
 export default function StoryForUser() {
     const [stories, setStories] = useState(null);
@@ -13,7 +14,7 @@ export default function StoryForUser() {
         var userId = jwt_decode(localStorage.getItem('token')).UserID;
         axios({
             method : 'get',
-            url :'http://localhost:8080/getUserStories/'+userId,
+            url :`${serviceConfig.postURL}/getUserStories/`+userId,
         }).then(res =>{
             console.log(res.data," media for story");
             setStories(res.data);
@@ -28,7 +29,7 @@ export default function StoryForUser() {
         if(e == true){
             axios({
                 method : 'post',
-                url :'http://localhost:8080/AddToStoryHighlights/'+id
+                url :`${serviceConfig.postURL}/AddToStoryHighlights/`+id
             });
         }else{
 

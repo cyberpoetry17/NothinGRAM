@@ -24,6 +24,8 @@ import SearchBar from './components/SearchBar';
 import LocationSearch from './components/LocationSearch';
 import TagSearch from './components/TagSearch';
 import ReportedFeed from './components/feed/ReportedFeed';
+import AddAgent from './components/AddAgent';
+import AgentConfirmationPage from './components/user/AgentConfirmationPage';
 
 export default function App() {
 
@@ -75,11 +77,16 @@ export default function App() {
               <Nav.Item>
                 <Nav.Link href="/register">SIGN UP!</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/addAgent">ADD AGENT</Nav.Link>
+              </Nav.Item>
               </>
               }
           </Nav>
 
         <Switch >
+          <Route path="/agentrequests" component={AgentConfirmationPage}/>
+          <Route path="/addAgent" component={AddAgent}/>
           <Route path="/reportfeed" component={ReportedFeed}/>
           <Route path="/userinteracted/:username" component={UserInteractedContent}/>
           <Route path="/requests/:username" component={ProfileRequests}/>

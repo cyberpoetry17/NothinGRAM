@@ -48,6 +48,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/GetUserProfilePrivacy", handler.GetUserProfilePrivacy).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/getuserwhofollow", handler.GetAllUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/deleteprofile/{userid}", handler.DeleteProfile).Methods(http.MethodPost)
+	router.HandleFunc("/confirmagent", handler.CreateUserFromAgent).Methods(http.MethodPost,http.MethodOptions)
 
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 

@@ -4,6 +4,7 @@ import axios from 'axios';
 import {Link} from 'react-router-dom'
 import "../../styles/story.css";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
+import {serviceConfig} from '../../applicationSettings.js'
 
 
 export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnStoryHighlights}) {
@@ -25,7 +26,7 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
     const onLoad = () => {
         axios({
             method : 'get',
-            url :'http://localhost:8080/GetMediaForStory?StoryId='+IdStory,
+            url :`${serviceConfig.postURL}/GetMediaForStory?StoryId=`+IdStory,
         }).then(res =>{
             console.log(res.data," media for story")
             setMedia(res.data)
@@ -33,9 +34,9 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
         console.log(UserId , "user id")
         axios({
             method : 'get',
-            url :'http://localhost:8080/username/'+UserId,
+            url :`${serviceConfig.userURL}/username/`+UserId,
         }).then(res =>{
-            setUserName(res.data.substring(1,(res.data.length)-2));
+            setUserName(res.data.substring(0,(res.data.length)));
         });
 
     }
@@ -64,12 +65,12 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
         if(e == true){
             axios({
                 method : 'post',
-                url :'http://localhost:8080/AddToStoryHighlights/'+IdStory
+                url :`${serviceConfig.postURL}/AddToStoryHighlights/`+IdStory
             });
         }else{
             axios({
                 method : 'post',
-                url :'http://localhost:8080/RemoveFromStoryHighlights/'+IdStory
+                url :`${serviceConfig.postURL}/RemoveFromStoryHighlights/`+IdStory
             });
         }
         

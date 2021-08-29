@@ -51,7 +51,7 @@ class AddCloseFollower extends React.Component {
 
       credentials: "same-origin",
     };
-    fetch(`${serviceConfig.baseURL}/getclosefollowers`, requestOpt)
+    fetch(`${serviceConfig.userURL}/getclosefollowers`, requestOpt)
       .then((response) => response.json())
       .then((responseJson) => {
         var followers = responseJson;
@@ -75,7 +75,7 @@ class AddCloseFollower extends React.Component {
 
       credentials: "same-origin",
     };
-    fetch(`${serviceConfig.baseURL}/getuserwhofollow`, requestOpt)
+    fetch(`${serviceConfig.userURL}/getuserwhofollow`, requestOpt)
       .then((response) => response.json())
       .then((responseJson) => {
         var followers = responseJson;
@@ -109,7 +109,7 @@ class AddCloseFollower extends React.Component {
       credentials: "same-origin", // ,'access-control-allow-origin' : '*'
     };
 
-    fetch(`${serviceConfig.baseURL}/setclosefollowers`, requestOpt)
+    fetch(`${serviceConfig.userURL}/setclosefollowers`, requestOpt)
       .then((response) => {
         if (!response.ok) {
           console.log("neuspelo");

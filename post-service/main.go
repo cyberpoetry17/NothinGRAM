@@ -16,18 +16,18 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-func initializeRepository(database *gorm.DB) (*repository.PostRepo,*repository.TagRepo,*repository.CommentRepo,*repository.LikeRepo,*repository.DislikeRepo, *repository.MediaRepo,*repository.LocationRepo,*repository.ReportedPostRepo,*repository.StoryRepo) {
-	return &repository.PostRepo{Database: database}, &repository.TagRepo{Database: database}, &repository.CommentRepo{Database: database},&repository.LikeRepo{Database: database},&repository.DislikeRepo{Database: database}, &repository.MediaRepo{Database: database},&repository.LocationRepo{Database: database},&repository.ReportedPostRepo{Database: database}, &repository.StoryRepo{Database: database}
+func initializeRepository(database *gorm.DB) (*repository.PostRepo,*repository.TagRepo,*repository.CommentRepo,*repository.LikeRepo,*repository.DislikeRepo, *repository.MediaRepo,*repository.LocationRepo,*repository.ReportedPostRepo,*repository.StoryRepo,*repository.AgentRepo) {
+	return &repository.PostRepo{Database: database}, &repository.TagRepo{Database: database}, &repository.CommentRepo{Database: database},&repository.LikeRepo{Database: database},&repository.DislikeRepo{Database: database}, &repository.MediaRepo{Database: database},&repository.LocationRepo{Database: database},&repository.ReportedPostRepo{Database: database}, &repository.StoryRepo{Database: database}, &repository.AgentRepo{Database: database}
 }
 
-func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRepo, repoComment *repository.CommentRepo, repoLike *repository.LikeRepo,repoDislike *repository.DislikeRepo, repoMedia *repository.MediaRepo,repoLocation *repository.LocationRepo,repoReport *repository.ReportedPostRepo,repoStory *repository.StoryRepo) (*services.PostService,*services.TagService,*services.CommentService,*services.LikeService,*services.DislikeService,*services.MediaService,*services.LocationService,*services.ReportedPostService,*services.StoryService) {
-	return &services.PostService{PostRepo: repoPost,TagRepo: repoTag,LikeRepo:repoLike,DislikeRepo: repoDislike,MediaRepo: repoMedia,LocationRepo: repoLocation,ReportRepo: repoReport,CommentRepo: repoComment}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation},&services.ReportedPostService{Repo: repoReport}, &services.StoryService{StoryRepo: repoStory,PostRepo: repoPost, MediaRepo: repoMedia}
+func initializeServices(repoPost *repository.PostRepo, repoTag *repository.TagRepo, repoComment *repository.CommentRepo, repoLike *repository.LikeRepo,repoDislike *repository.DislikeRepo, repoMedia *repository.MediaRepo,repoLocation *repository.LocationRepo,repoReport *repository.ReportedPostRepo,repoStory *repository.StoryRepo, repoAgent *repository.AgentRepo) (*services.PostService,*services.TagService,*services.CommentService,*services.LikeService,*services.DislikeService,*services.MediaService,*services.LocationService,*services.ReportedPostService,*services.StoryService,*services.AgentService) {
+	return &services.PostService{PostRepo: repoPost,TagRepo: repoTag,LikeRepo:repoLike,DislikeRepo: repoDislike,MediaRepo: repoMedia,LocationRepo: repoLocation,ReportRepo: repoReport,CommentRepo: repoComment}, &services.TagService{Repo: repoTag}, &services.CommentService{Repo: repoComment},&services.LikeService{Repo: repoLike},&services.DislikeService{Repo: repoDislike},&services.MediaService{Repo: repoMedia},&services.LocationService{Repo: repoLocation},&services.ReportedPostService{Repo: repoReport}, &services.StoryService{StoryRepo: repoStory,PostRepo: repoPost, MediaRepo: repoMedia}, &services.AgentService{AgentRepo: repoAgent}
 }
 
-func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService, serviceMedia *services.MediaService,serviceLocation *services.LocationService,serviceReport *services.ReportedPostService, serviceStory *services.StoryService) (*handlerss.PostHandler,*handlerss.TagHandler,*handlerss.CommentHandler,*handlerss.LikeHandler,*handlerss.DislikeHandler,*handlerss.MediaHandler,*handlerss.LocationHandler,*handlerss.ReportedPostHandler,*handlerss.StoryHandler) {
-	return &handlerss.PostHandler{Service: servicePost}, &handlerss.TagHandler{Service: serviceTag}, &handlerss.CommentHandler{Service: serviceComment},&handlerss.LikeHandler{Service: serviceLike},&handlerss.DislikeHandler{Service: serviceDislike}, &handlerss.MediaHandler{Service: serviceMedia},&handlerss.LocationHandler{Service: serviceLocation},&handlerss.ReportedPostHandler{Service: serviceReport},&handlerss.StoryHandler{Service: serviceStory}
+func initializeHandlers(servicePost *services.PostService,serviceTag *services.TagService, serviceComment *services.CommentService,serviceLike *services.LikeService,serviceDislike *services.DislikeService, serviceMedia *services.MediaService,serviceLocation *services.LocationService,serviceReport *services.ReportedPostService, serviceStory *services.StoryService, serviceAgent *services.AgentService) (*handlerss.PostHandler,*handlerss.TagHandler,*handlerss.CommentHandler,*handlerss.LikeHandler,*handlerss.DislikeHandler,*handlerss.MediaHandler,*handlerss.LocationHandler,*handlerss.ReportedPostHandler,*handlerss.StoryHandler,*handlerss.AgentHandler) {
+	return &handlerss.PostHandler{Service: servicePost}, &handlerss.TagHandler{Service: serviceTag}, &handlerss.CommentHandler{Service: serviceComment},&handlerss.LikeHandler{Service: serviceLike},&handlerss.DislikeHandler{Service: serviceDislike}, &handlerss.MediaHandler{Service: serviceMedia},&handlerss.LocationHandler{Service: serviceLocation},&handlerss.ReportedPostHandler{Service: serviceReport},&handlerss.StoryHandler{Service: serviceStory}, &handlerss.AgentHandler{Service: serviceAgent}
 }
-func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler, commentHandler *handlerss.CommentHandler,likeHandler *handlerss.LikeHandler,dislikeHandler *handlerss.DislikeHandler, mediaHandler *handlerss.MediaHandler,locationHandler *handlerss.LocationHandler,reportHandler *handlerss.ReportedPostHandler, storyHandler *handlerss.StoryHandler) {
+func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler, commentHandler *handlerss.CommentHandler,likeHandler *handlerss.LikeHandler,dislikeHandler *handlerss.DislikeHandler, mediaHandler *handlerss.MediaHandler,locationHandler *handlerss.LocationHandler,reportHandler *handlerss.ReportedPostHandler, storyHandler *handlerss.StoryHandler, agentHandler *handlerss.AgentHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	c:=cors.New(cors.Options{AllowedOrigins: []string{"*"},AllowCredentials: true})
@@ -42,7 +42,16 @@ func handleFunc(handler *handlerss.PostHandler,tagHandler *handlerss.TagHandler,
 	locationHandleFuncs(router, locationHandler)
 	reportHandleFuncs(reportHandler,router)
 	storyHandleFuncs(router, storyHandler)
+	agentHandleFuncs(router, agentHandler)
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("POST_SERVICE_PORT")), hand))
+}
+
+func agentHandleFuncs(router *mux.Router, agentHandler *handlerss.AgentHandler) {
+	router.HandleFunc("/addAgent", agentHandler.CreateAgent).Methods("POST")
+	router.HandleFunc("/getallagents", agentHandler.GetAll).Methods("GET")
+	router.HandleFunc("/removeAgent/{agentemail}", agentHandler.DeleteAgent).Methods("POST")
+
 }
 
 func storyHandleFuncs(router *mux.Router, storyHandler *handlerss.StoryHandler) {
@@ -141,10 +150,10 @@ func main() {
 	//host, dbUser, dbName, password, dbPort string)
 	db := repository.SetRepositoriesAndDatabase(host, dbUser, dbName, password, dbPort) //ovo je baza
 
-	repoPost, repoTag,repoComment,repoLike,repoDislike,repoMedia,repoLocation,repoReport,repoStory := initializeRepository(db)
-	servicePost,serviceTag, serviceComment, serviceLike, serviceDislike,serviceMedia,serviceLocation,serviceReport,serviceStory := initializeServices(repoPost, repoTag, repoComment,repoLike,repoDislike,repoMedia,repoLocation,repoReport,repoStory)
-	handlerPost,handlerTag, handlerComment,handlerLike, handlerDislike, handlerMedia,handlerLocation,handlerReport,handlerStory := initializeHandlers(servicePost,serviceTag,serviceComment,serviceLike,serviceDislike,serviceMedia,serviceLocation,serviceReport,serviceStory)
-	handleFunc(handlerPost,handlerTag,handlerComment,handlerLike,handlerDislike,handlerMedia,handlerLocation,handlerReport,handlerStory)
+	repoPost, repoTag,repoComment,repoLike,repoDislike,repoMedia,repoLocation,repoReport,repoStory,repoAgent := initializeRepository(db)
+	servicePost,serviceTag, serviceComment, serviceLike, serviceDislike,serviceMedia,serviceLocation,serviceReport,serviceStory,serviceAgent := initializeServices(repoPost, repoTag, repoComment,repoLike,repoDislike,repoMedia,repoLocation,repoReport,repoStory,repoAgent)
+	handlerPost,handlerTag, handlerComment,handlerLike, handlerDislike, handlerMedia,handlerLocation,handlerReport,handlerStory,handlerAgent := initializeHandlers(servicePost,serviceTag,serviceComment,serviceLike,serviceDislike,serviceMedia,serviceLocation,serviceReport,serviceStory,serviceAgent)
+	handleFunc(handlerPost,handlerTag,handlerComment,handlerLike,handlerDislike,handlerMedia,handlerLocation,handlerReport,handlerStory,handlerAgent)
 	fmt.Println(os.Getenv("Port is:"+"PORT"))
 
 

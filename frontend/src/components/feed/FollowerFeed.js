@@ -4,6 +4,7 @@ import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import Stories from "../story/Stories";
+import {serviceConfig} from '../../applicationSettings.js'
 
 export class UserInteractedContent extends React.Component{
 
@@ -20,10 +21,10 @@ export class UserInteractedContent extends React.Component{
     }
 
     GetAllFollowerIds(){
-        axios.get('http://localhost:8080/getallfollowedforloggeduser/'+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
+        axios.get(`${serviceConfig.userURL}/getallfollowedforloggeduser/`+jwt_decode(localStorage.getItem('token')).UserID).then((response)=>{
             
             response.data?.map((follow) =>(     
-                axios.get('http://localhost:8080/allpostsbyuserid/'+follow).then((responsenew)=>{
+                axios.get(`${serviceConfig.postURL}/allpostsbyuserid/`+follow).then((responsenew)=>{
                 const data = responsenew.data;
                 console.log(data)
                 if(data != null)

@@ -98,7 +98,7 @@ handleSubmit(e){
 
       credentials: "same-origin", //,'access-control-allow-origin' : '*'
     };
-    fetch(`${serviceConfig.baseURL}/user`, requestOpt)
+    fetch(`${serviceConfig.userURL}/user`, requestOpt)
       .then((response) => response.json())
       .then((responseJson) => {
         // this.setState({ user : responseJson })
@@ -175,7 +175,7 @@ handleSubmit(e){
       body: JSON.stringify(updateUser),
     };
 
-    fetch(`${serviceConfig.baseURL}/update`, requestOptions)
+    fetch(`${serviceConfig.userURL}/update`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

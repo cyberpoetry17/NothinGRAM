@@ -45,7 +45,7 @@ class Login extends React.Component{
             credentials: 'same-origin'// ,'access-control-allow-origin' : '*'
         }
 
-        fetch(`${serviceConfig.baseURL}/login`,requestOpt)
+        fetch(`${serviceConfig.userURL}/login`,requestOpt)
             .then(response => {
 
                 if(!response.ok){

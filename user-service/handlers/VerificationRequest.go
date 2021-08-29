@@ -26,13 +26,15 @@ func CreateVerificationRequestFromDTO(dto services.UserVerificationRequest) *dat
 	verificationRequest.Surname = dto.Surname
 	verificationRequest.Username = dto.Username
 	verificationRequest.Category = dto.Category
-	verificationRequest.RequestStatus = dto.RequestStatus
+	verificationRequest.RequestStatus = 3
 
 	return &verificationRequest
 }
 
 func (handler *VerificationRequestHandler) CreateVerificationRequest(w http.ResponseWriter, r *http.Request) {
-	//setupResponse(&w, r)
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	if (*r).Method == "OPTIONS" {
 		return
 	}

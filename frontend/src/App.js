@@ -26,6 +26,7 @@ import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
 import AddCloseFollower from './components/AddCloseFollower';
+import AdministratorHomepage from './components/AdministratorHomepage';
 
 
 export default function App() {

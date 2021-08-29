@@ -60,7 +60,36 @@ export class Verification extends React.Component {
         this.setState({ _category: 6})
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        this.loadUserData();
+    }
+
+    loadUserData() {
+        var token = localStorage.getItem("token");
+        var user = nil;
+
+        const requestOpt = {
+            method: "GET",
+            headers: {
+              "Content-Type": "aplication/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "same-origin",
+        };
+        fetch(`${serviceConfig.baseURL}/user`, requestOpt)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                user = responseJson;
+                this.setState({
+                    _name: user.name,
+                    _surname: user.surname,
+                    _username: user.username,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
 
     createVerificationRequest() {
         const {
@@ -88,6 +117,7 @@ export class Verification extends React.Component {
           if (!response.ok) {
             return Promise.reject(response);
           }
+          alert("Verification request sent. Returning to homepage.");
           this.props.history.push("/home");
         })
         .catch((response) => {

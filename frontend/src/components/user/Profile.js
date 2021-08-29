@@ -6,7 +6,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {useState,useEffect} from 'react'
 import queryString from 'query-string';
-import {Nav} from 'react-bootstrap';
+import {Nav,Button} from 'react-bootstrap';
 import StoryHighlights from '../story/StoryHighlights';
 
 export class Profile extends React.Component{
@@ -18,38 +18,82 @@ export class Profile extends React.Component{
           posts: [],
           user:[],
           followed:false,
+          blocked:false,
+          muted:false,
           isMyProfile:false
         };
       }
     async componentDidMount(){
         await this.IsProfileFollowedByLoggedUser();
+       await this.IsProfileBlockedByLoggedUser();
+         await this.IsProfileMutedByLoggedUser();
         this.GetUserByUserId();
         this.GetAllPostsForUserDependingOnFollowage();
+    
         
     }
+
 
     async IsProfileFollowedByLoggedUser(){
         if (window.localStorage.getItem('token') != null){
             var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-            await axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+            await axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
                 const data = response.data
-                axios.post('http://localhost:8080/api/user/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
+                axios.post('http://localhost:8081/getfollowstatus',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then((response)=>{
                 this.setState({followed:response.data})
                 })
             })
         }  
     }
 
+     async IsProfileBlockedByLoggedUser(){
+        if (window.localStorage.getItem('token') != null){
+            var userblocking = jwt_decode(localStorage.getItem('token')).UserID;
+           await  axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+                const data = response.data
+                console.log(data)
+              axios.post('http://localhost:8081/getblockedstatus',JSON.stringify({blockedID:userblocking,userID:data.UserId})).then((response)=>{
+                this.setState({blocked:response.data})
+                if(response.data == true){ 
+                    console.log("uslo u petlju")
+                    this.props.history.push("/login");}    
+            })
+            })
+        }  
+    }
+
+    
+    async IsProfileMutedByLoggedUser(){
+        if (window.localStorage.getItem('token') != null){
+            var userblocking = jwt_decode(localStorage.getItem('token')).UserID;
+           await  axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+                const data = response.data
+                console.log(data)
+              axios.post('http://localhost:8081/getmutedstatus',JSON.stringify({mutedID:userblocking,userID:data.UserId})).then((response)=>{
+                this.setState({muted:response.data})
+             
+                  
+            })
+            })
+        }  
+    }
+
+
+
+
+
     GetUserByUserId(){
-        axios.get('http://localhost:8080/api/user/getuserbyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get('http://localhost:8081/getuserbyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({user:data});
         })
         .catch(()=>{alert('didnt retrieve user')});
     }
 
+  
+
     GetAllPostsForUserDependingOnFollowage(){
-        axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             this.setState({userid:response.data.UserId})
             if (window.localStorage.getItem('token') != null){
                 if(response.data.UserId == jwt_decode(localStorage.getItem('token')).UserID){
@@ -57,7 +101,7 @@ export class Profile extends React.Component{
                 }
                 if((this.state.followed == true || this.props.match.params.username==jwt_decode(localStorage.getItem('token')).Username) ||
                 (response.data.Private == false && this.state.followed==false && this.props.match.params.username!=jwt_decode(localStorage.getItem('token')).Username)){
-                    axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+this.state.userid).then((response)=>{
+                    axios.get('http://localhost:8080/allpostsbyuserid/'+this.state.userid).then((response)=>{
                     const data = response.data;
                     this.setState({posts:data})
                     }).catch(()=>alert('didnt retrieve all posts for user'))
@@ -65,38 +109,96 @@ export class Profile extends React.Component{
             }
             else if (response.data.Private == false && this.state.followed==false){
 
-                axios.get('http://localhost:8080/api/post/allpostsbyuserid/'+this.state.userid).then((response)=>{
+                axios.get('http://localhost:8080/allpostsbyuserid/'+this.state.userid).then((response)=>{
                     const data = response.data;
                     this.setState({posts:data})
                     }).catch(()=>alert('didnt retrieve all posts for user not logged'))
                 }
         }).catch(()=>{alert('didnt retrieve user by username')});
     }
+    BlockUser(event){
+        if (window.localStorage.getItem('token') != null){
+            var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
+            axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username)
+            .then((response)=>{
+                const dataa = response.data
+                console.log(dataa);
+                if(this.state.blocked == false){
+                    axios.post('http://localhost:8081/block',JSON.stringify({blockedID:userfollowing,userID:dataa.UserId})).then(
+                        ()=>{
+                            alert('You have blocked user with userid' + this.state.userid);
+                            this.setState({blocked:true});
+                        }).then(()=>{this.props.history.push("/login");})
+                        .then((response) =>{
+                            axios.post('http://localhost:8081/unfollow',JSON.stringify({idfollower:userfollowing,iduser:dataa.UserId}))
+                            .then(
+                                alert("User has been unfollowed!")
+                            ).catch("Something went wrong!")
+                        })
+                }
+
+            }).catch(()=>{alert('didnt retrieve user by username')});
+        }
+    }
+
+
+    MuteUser(event){
+        if (window.localStorage.getItem('token') != null){
+            var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
+            axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username)
+            .then((response)=>{
+                const dataa = response.data
+                console.log(dataa);
+                if(this.state.muted == false){
+                    axios.post('http://localhost:8081/createMuted',JSON.stringify({mutedID:userfollowing,userID:dataa.UserId})).then(
+                        ()=>{
+                            alert('You have muted user with userid' + this.state.userid);
+                            this.setState({muted:true});
+                        })
+
+                }
+                else if (this.state.muted == true){
+                    axios.post('http://localhost:8081/removeMuted',JSON.stringify({mutedID:userfollowing,userID:dataa.UserId})).then(
+                    ()=>{
+                        alert('You have unmuted user with userid' + this.state.userid);
+                        this.setState({muted:false});
+                    })
+                }
+
+            }).catch(()=>{alert('didnt retrieve user by username')});
+        }
+    }
+
+
+
+
+
 
     FollowUser(event){
         if (window.localStorage.getItem('token') != null){
         var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
-        axios.get('http://localhost:8080/api/user/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        axios.get('http://localhost:8081/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
             const data = response.data
+            console.log(data)
             if(this.state.followed == false){
                 if(data.Private == false){
-                axios.post('http://localhost:8080/api/user/follow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
+                axios.post('http://localhost:8081/follow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
                 ()=>{
                     alert('You have followed user with userid' + this.state.userid);
                     this.setState({followed:true});
                 }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
                 }else{
-                    axios.post('http://localhost:8080/api/user/createfollowrequest',JSON.stringify({idfollower:userfollowing,idfollowed:data.UserId})).then(
+                    axios.post('http://localhost:8081/createfollowrequest',JSON.stringify({idfollower:userfollowing,idfollowed:data.UserId})).then(
                 ()=>{
                     alert('Follow request sent');
                 })
                 }
             }else if (this.state.followed == true){
-                axios.post('http://localhost:8080/api/user/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
+                axios.post('http://localhost:8081/unfollow',JSON.stringify({idfollower:userfollowing,iduser:data.UserId})).then(
                 ()=>{
                     alert('You have unfollowed user with userid' + this.state.userid);
                     this.setState({followed:false});
-                }).then(()=>this.GetAllPostsForUserDependingOnFollowage())
+                })
             }
         }).catch(()=>{alert('didnt retrieve user by username')});
     }else{
@@ -148,7 +250,11 @@ export class Profile extends React.Component{
                                 </BrowserRouter>
                                 </div>
                             :
-                                <button className="follow_but" onClick={this.FollowUser.bind(this)}>{this.state.followed ? "Unfollow" : "Follow"} </button>
+                            <div>
+                            <Button variant="primary" className="follow_but" onClick={this.FollowUser.bind(this)}>{this.state.followed ? "Unfollow" : "Follow"} </Button>
+                            <Button variant="danger" className="follow_but" onClick={this.BlockUser.bind(this)}>Block</Button>
+                            <Button variant="warning" className="follow_but" onClick={this.MuteUser.bind(this)}>{this.state.muted ? "Unmute" : "Mute"}</Button>
+                        </div>
                             }
                             
                         </div>

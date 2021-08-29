@@ -11,7 +11,7 @@ export default function StoryHighlights({userId}) {
         // var userId = jwt_decode(localStorage.getItem('token')).UserID;
         axios({
             method : 'get',
-            url :'http://localhost:8080/api/post/GetAllStoryHighlights/'+userId,
+            url :'http://localhost:8080/GetAllStoryHighlights/'+userId,
         }).then(res =>{
             console.log(res.data," media for story");
             setStories(res.data);

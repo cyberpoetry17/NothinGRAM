@@ -163,9 +163,9 @@ export default function Post({userid,postid,picpath,privatepost,tokenInfo,descri
     }
 
     const CheckIfUserReportedPost = () =>{
-        axios({method:'post',url:'http://localhost:8080/api/post/checkifreportedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
+        axios({method:'post',url:'http://localhost:8080/checkifreportedbyuser',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then((response)=>{
             if(response.data == false){
-                axios({method:'post',url:'http://localhost:8080/api/post/reportpost',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>{alert("Post has been reported.")});
+                axios({method:'post',url:'http://localhost:8080/reportpost',headers:{},data:JSON.stringify({userid:tokenInfo.UserID,postid})}).then(()=>{alert("Post has been reported.")});
             }else if(response.data == true){
                 alert("You already reported this post");
             }

@@ -6,7 +6,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {useState,useEffect} from 'react'
 import queryString from 'query-string';
-import {Nav} from 'react-bootstrap';
+import {Nav,Button} from 'react-bootstrap';
 import StoryHighlights from '../story/StoryHighlights';
 import {serviceConfig} from '../../applicationSettings.js'
 
@@ -19,11 +19,15 @@ export class Profile extends React.Component{
           posts: [],
           user:[],
           followed:false,
+          blocked:false,
+          muted:false,
           isMyProfile:false
         };
       }
     async componentDidMount(){
         await this.IsProfileFollowedByLoggedUser();
+       await this.IsProfileBlockedByLoggedUser();
+         await this.IsProfileMutedByLoggedUser();
         this.GetUserByUserId();
         this.GetAllPostsForUserDependingOnFollowage();
         
@@ -40,6 +44,42 @@ export class Profile extends React.Component{
             })
         }  
     }
+
+     async IsProfileBlockedByLoggedUser(){
+        if (window.localStorage.getItem('token') != null){
+            var userblocking = jwt_decode(localStorage.getItem('token')).UserID;
+           await  axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username).then((response)=>{
+                const data = response.data
+                console.log(data)
+              axios.post(`${serviceConfig.userURL}/getblockedstatus`,JSON.stringify({blockedID:userblocking,userID:data.UserId})).then((response)=>{
+                this.setState({blocked:response.data})
+                if(response.data == true){
+                    console.log("uslo u petlju")
+                    this.props.history.push("/login");}
+            })
+            })
+        }
+    }
+
+
+    async IsProfileMutedByLoggedUser(){
+        if (window.localStorage.getItem('token') != null){
+            var userblocking = jwt_decode(localStorage.getItem('token')).UserID;
+           await  axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username).then((response)=>{
+                const data = response.data
+                console.log(data)
+              axios.post(`${serviceConfig.userURL}/getmutedstatus`,JSON.stringify({mutedID:userblocking,userID:data.UserId})).then((response)=>{
+                this.setState({muted:response.data})
+
+
+            })
+            })
+        }
+    }
+
+
+
+
 
     GetUserByUserId(){
         axios.get(`${serviceConfig.userURL}/getuserbyusername/`+this.props.match.params.username).then((response)=>{
@@ -73,6 +113,63 @@ export class Profile extends React.Component{
                 }
         }).catch(()=>{alert('didnt retrieve user by username')});
     }
+    BlockUser(event){
+        if (window.localStorage.getItem('token') != null){
+            var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
+            axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username)
+            .then((response)=>{
+                const dataa = response.data
+                console.log(dataa);
+                if(this.state.blocked == false){
+                    axios.post(`${serviceConfig.userURL}/block`,JSON.stringify({blockedID:userfollowing,userID:dataa.UserId})).then(
+                        ()=>{
+                            alert('You have blocked user with userid' + this.state.userid);
+                            this.setState({blocked:true});
+                        }).then(()=>{this.props.history.push("/login");})
+                        .then((response) =>{
+                            axios.post(`${serviceConfig.userURL}//unfollow`,JSON.stringify({idfollower:userfollowing,iduser:dataa.UserId}))
+                            .then(
+                                alert("User has been unfollowed!")
+                            ).catch("Something went wrong!")
+                        })
+                }
+
+            }).catch(()=>{alert('didnt retrieve user by username')});
+        }
+    }
+
+
+    MuteUser(event){
+        if (window.localStorage.getItem('token') != null){
+            var userfollowing = jwt_decode(localStorage.getItem('token')).UserID;
+            axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username)
+            .then((response)=>{
+                const dataa = response.data
+                console.log(dataa);
+                if(this.state.muted == false){
+                    axios.post(`${serviceConfig.userURL}/createMuted`,JSON.stringify({mutedID:userfollowing,userID:dataa.UserId})).then(
+                        ()=>{
+                            alert('You have muted user with userid' + this.state.userid);
+                            this.setState({muted:true});
+                        })
+
+                }
+                else if (this.state.muted == true){
+                    axios.post(`${serviceConfig.userURL}/removeMuted`,JSON.stringify({mutedID:userfollowing,userID:dataa.UserId})).then(
+                    ()=>{
+                        alert('You have unmuted user with userid' + this.state.userid);
+                        this.setState({muted:false});
+                    })
+                }
+
+            }).catch(()=>{alert('didnt retrieve user by username')});
+        }
+    }
+
+
+
+
+
 
     FollowUser(event){
         if (window.localStorage.getItem('token') != null){
@@ -144,7 +241,7 @@ export class Profile extends React.Component{
                                     <Nav.Item >
                                         <Nav.Link href={"/stories"}>Stories</Nav.Link>
                                     </Nav.Item>
-                                    {jwt_decode(localStorage.getItem('token')).Role === 1 ? 
+                                    {jwt_decode(localStorage.getItem('token')).Role === 1 ?
                                     <>
                                      <Nav.Item >
                                      <Nav.Link href={"/agentrequests"}>Agent Requests</Nav.Link>
@@ -154,14 +251,18 @@ export class Profile extends React.Component{
                                      </Nav.Item>
                                      </>
                                         :
-                                     null 
+                                     null
                                     }
-                                   
+
                                 </Nav>
                                 </BrowserRouter>
                                 </div>
                             :
-                                <button className="follow_but" onClick={this.FollowUser.bind(this)}>{this.state.followed ? "Unfollow" : "Follow"} </button>
+                            <div>
+                            <Button variant="primary" className="follow_but" onClick={this.FollowUser.bind(this)}>{this.state.followed ? "Unfollow" : "Follow"} </Button>
+                            <Button variant="danger" className="follow_but" onClick={this.BlockUser.bind(this)}>Block</Button>
+                            <Button variant="warning" className="follow_but" onClick={this.MuteUser.bind(this)}>{this.state.muted ? "Unmute" : "Mute"}</Button>
+                        </div>
                             }
                             
                         </div>

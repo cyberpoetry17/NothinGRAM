@@ -6,7 +6,9 @@ import (
 )
 
 type FollowerService struct {
-	Repo *repository.FollowerRepo
+	Repo        *repository.FollowerRepo
+	RepoBlocked *repository.BlockedRepo
+	RepoMuted   *repository.MutedRepo
 }
 
 func (service *FollowerService) FollowUser(follower *data.Follower) error {
@@ -22,7 +24,21 @@ func (service *FollowerService) FollowStatusForProfile(follower *data.Follower) 
 }
 
 func (service *FollowerService) FollowedByUser(userid string) []string {
-	return service.Repo.FollowedByUser(userid)
+	muted := service.RepoMuted.GetAllMutedUsersByID(userid)
+	follower := service.Repo.FollowedByUser(userid)
+	var modifiedFollower = follower
+	for i := 0; i < len(muted); i++ {
+		for j := 0; j < len(follower); j++ {
+			if muted[i] == follower[j] {
+				modifiedFollower = append(modifiedFollower[:j], modifiedFollower[j+1:]...)
+			}
+
+		}
+
+	}
+
+	return modifiedFollower
+	// return service.Repo.FollowedByUser(userid)
 }
 
 // func (service *FollowerService) GetAllFollowersForUser(userId string) ([]data.Follower, error) {

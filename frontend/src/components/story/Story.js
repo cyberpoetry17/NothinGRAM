@@ -36,7 +36,7 @@ export default function Story({postId,type,IdStory,UserId,size,ForCloseF,ShowOnS
             method : 'get',
             url :`${serviceConfig.userURL}/username/`+UserId,
         }).then(res =>{
-            setUserName(res.data.substring(1,(res.data.length)-2));
+            setUserName(res.data.substring(0,(res.data.length)));
         });
 
     }

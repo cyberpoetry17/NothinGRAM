@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Container, Row, Col, Button, FormControl} from 'react-bootstrap';
-import { serviceConfig } from "../applicationSettings.js";
-import { app } from './base';
+import { serviceConfig } from "../../applicationSettings";
+import { app } from '../base';
 import { withRouter } from "react-router";
 
 export class Verification extends React.Component {
@@ -89,7 +89,7 @@ export class Verification extends React.Component {
             },
             credentials: "same-origin",
         };
-        fetch(`${serviceConfig.baseURL}/user`, requestOpt)
+        fetch(`${serviceConfig.userURL}/user`, requestOpt)
             .then((response) => response.json())
             .then((responseJson) => {
                 user = responseJson;
@@ -129,7 +129,7 @@ export class Verification extends React.Component {
             body: JSON.stringify(verificationRequest),
           };
 
-        fetch(`${serviceConfig.baseURL}/verification`, verificationRequestOptions)
+        fetch(`${serviceConfig.userURL}/verification`, verificationRequestOptions)
         .then((response) => {
           if (!response.ok) {
             return Promise.reject(response);

@@ -13,7 +13,7 @@ export default function VerificationRequests({request}){
                         status:request.status,
                         mediapath:request.mediapath
         }
-        axios.post(`${serviceConfig.baseURL}/acceptverification`, requestData).then(()=>window.location.reload())
+        axios.post(`${serviceConfig.userURL}/acceptverification`, requestData).then(()=>window.location.reload())
     }
 
     const DeclineVerificationRequest = () => {
@@ -24,7 +24,7 @@ export default function VerificationRequests({request}){
                         status:request.status,
                         mediapath:request.mediapath
         }
-        axios.post(`${serviceConfig.baseURL}/declineverification`, requestData).then(()=>window.location.reload())
+        axios.post(`${serviceConfig.userURL}/declineverification`, requestData).then(()=>window.location.reload())
     }
 
     return(

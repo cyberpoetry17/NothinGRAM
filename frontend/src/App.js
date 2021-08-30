@@ -26,6 +26,8 @@ import TagSearch from './components/TagSearch';
 import ReportedFeed from './components/feed/ReportedFeed';
 import AddAgent from './components/AddAgent';
 import AgentConfirmationPage from './components/user/AgentConfirmationPage';
+import VerificationPage from './components/VerificationPage'
+
 
 export default function App() {
 
@@ -92,7 +94,8 @@ export default function App() {
           <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/closefollowerr" component={AddCloseFollower}/>
-          <Route path="/verification/" component={Verification}/>
+          <Route path="/verification" component={Verification}/>
+          <Route path="/verificationrequests" component={VerificationPage}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route path="/search/locations/:location" render={(props) => (<LocationSearch location={props.match.params.location}/>)}/>
           <Route path="/search/tags/:tag" render={(props) => (<TagSearch location={props.match.params.tag}/>)}/>

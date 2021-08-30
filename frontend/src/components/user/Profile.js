@@ -247,9 +247,13 @@ export class Profile extends React.Component{
                                      <Nav.Link href={"/agentrequests"}>Agent Requests</Nav.Link>
                                      </Nav.Item>
                                      <Nav.Item>
-                                     <Nav.Link href="/addAgent">ADD AGENT</Nav.Link>
+                                     <Nav.Link href="/addAgent">Add Agent</Nav.Link>
+                                     </Nav.Item>
+                                     <Nav.Item>
+                                     <Nav.Link href="/verificationrequests">Verification requests</Nav.Link>
                                      </Nav.Item>
                                      </>
+
                                         :
                                      null
                                     }

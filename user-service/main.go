@@ -16,18 +16,18 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/services"
 )
 
-func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo, *repository.MutedRepo, *repository.FollowerRepo, *repository.FollowerRequestRepo, *repository.CloseFollowerRepository) {
-	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}, &repository.FollowerRepo{Database: database}, &repository.FollowerRequestRepo{Database: database}, &repository.CloseFollowerRepository{Database: database}
+func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.BlockedRepo, *repository.MutedRepo, *repository.FollowerRepo, *repository.FollowerRequestRepo, *repository.CloseFollowerRepository, *repository.VerificationRequestRepo) {
+	return &repository.UserRepo{Database: database}, &repository.BlockedRepo{Database: database}, &repository.MutedRepo{Database: database}, &repository.FollowerRepo{Database: database}, &repository.FollowerRequestRepo{Database: database}, &repository.CloseFollowerRepository{Database: database}, &repository.VerificationRequestRepo{Database: database}
 }
 
-func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo, repoFollowerRequest *repository.FollowerRequestRepo, repoCloseFollower *repository.CloseFollowerRepository) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService, *services.FollowerRequestService, *services.CloseFollowerService) {
-	return &services.UserService{Repo: repo, RepoFollower: repoFollower, RepoCloseFollower: repoCloseFollower, MutedRepo: repoMuted, BlockedRepo: repoBlocked}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower, RepoMuted: repoMuted, RepoBlocked: repoBlocked}, &services.FollowerRequestService{Repo: repoFollowerRequest}, &services.CloseFollowerService{Repo: repoCloseFollower}
+func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo, repoFollowerRequest *repository.FollowerRequestRepo, repoCloseFollower *repository.CloseFollowerRepository, repoVerificationRequest *repository.VerificationRequestRepo) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService, *services.FollowerRequestService, *services.CloseFollowerService, *services.VerificationRequestService) {
+	return &services.UserService{Repo: repo, RepoFollower: repoFollower, RepoCloseFollower: repoCloseFollower, MutedRepo: repoMuted, BlockedRepo: repoBlocked}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower, RepoMuted: repoMuted, RepoBlocked: repoBlocked}, &services.FollowerRequestService{Repo: repoFollowerRequest}, &services.CloseFollowerService{Repo: repoCloseFollower}, &services.VerificationRequestService{Repo: repoVerificationRequest}
 }
 
-func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService, serviceFollowerRequest *services.FollowerRequestService, serviceCloseFollower *services.CloseFollowerService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler, *handlers.FollowerRequestHandler, *handlers.CloseFollowerHandler) {
-	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}, &handlers.FollowerRequestHandler{Service: serviceFollowerRequest}, &handlers.CloseFollowerHandler{Service: serviceCloseFollower, UserServ: service}
+func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService, serviceFollowerRequest *services.FollowerRequestService, serviceCloseFollower *services.CloseFollowerService, serviceVerificationRequest *services.VerificationRequestService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler, *handlers.FollowerRequestHandler, *handlers.CloseFollowerHandler, *handlers.VerificationRequestHandler) {
+	return &handlers.UserHandler{Service: service}, &handlers.BlockedHandler{Service: serviceBlocked}, &handlers.MutedHandler{Service: serviceMuted}, &handlers.FollowerHandler{Service: serviceFollower}, &handlers.FollowerRequestHandler{Service: serviceFollowerRequest}, &handlers.CloseFollowerHandler{Service: serviceCloseFollower, UserServ: service}, &handlers.VerificationRequestHandler{Service: serviceVerificationRequest, ServiceUser: service}
 }
-func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler, handlerFollowerRequest *handlers.FollowerRequestHandler, handlerCloseFollower *handlers.CloseFollowerHandler) {
+func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.BlockedHandler, handlerMuted *handlers.MutedHandler, followerHandler *handlers.FollowerHandler, handlerFollowerRequest *handlers.FollowerRequestHandler, handlerCloseFollower *handlers.CloseFollowerHandler, handlerVerificationRequest *handlers.VerificationRequestHandler) {
 	router := mux.NewRouter().StrictSlash(true)
 
 	// c := cors.New(cors.Options{AllowedOrigins: []string{"*"}, AllowCredentials: true})
@@ -77,6 +77,11 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/getclosefollowers", handler.GetAllCloseUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/getAllCloseFollowersForUser/{userid}", handlerCloseFollower.GetAllCloseFollowerUser).Methods(http.MethodGet)
 
+	router.HandleFunc("/verification", handlerVerificationRequest.CreateVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/waitlistedverificationrequests", handlerVerificationRequest.GetAllWaitlistedVerificationRequests).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/acceptverification", handlerVerificationRequest.AcceptUserVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/declineverification", handlerVerificationRequest.DeclineUserVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }
 
@@ -104,8 +109,8 @@ func main() {
 	// handle err
 	time.Local = loc //
 
-	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower, repoFollowerRequest, repoCloseFollower := initializeRepository(db)
-	serviceUser, serviceBLocked, serviceMuted, serviceFollower, serviceFollowerRequest, serviceCloseFollower := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower, repoFollowerRequest, repoCloseFollower)
-	handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest, handlerCloseFollower := initializeHandlers(serviceUser, serviceBLocked, serviceMuted, serviceFollower, serviceFollowerRequest, serviceCloseFollower)
-	handleFuncUser(handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest, handlerCloseFollower)
+	repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower, repoFollowerRequest, repoCloseFollower, repoVerificationRequest := initializeRepository(db)
+	serviceUser, serviceBLocked, serviceMuted, serviceFollower, serviceFollowerRequest, serviceCloseFollower, serviceVerificationRequest := initializeServices(repositoryUser, repositoryBlocked, repositoryMuted, repositoryFollower, repoFollowerRequest, repoCloseFollower, repoVerificationRequest)
+	handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest, handlerCloseFollower, handlerVerificationRequest := initializeHandlers(serviceUser, serviceBLocked, serviceMuted, serviceFollower, serviceFollowerRequest, serviceCloseFollower, serviceVerificationRequest)
+	handleFuncUser(handlerUser, handlerBlocked, handlerMuted, handlerFollower, handlerFollowerRequest, handlerCloseFollower, handlerVerificationRequest)
 }

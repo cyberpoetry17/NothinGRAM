@@ -117,7 +117,7 @@ export class Verification extends React.Component {
             name: _name,
             surname: _surname,
             username: _username,
-            mediapath: _mediapath,
+            picture: _mediapath,
             category: _category,
         };
 

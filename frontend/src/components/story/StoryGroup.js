@@ -8,13 +8,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import {Form,Container,Row,Col,Button,Carousel} from 'react-bootstrap';
 
-export default function StoryGroup(storyList) {
+export default function StoryGroup({storyList,ForCloseFriends}) {
     const [stories, setStories] = useState(null);
     const [loaded, setLoaded] = useState(false);
     const [open, toggleOpen] = useState(false);
     useEffect(()=>{
-        setStories(storyList.storyList)
-        console.log("storyList:",storyList.storyList)
+        setStories(storyList)
+        console.log("storyList:",storyList)
+        console.log(ForCloseFriends);
     },[])
 
     useEffect(()=>{
@@ -30,6 +31,10 @@ export default function StoryGroup(storyList) {
 
     const handleClose = () => {
         toggleOpen(false);
+        // var el = document.getElementById(IdStory+"-div");
+        // if(el!=null){
+        //     el.style.borderColor= "white";
+        // }
       };
 
     return (
@@ -49,7 +54,7 @@ export default function StoryGroup(storyList) {
             {/* <button onClick={openDialog}>Open </button> */}
             {loaded?
                 <div onClick={openDialog}>
-                    <Story onClick={openDialog} UserId={stories[0].UserId} IdStory={stories[0].IdStory} postId={stories[0].PostID} type={stories[0].Type}/> 
+                    <Story onClick={openDialog} UserId={stories[0].UserId} IdStory={stories[0].IdStory} postId={stories[0].PostID} type={stories[0].Type} ForCloseF={ForCloseFriends}/> 
                 </div>
                  :
                  <p>loading..</p>
@@ -62,7 +67,7 @@ export default function StoryGroup(storyList) {
                         stories.map(s=>(
                             
                                 <Carousel.Item margin="auto">
-                                    <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type}/> 
+                                    <Story UserId={s.UserId} IdStory={s.IdStory} postId={s.PostID} type={s.Type} size="1" /> 
                                 </Carousel.Item>
                             
                         )):

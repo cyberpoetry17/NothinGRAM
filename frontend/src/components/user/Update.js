@@ -1,8 +1,8 @@
 import React from "react";
-import { serviceConfig } from "../applicationSettings";
+import { serviceConfig } from "../../applicationSettings";
 import { Container, Button } from "react-bootstrap";
 import { Form } from "react-bootstrap";
-import "../styles/Login.css";
+import "../../styles/Login.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -98,7 +98,7 @@ handleSubmit(e){
 
       credentials: "same-origin", //,'access-control-allow-origin' : '*'
     };
-    fetch(`${serviceConfig.baseURL}/user`, requestOpt)
+    fetch(`${serviceConfig.userURL}/user`, requestOpt)
       .then((response) => response.json())
       .then((responseJson) => {
         // this.setState({ user : responseJson })
@@ -175,7 +175,7 @@ handleSubmit(e){
       body: JSON.stringify(updateUser),
     };
 
-    fetch(`${serviceConfig.baseURL}/update`, requestOptions)
+    fetch(`${serviceConfig.userURL}/update`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

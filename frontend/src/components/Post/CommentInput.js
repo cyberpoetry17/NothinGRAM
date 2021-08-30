@@ -1,12 +1,11 @@
-import { app } from './base';
+import { app } from '../base';
 import {BrowserRouter, Link, Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import axios from 'axios';
 import React,{useState,useEffect} from 'react'
-import { Like } from './Like';
-import {Dislike} from './Dislike';
 import jwt_decode from 'jwt-decode';
-import "../styles/post-style.css";
+import "../../styles/post-style.css";
 import { getAlgorithms } from 'json-web-token';
+import {serviceConfig} from '../../applicationSettings'
 
 export default function CommentInput({postid,getcoms}){
     var [comment,setComment] = React.useState("");
@@ -14,7 +13,9 @@ export default function CommentInput({postid,getcoms}){
 
     const PostComment = () => {
         if (window.localStorage.getItem('token') != null){
-            axios({method:'post',url:'http://localhost:8005/addComment/',data:JSON.stringify({Comment:comment,UserId:jwt_decode(localStorage.getItem('token')).UserID,PostId:postid})}).then(()=>{
+            axios({method:'post',url:`${serviceConfig.postURL}/addComment/`,data:JSON.stringify({Comment:comment,UserId:jwt_decode(localStorage.getItem('token')).UserID,PostId:postid})}).then(()=>{
+                setComment('');
+            }).then(()=>{
                 getcoms();
             });
         }else{

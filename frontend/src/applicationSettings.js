@@ -1,3 +1,4 @@
 export const serviceConfig = {
-    baseURL: "http://localhost:8004",
+    userURL: "http://localhost:8080/api/user",
+    postURL: "http://localhost:8080/api/post",
 };

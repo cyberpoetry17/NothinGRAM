@@ -21,7 +21,7 @@ func initializeRepository(database *gorm.DB) (*repository.UserRepo, *repository.
 }
 
 func initializeServices(repo *repository.UserRepo, repoBlocked *repository.BlockedRepo, repoMuted *repository.MutedRepo, repoFollower *repository.FollowerRepo, repoFollowerRequest *repository.FollowerRequestRepo, repoCloseFollower *repository.CloseFollowerRepository, repoVerificationRequest *repository.VerificationRequestRepo) (*services.UserService, *services.BlockedService, *services.MutedService, *services.FollowerService, *services.FollowerRequestService, *services.CloseFollowerService, *services.VerificationRequestService) {
-	return &services.UserService{Repo: repo}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower}, &services.FollowerRequestService{Repo: repoFollowerRequest}, &services.CloseFollowerService{Repo: repoCloseFollower}, &services.VerificationRequestService{Repo: repoVerificationRequest}
+	return &services.UserService{Repo: repo, RepoFollower: repoFollower, RepoCloseFollower: repoCloseFollower, MutedRepo: repoMuted, BlockedRepo: repoBlocked}, &services.BlockedService{Repo: repoBlocked}, &services.MutedService{Repo: repoMuted}, &services.FollowerService{Repo: repoFollower, RepoMuted: repoMuted, RepoBlocked: repoBlocked}, &services.FollowerRequestService{Repo: repoFollowerRequest}, &services.CloseFollowerService{Repo: repoCloseFollower}, &services.VerificationRequestService{Repo: repoVerificationRequest}
 }
 
 func initializeHandlers(service *services.UserService, serviceBlocked *services.BlockedService, serviceMuted *services.MutedService, serviceFollower *services.FollowerService, serviceFollowerRequest *services.FollowerRequestService, serviceCloseFollower *services.CloseFollowerService, serviceVerificationRequest *services.VerificationRequestService) (*handlers.UserHandler, *handlers.BlockedHandler, *handlers.MutedHandler, *handlers.FollowerHandler, *handlers.FollowerRequestHandler, *handlers.CloseFollowerHandler, *handlers.VerificationRequestHandler) {
@@ -40,22 +40,27 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 	router.HandleFunc("/logout", handler.Logout).Methods("POST")
 	router.HandleFunc("/verify/{userId}", handler.Verify).Methods("GET")
+	router.HandleFunc("/getpublicuserids", handler.GetPublicUserIds).Methods(http.MethodGet)
 	router.HandleFunc("/login", handler.LoginUser).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/username/{usernamebyid}", handler.GetUsernameById).Methods("GET")
 	router.HandleFunc("/getuserbyusername/{username}", handler.GetUserByUsernameForProfile).Methods(http.MethodGet)
 	router.HandleFunc("/getuseridandprivatebyusername/{username}", handler.GetUserIdByUsernameForProfile).Methods(http.MethodGet)
 	router.HandleFunc("/GetUserProfilePrivacy", handler.GetUserProfilePrivacy).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc("/getuserwhofollow", handler.GetAllUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/deleteprofile/{userid}", handler.DeleteProfile).Methods(http.MethodPost)
+	router.HandleFunc("/confirmagent", handler.CreateUserFromAgent).Methods(http.MethodPost,http.MethodOptions)
 
 	router.HandleFunc("/auth", handler.AuthorizationToken).Methods("POST")
 
-	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods("POST")
+	router.HandleFunc("/block", handlerBlocked.BlockUser).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/unblock", handlerBlocked.UnblockUser).Methods("POST")
-	router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsers).Methods("GET")
+	// router.HandleFunc("/allblockedusers/{userID}", handlerBlocked.GetAllBlockedUsers).Methods("GET")
+	router.HandleFunc("/getblockedstatus", handlerBlocked.BlockStatusForProfile).Methods(http.MethodPost)
 
-	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods("POST")
-	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods("POST")
-	router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
+	router.HandleFunc("/createMuted", handlerMuted.CreateMutedUser).Methods(http.MethodPost)
+	router.HandleFunc("/removeMuted", handlerMuted.RemoveMutedUser).Methods(http.MethodPost)
+	router.HandleFunc("/getmutedstatus", handlerMuted.MutedStatusForProfile).Methods(http.MethodPost)
+	// router.HandleFunc("/allmutedusers/{userID}", handlerMuted.GetAllMutedUsers).Methods("GET")
 
 	router.HandleFunc("/follow", followerHandler.FollowUser).Methods(http.MethodPost)
 	router.HandleFunc("/getfollowstatus", followerHandler.FollowStatusForProfile).Methods(http.MethodPost)
@@ -70,6 +75,7 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/removeclosefollower", handlerCloseFollower.RemoveCloseFollower).Methods(http.MethodPost)
 	router.HandleFunc("/setclosefollowers", handlerCloseFollower.ModifyCloseFollowers).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/getclosefollowers", handler.GetAllCloseUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/getAllCloseFollowersForUser/{userid}", handlerCloseFollower.GetAllCloseFollowerUser).Methods(http.MethodGet)
 
 	router.HandleFunc("/verification", handlerVerificationRequest.CreateVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
 	router.HandleFunc("/waitlistedverificationrequests", handlerVerificationRequest.GetAllWaitlistedVerificationRequests).Methods(http.MethodGet, http.MethodOptions)

@@ -144,6 +144,14 @@ func (handler *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (handler *UserHandler) GetPublicUserIds(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	resp := handler.Service.GetPublicUserIds()
+	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
 func (handler *UserHandler) GetUserByUsernameForProfile(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 	fmt.Println("getById")
@@ -178,10 +186,10 @@ func (handler *UserHandler) GetUserIdByUsernameForProfile(w http.ResponseWriter,
 
 func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
-	fmt.Println("getting username By Id")
+	fmt.Println("getting username By Id novo")
 	vars := mux.Vars(r)
 	id := vars["usernamebyid"]
-
+	fmt.Println(id)
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -194,6 +202,21 @@ func (handler *UserHandler) GetUsernameById(w http.ResponseWriter, r *http.Reque
 	resp := handler.Service.GetUsernameById(idUser)
 
 	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *UserHandler) DeleteProfile(w http.ResponseWriter, r *http.Request) {
+	setupResponse(&w, r)
+	fmt.Println("deleting profile")
+	vars := mux.Vars(r)
+	id := vars["userid"]
+	fmt.Println(id)
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = handler.Service.DeleteProfile(id)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 }
@@ -257,6 +280,27 @@ func createUserFromDTO(dto services.RegisterRequest, date time.Time) *data.User2
 	return &user
 }
 
+func createUserFromAgentDTO(dto services.RegisterRequest, date time.Time) *data.User2 {
+	var user data.User2
+	user.DateOfBirth = date
+	user.Email = dto.Email
+	user.Name = dto.Name
+	user.Gender = dto.Gender
+	user.Password = dto.Password
+	user.PhoneNumber = dto.PhoneNumber
+	user.Private = dto.Private
+	user.Role = 3
+	user.Verified = dto.Verify
+	user.ReceiveNotifications = dto.ReceiveNotifications
+	user.Biography = dto.Biography
+	user.Taggable = dto.Taggable
+	user.Username = dto.Username
+	user.Website = dto.Website
+	user.Surname = dto.Surname
+
+	return &user
+}
+
 //register user
 func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("creating")
@@ -288,6 +332,47 @@ func (handler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	newUser.SetPassword(newUser.Password)
+	err = handler.Service.CreateUser(newUser)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	fmt.Println("Created.")
+	w.WriteHeader(http.StatusCreated)
+
+}
+
+func (handler *UserHandler) CreateUserFromAgent(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("creating user from agent")
+
+	setupResponse(&w, r)
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
+	// //var user data.User2
+	var user services.RegisterRequest
+	//var user data.User2
+	err := json.NewDecoder(r.Body).Decode(&user) //dekodiran je dto sa stringom..sad hocu da parsiram string
+
+	if err != nil {
+		println(err)
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	fmt.Println(user.DateOfBirth)
+	DateOfBirthTime := handler.Service.ParseString(user.DateOfBirth)
+	newUser := createUserFromAgentDTO(user, DateOfBirthTime)
+	fmt.Println(newUser)
+	existsByUsername := handler.Service.Repo.UserExistsByUsername(newUser.Username)
+	existsByEmail := handler.Service.Repo.UserExistsByEmail(newUser.Email)
+	fmt.Println("prosao 1")
+	if existsByEmail || existsByUsername {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	fmt.Println("prosao 2")
 	newUser.SetPassword(newUser.Password)
 	err = handler.Service.CreateUser(newUser)
 	if err != nil {

@@ -33,7 +33,7 @@ export class Verification extends React.Component {
         const fileRef = storageRef.child(file.name)
         await fileRef.put(file)
         var a = await fileRef.getDownloadURL()
-        console.log("file paths:",a)          
+        console.log("file paths:",a)
         this.setState({ _mediapath: a})
         console.log(this.state._mediapath)
     }

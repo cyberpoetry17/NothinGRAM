@@ -4,6 +4,7 @@ import (
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/repository"
+	"github.com/google/uuid"
 	"strings"
 	"time"
 )
@@ -19,6 +20,8 @@ func (service *StoryService) CreateStory(storyDTO *DTO.StoryMediaDTO) error {
 	story.Type = data.MediaT
 	story.Time = time.Now()
 	story.UserId = storyDTO.UserId
+	story.IsActive = true
+	story.IsOnlyForCloseFriends = storyDTO.IsOnlyForCloseFriends
 	err:= service.StoryRepo.CreateStory(&story)
 
 	if(err!= nil){
@@ -54,4 +57,42 @@ func setIfItIsVideo(media data.Media) {
 
 func (service *StoryService) GetAllActiveStories() []data.Story {
 	return service.StoryRepo.GetAllActive()
+}
+
+func (service *StoryService) GetAllUserStories(userId uuid.UUID) ([]data.Story,error){
+	return service.StoryRepo.GetAllUserStories(userId)
+}
+
+func (service *StoryService) GetCloseFrinedStoriesForUser(userId uuid.UUID) ([]data.Story){
+	return  service.StoryRepo.GetCloseFrinedStoriesForUser(userId)
+}
+
+func (service *StoryService) GetAllStoryHighlights(userId uuid.UUID) []data.Story{
+	return service.StoryRepo.GetUserStoryHighlights(userId)
+}
+
+func (service *StoryService) AddToStoryHighlights(storyId uuid.UUID) error{
+	for _,el:= range service.StoryRepo.GetAll(){
+		if(el.IdStory == storyId){
+			el.ShowOnStoryHighlights=true;
+			err:= service.StoryRepo.EditStory(&el);
+			return err
+		}
+	}
+	return nil
+}
+
+func (service *StoryService) RemoveFromStoryHighlights(storyId uuid.UUID) error{
+	for _,el:= range service.StoryRepo.GetAll(){
+		if(el.IdStory == storyId){
+			el.ShowOnStoryHighlights=false;
+			err:= service.StoryRepo.EditStory(&el);
+			return err
+		}
+	}
+	return nil
+}
+
+func (service *StoryService) GetActiveStoriesByUserId(userId uuid.UUID) ([]data.Story){
+	return service.StoryRepo.GetActiveStoriesByUserId(userId)
 }

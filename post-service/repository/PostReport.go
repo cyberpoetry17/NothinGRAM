@@ -10,6 +10,13 @@ type ReportedPostRepo struct {
 	Database *gorm.DB
 }
 
+func (repo *ReportedPostRepo) GetAll() []data.ReportedPost{
+	var posts []data.ReportedPost
+	repo.Database.
+		Find(&posts)
+	return posts
+}
+
 func (repo ReportedPostRepo) CreateReport(report *data.ReportedPost) error {
 	result := repo.Database.Create(report)
 	if(result.Error != nil){
@@ -29,6 +36,16 @@ func (repo ReportedPostRepo) GetAllReportsForPost (postId string) []data.Reporte
 		}
 	}
 	return backList
+}
+
+func (repo *ReportedPostRepo) RemoveReportedPost (id string) bool{
+	posts := repo.GetAll()
+	for _,element := range posts{
+		if element.PostId.String() == id{
+			repo.Database.Delete(&element)
+		}
+	}
+	return true
 }
 
 func (repo ReportedPostRepo) CheckIfReportedByUser (report *data.ReportedPost) bool{

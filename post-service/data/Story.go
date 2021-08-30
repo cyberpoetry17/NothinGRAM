@@ -20,12 +20,13 @@ type Story struct{
 	Type StoryType `gorm:"column:Type"  json:"Type"`
 	IsActive bool `gorm:"column:IsActive"  json:"IsActive"`
 	UserId uuid.UUID `gorm:"column:UserId"  json:"UserId"`
+	IsOnlyForCloseFriends bool `gorm:"column:IsOnlyForCloseFriends"  json:"IsOnlyForCloseFriends"`
+	ShowOnStoryHighlights bool `gorm:"column:ShowOnStoryHighlights"  json:"ShowOnStoryHighlights"`
 }
 
 func (story *Story) BeforeCreate(scope *gorm.DB) error {
 	if(story.IdStory.String() == "00000000-0000-0000-0000-000000000000") {
 		story.IdStory = uuid.New()
-		story.IsActive = true
 	}
 	return nil
 

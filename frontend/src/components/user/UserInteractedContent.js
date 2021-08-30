@@ -1,7 +1,8 @@
-import Post from "./Post";
+import Post from "../Post/Post";
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom'
 import axios from 'axios';
+import {serviceConfig} from '../../applicationSettings.js'
 
 export class UserInteractedContent extends React.Component{
 
@@ -20,19 +21,19 @@ export class UserInteractedContent extends React.Component{
     }
 
     async GetUserIdByUsername(){
-        await axios.get('http://localhost:8004/getuseridandprivatebyusername/'+this.props.match.params.username).then((response)=>{
+        await axios.get(`${serviceConfig.userURL}/getuseridandprivatebyusername/`+this.props.match.params.username).then((response)=>{
             const data = response.data;
             this.setState({userid:data.UserId});
         })
     }
 
     GetAllPosts(){
-        axios.get('http://localhost:8005/getlikedbyuser/'+this.state.userid).then((response)=>{
+        axios.get(`${serviceConfig.postURL}/getlikedbyuser/`+this.state.userid).then((response)=>{
             const data = response.data;
             this.setState({likedposts:data});
         })
         .catch(()=>{alert('didnt retrieve liked posts')});
-        axios.get('http://localhost:8005/getdislikedbyuser/'+this.state.userid).then((response)=>{
+        axios.get(`${serviceConfig.postURL}/getdislikedbyuser/`+this.state.userid).then((response)=>{
             const data = response.data;
             this.setState({dislikedposts:data});
         })

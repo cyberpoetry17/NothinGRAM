@@ -2,7 +2,6 @@ package repository
 
 import (
 	"fmt"
-
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/DTO"
 
 	"github.com/cyberpoetry17/NothinGRAM/UserAPI/data"
@@ -73,6 +72,28 @@ func (repo *UserRepo) GetUserByUsernameForProfile(id string) *data.User2 {
 		}
 	}
 	return &backUser
+}
+
+func (repo *UserRepo) GetPublicUserIds() []string {
+	var users []data.User2
+	var backUserId []string
+	users = repo.GetAll()
+	for _, element := range users {
+		if element.Private == false {
+			backUserId = append(backUserId,element.ID.String())
+		}
+	}
+	return backUserId
+}
+
+func (repo *UserRepo) DeleteUserById(userid string) bool {
+	users := repo.GetAll()
+	for _,element := range users{
+		if element.ID.String() == userid {
+			repo.Database.Delete(&element)
+		}
+	}
+	return true
 }
 
 func (repo *UserRepo) GetUserIdByUsernameForProfile(id string) DTO.UserUsernameAndPrivateDTO {

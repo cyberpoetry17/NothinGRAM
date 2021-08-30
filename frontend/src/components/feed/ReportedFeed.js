@@ -33,10 +33,15 @@ export default function ReportedFeed() {
     <>
         {reports?.map((post,i) => (
         <div className="feed" key={i}>
+            
             <Post userid={post.userid} postid={post.ID} picpath={post.picpath} privatepost={post.private} description={post.description} location = {post.LocationID} />
-            <div className="post__header">
-            <button className="like_but" onClick={() => DeletePost(post.ID)}>Delet</button>
-            <button className="like_but" onClick={() => DeleteProfile(post.userid)}>Delet profile</button>
+            <div className="post__center">
+                <div className="post">
+                    <div className="post__header">
+                        <button className="like_but" onClick={() => DeletePost(post.ID)}>Delete post</button>
+                        <button className="like_but" onClick={() => DeleteProfile(post.userid)}>Delete profile</button>
+                    </div>
+                </div>
             </div>
         </div>
         ))}

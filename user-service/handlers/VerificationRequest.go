@@ -10,7 +10,8 @@ import (
 )
 
 type VerificationRequestHandler struct {
-	Service *services.VerificationRequestService
+	Service     *services.VerificationRequestService
+	ServiceUser *services.UserService
 }
 
 /*
@@ -104,7 +105,13 @@ func (handler *VerificationRequestHandler) AcceptUserVerificationRequest(w http.
 
 	verificationRequest := CreateVerificationRequestFromDTO(userVerificationRequest)
 	verificationRequest.RequestStatus = 1
-	// TODO: update user
+	user := handler.ServiceUser.GetUserByUsernameForProfile(verificationRequest.Username)
+	user.Verified = true
+	errorUser := handler.ServiceUser.Repo.Database.Save(&user).Error
+	if errorUser != nil {
+		fmt.Println(errorUser)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
 
 	err = handler.Service.UpdateVerificationRequest(verificationRequest)
 	if err != nil {

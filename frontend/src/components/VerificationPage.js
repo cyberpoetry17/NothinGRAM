@@ -13,7 +13,7 @@ export default function VerificationPage() {
     },[])
 
     const GetVerificationRequests = () => {
-        axios.get(`${serviceConfig.postURL}/waitlistedverificationrequests`).then((responsenew)=>{
+        axios.get(`${serviceConfig.baseURL}/waitlistedverificationrequests`).then((responsenew)=>{
             const data = responsenew.data;
             if(data != null)
                 setVerificationRequests(data);

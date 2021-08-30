@@ -117,9 +117,15 @@ export class Profile extends React.Component{
                                     <Nav.Item >
                                         <Nav.Link href="/verification">User Verification</Nav.Link>
                                     </Nav.Item>
-                                    <Nav.Item >
-                                        <Nav.Link href="/verificationrequests">Verification requests</Nav.Link>
-                                    </Nav.Item>
+                                    {jwt_decode(localStorage.getItem('token')).Role === 1 ?
+                                    <>
+                                        <Nav.Item>
+                                            <Nav.Link href="/verificationrequests">Verification requests</Nav.Link>
+                                        </Nav.Item>
+                                    </>
+                                    :
+                                    null
+                                    }
                                     <Nav.Item >
                                         <Nav.Link href="/update">Update</Nav.Link>
                                     </Nav.Item>

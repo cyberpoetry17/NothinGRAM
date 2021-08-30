@@ -166,7 +166,7 @@ export class Verification extends React.Component {
                         <Form.Row>
                             <Form.Group as={Col} md="6">
                                 <FormControl
-                                    required
+                                    readOnly="readonly"
                                     id="_name"
                                     value={_name}
                                     type="name"
@@ -178,7 +178,7 @@ export class Verification extends React.Component {
                         <Form.Row>
                             <Form.Group as={Col} md="6">
                                 <FormControl
-                                    required
+                                    readOnly="readonly"
                                     id="_surname"
                                     value={_surname}
                                     type="surname"
@@ -190,7 +190,7 @@ export class Verification extends React.Component {
                         <Form.Row>
                             <Form.Group as={Col} md="6">
                                 <FormControl
-                                    required
+                                    readOnly="readonly"
                                     id="_username"
                                     value={_username}
                                     type="username"

@@ -86,8 +86,8 @@ export default function App() {
           <Route path="/requests/:username" component={ProfileRequests}/>
           <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/closefollowerr" component={AddCloseFollower}/>
-          <Route path="/verification/" component={Verification}/>
-          <Route path="/verificationrequests/" component={VerificationPage}/>
+          <Route path="/verification" component={Verification}/>
+          <Route path="/verificationrequests" component={VerificationPage}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">
             <PostFeed/>

@@ -41,9 +41,14 @@ func (service *VerificationRequestService) GetAllWaitlistedVerificationRequests(
 }
 
 func (service *VerificationRequestService) UpdateVerificationRequest(verificationRequest *data.VerificationRequest) error {
-	err := service.Repo.Database.Save(&verificationRequest).Error
-	if err != nil {
-		return err
+	errorDelete := service.Repo.Database.Where("username=?", verificationRequest.Username).Delete(verificationRequest).Error
+	if errorDelete != nil {
+		return errorDelete
+	}
+
+	errorSave := service.Repo.Database.Save(verificationRequest).Where("username=?", verificationRequest.Username).Error
+	if errorSave != nil {
+		return errorSave
 	}
 	return nil
 }

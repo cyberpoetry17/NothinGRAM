@@ -65,3 +65,79 @@ func (handler *VerificationRequestHandler) CreateVerificationRequest(w http.Resp
 	fmt.Println("Verification request created.")
 	w.WriteHeader(http.StatusCreated)
 }
+
+func (handler *VerificationRequestHandler) GetAllWaitlistedVerificationRequests(w http.ResponseWriter, r *http.Request) {
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
+	waitlistedVerificationRequests := handler.Service.GetAllWaitlistedVerificationRequests()
+	if waitlistedVerificationRequests == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(w).Encode(waitlistedVerificationRequests)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *VerificationRequestHandler) AcceptUserVerificationRequest(w http.ResponseWriter, r *http.Request) {
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
+	var userVerificationRequest services.UserVerificationRequest
+	err := json.NewDecoder(r.Body).Decode(&userVerificationRequest)
+
+	if err != nil {
+		println(err)
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	verificationRequest := CreateVerificationRequestFromDTO(userVerificationRequest)
+	verificationRequest.RequestStatus = 1
+	// TODO: update user
+
+	err = handler.Service.UpdateVerificationRequest(verificationRequest)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *VerificationRequestHandler) DeclineUserVerificationRequest(w http.ResponseWriter, r *http.Request) {
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
+	var userVerificationRequest services.UserVerificationRequest
+	err := json.NewDecoder(r.Body).Decode(&userVerificationRequest)
+
+	if err != nil {
+		println(err)
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	verificationRequest := CreateVerificationRequestFromDTO(userVerificationRequest)
+	verificationRequest.RequestStatus = 2
+
+	err = handler.Service.UpdateVerificationRequest(verificationRequest)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusExpectationFailed)
+	}
+	w.WriteHeader(http.StatusOK)
+}

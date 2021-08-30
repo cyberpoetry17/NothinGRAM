@@ -22,3 +22,17 @@ func (repo *VerificationRequestRepo) VerificationRequestExistsByUsername(usernam
 	repo.Database.Where("username=?", username).Find(&data.VerificationRequest{}).Count(&count)
 	return count != 0
 }
+
+func (repo *VerificationRequestRepo) GetAllVerificationRequests() []data.VerificationRequest {
+	var allVerificationRequests []data.VerificationRequest
+	repo.Database.
+		Preload("Name").
+		Preload("Surname").
+		Preload("Username").
+		Preload("Category").
+		Preload("RequestStatus").
+		Preload("PicturePath").
+		Find(&allVerificationRequests)
+
+	return allVerificationRequests
+}

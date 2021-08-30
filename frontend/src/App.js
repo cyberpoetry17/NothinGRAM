@@ -15,6 +15,7 @@ import Update from './components/Update';
 import Profile from './components/Profile';
 import FollowerFeed from './components/FollowerFeed'
 import Verification from './components/Verification'
+import VerificationRequests from './components/VerificationRequests';
 // import { version } from 'react-dom';
 // import jwt_decode from 'jwt-decode';
 import ProfileRequests from './components/ProfileRequests'
@@ -26,7 +27,7 @@ import jwt_decode from 'jwt-decode';
 import UserInteractedContent from './components/UserInteractedContent';
 import AddStory from './components/AddStory';
 import AddCloseFollower from './components/AddCloseFollower';
-import AdministratorHomepage from './components/AdministratorHomepage';
+import VerificationPage from './components/VerificationPage';
 
 
 export default function App() {
@@ -86,6 +87,7 @@ export default function App() {
           <Route path="/userfeed" component={FollowerFeed}/>
           <Route path="/closefollowerr" component={AddCloseFollower}/>
           <Route path="/verification/" component={Verification}/>
+          <Route path="/verificationrequests/" component={VerificationPage}/>
           <Route path="/profile/:username" component={Profile}/>
           <Route className="main" path="/posts">
             <PostFeed/>

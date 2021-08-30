@@ -72,6 +72,9 @@ func handleFuncUser(handler *handlers.UserHandler, handlerBlocked *handlers.Bloc
 	router.HandleFunc("/getclosefollowers", handler.GetAllCloseUserFollowersById).Methods(http.MethodGet, http.MethodOptions)
 
 	router.HandleFunc("/verification", handlerVerificationRequest.CreateVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/waitlistedverificationrequests", handlerVerificationRequest.GetAllWaitlistedVerificationRequests).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc("/acceptverification", handlerVerificationRequest.AcceptUserVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/declineverification", handlerVerificationRequest.DeclineUserVerificationRequest).Methods(http.MethodPost, http.MethodOptions)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("USER_SERVICE_PORT")), router))
 }

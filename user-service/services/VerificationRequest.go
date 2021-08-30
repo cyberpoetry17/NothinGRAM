@@ -27,3 +27,23 @@ func (service *VerificationRequestService) VerificationRequestExistsByUsername(u
 	exists := service.Repo.VerificationRequestExistsByUsername(username)
 	return exists
 }
+
+func (service *VerificationRequestService) GetAllWaitlistedVerificationRequests() []data.VerificationRequest {
+	allVerificationRequests := service.Repo.GetAllVerificationRequests()
+	var waitlistedVerificationRequests []data.VerificationRequest
+	for _, verificationRequest := range allVerificationRequests {
+		if verificationRequest.RequestStatus == 3 {
+			waitlistedVerificationRequests = append(waitlistedVerificationRequests, verificationRequest)
+		}
+	}
+
+	return waitlistedVerificationRequests
+}
+
+func (service *VerificationRequestService) UpdateVerificationRequest(verificationRequest *data.VerificationRequest) error {
+	err := service.Repo.Database.Save(&verificationRequest).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

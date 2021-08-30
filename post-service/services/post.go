@@ -84,6 +84,7 @@ func (service *PostService) RemovePost(id string) bool{
 	service.LikeRepo.RemoveAllLikesForPost(id)
 	service.DislikeRepo.RemoveAllDislikesForPost(id)
 	service.CommentRepo.RemoveAllCommentsForPost(id)
+	service.PostRepo.Database.Select("Tags").Delete(&data.Post{ID: uuid.MustParse(id)})
 	service.PostRepo.RemovePost(id)
 	service.ReportRepo.RemoveReportedPost(id)
 	return true

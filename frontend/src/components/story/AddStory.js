@@ -40,7 +40,7 @@ export default function AddStory() {
             url :`${serviceConfig.postURL}/addStory`,
             data:JSON.stringify(body)
         })
-        history.push("/")
+        history.push("/posts")
     }
 
     return (

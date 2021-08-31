@@ -55,7 +55,7 @@ class Login extends React.Component{
                     return Promise.reject(response);
                 }
                 console.log("USPELO");
-                this.props.history.push('/home');
+                this.props.history.push('/posts');
                 window.location.reload();
                 return response.json();
             })

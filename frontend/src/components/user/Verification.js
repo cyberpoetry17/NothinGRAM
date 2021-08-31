@@ -135,7 +135,7 @@ export class Verification extends React.Component {
             return Promise.reject(response);
           }
           alert("Verification request sent. Returning to homepage.");
-          this.props.history.push("/home");
+          this.props.history.push("/posts");
         })
         .catch((response) => {
           if (response.status === 400) {

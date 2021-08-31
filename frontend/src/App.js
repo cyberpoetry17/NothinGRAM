@@ -59,7 +59,7 @@ export default function App() {
               </> : null
               }
               <Nav.Item>
-                <Nav.Link href="/" onClick={()=>{window.localStorage.removeItem('token');this.props.history.push('/');}}>SIGN OUT</Nav.Link>
+                <Nav.Link href="/posts" onClick={()=>{window.localStorage.removeItem('token')}}>SIGN OUT</Nav.Link>
               </Nav.Item>
               </>
               :
